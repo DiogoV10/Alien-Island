@@ -52,6 +52,12 @@ public class WeaponSelector : MonoBehaviour
         }
 
         if (keys == null) keys = new KeyCode[weaponsSystem.Length];
+
+        for(int i = 0; i < keys.Length; ++i)
+        {
+            Debug.Log(weaponsSystem[i]);
+            Debug.Log(i);
+        }
     }
 
     private void SelectSystem(int systemIndex)

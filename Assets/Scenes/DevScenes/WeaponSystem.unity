@@ -575,8 +575,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 404899262}
   - {fileID: 816201614}
+  - {fileID: 404899262}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1649398211
@@ -594,7 +594,7 @@ MonoBehaviour:
   weaponsSystem:
   - {fileID: 816201614}
   - {fileID: 404899262}
-  keys: 3100000032000000
+  keys: 4301000044010000
   switchTime: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
