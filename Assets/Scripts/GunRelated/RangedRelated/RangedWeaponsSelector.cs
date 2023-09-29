@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeWeaponsSelector : MonoBehaviour
+public class RangedWeaponsSwap : MonoBehaviour
 {
-    [Header("Melee Weapons")]
-    [SerializeField] private GameObject[] meleeWeapons;
+    [Header("RangedWeapons")]
+    [SerializeField] private GameObject[] rangedWeapons;
 
     [Header("Swap Key")]
     [SerializeField] private KeyCode swapKey;
@@ -24,7 +24,7 @@ public class MeleeWeaponsSelector : MonoBehaviour
     {
         if (isSelectorActive && Input.GetKeyDown(swapKey))
         {
-            lastSelectedWeaponIndex = (lastSelectedWeaponIndex + 1) % meleeWeapons.Length;
+            lastSelectedWeaponIndex = (lastSelectedWeaponIndex + 1) % rangedWeapons.Length;
             SetActiveWeapon(lastSelectedWeaponIndex);
         }
     }
@@ -35,15 +35,15 @@ public class MeleeWeaponsSelector : MonoBehaviour
         gameObject.SetActive(isActive);
     }
 
-    
+
     private void SetActiveWeapon(int weaponIndex)
     {
 
-        foreach (GameObject weapon in meleeWeapons)
+        foreach (GameObject weapon in rangedWeapons)
         {
             weapon.SetActive(false);
         }
 
-        meleeWeapons[weaponIndex].SetActive(true);
+        rangedWeapons[weaponIndex].SetActive(true);
     }
 }
