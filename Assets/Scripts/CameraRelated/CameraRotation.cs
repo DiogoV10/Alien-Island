@@ -11,10 +11,11 @@ public class CameraRotation : MonoBehaviour
     private bool rotLeft;
     private bool rotRight;
     private InputSystem inputSystem;
-    private Rigidbody rigidbody;
+    [SerializeField] private Transform target;
+    private float distanceFromTarget = 36f;
+ 
     void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
@@ -41,6 +42,7 @@ public class CameraRotation : MonoBehaviour
     {
         RotateCameraLeft();
         RotateCameraRight();
+        transform.position = target.position - transform.forward * distanceFromTarget;
     }
 
     void RotateCameraLeft()
@@ -49,7 +51,7 @@ public class CameraRotation : MonoBehaviour
         {
             float x = transform.eulerAngles.x;
             float y = transform.eulerAngles.y;
-            rigidbody.rotation = Quaternion.Euler(new Vector3(x, y - (cameraRotationSpeed * Time.fixedDeltaTime)));
+            transform.RotateAround(target.position, Vector3.up, cameraRotationSpeed * Time.deltaTime);
         }
         
     }
@@ -60,7 +62,7 @@ public class CameraRotation : MonoBehaviour
         {
             float x = transform.eulerAngles.x;
             float y = transform.eulerAngles.y;
-            rigidbody.rotation = Quaternion.Euler(new Vector3(x, y + (cameraRotationSpeed * Time.fixedDeltaTime))); ;
+            transform.RotateAround(target.position, Vector3.down, cameraRotationSpeed * Time.deltaTime);
         }
     }
 }
