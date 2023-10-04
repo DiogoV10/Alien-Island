@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using V10;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -23,25 +24,26 @@ public class PlayerCombat : MonoBehaviour
 
     private void Start()
     {
+        GameInput.Instance.OnAttackMeleeAction += GameInput_OnAttackMeleeAction;
+
         animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         animator.runtimeAnimatorController = animatorOverrideController;
-    }                                    
+    }
+
+    private void GameInput_OnAttackMeleeAction(object sender, System.EventArgs e)
+    {
+        if (canAttack)
+        {
+            buttonPressed = true;
+            canAttack = false;
+        }
+    }
 
     private void Update()
     {
         if (nextAttack && buttonPressed)
         {
             Attack();
-        }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if (canAttack)
-            {
-                buttonPressed = true;
-                canAttack = false;
-                
-            }
         }
 
         ExitAttack();
