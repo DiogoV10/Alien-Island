@@ -637,6 +637,16 @@ PrefabInstance:
       propertyPath: follow
       value: 
       objectReference: {fileID: 349345623}
+    - target: {fileID: 4178152021638574490, guid: 4bc4401eb728443409ecd839b202550a,
+        type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4178152021638574490, guid: 4bc4401eb728443409ecd839b202550a,
+        type: 3}
+      propertyPath: m_CullingMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5108116066315328292, guid: 4bc4401eb728443409ecd839b202550a,
         type: 3}
       propertyPath: gameInput
