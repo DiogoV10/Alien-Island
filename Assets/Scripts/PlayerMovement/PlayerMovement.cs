@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isRunning = false;
+    private bool isWalking = false;
     private bool isDashing = false;
 
     [Header("Dash")]
@@ -66,7 +67,6 @@ public class PlayerMovement : MonoBehaviour
         else if(isDashing == false) MovePlayer();
         //Debug.Log(rigidBody.velocity.y);
 
-
     }
 
     void MovePlayer()
@@ -114,6 +114,21 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
         }
 
+        if (direction == Vector2.zero)
+            isWalking = false;
+        else
+            isWalking = true;
+
         return movementDirection;
+    }
+
+    public bool IsRunning()
+    {
+        return isRunning;
+    }
+
+    public bool IsWalking()
+    {
+        return isWalking;
     }
 }

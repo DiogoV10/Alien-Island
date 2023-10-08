@@ -66,7 +66,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             ],
             ""bindings"": [
                 {
-                    ""name"": ""2D Vector"",
+                    ""name"": ""WASD"",
                     ""id"": ""e60c246e-05ef-43d2-b4b6-69ba872156cd"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
@@ -202,6 +202,34 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Combat"",
+            ""id"": ""cd7916f1-9349-45d1-a0de-84c3ee729780"",
+            ""actions"": [
+                {
+                    ""name"": ""AttackMelee"",
+                    ""type"": ""Button"",
+                    ""id"": ""a17385d1-0c3a-48fc-98a0-dfe1a88f51eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""1f1c8283-da50-4754-a53c-88e95775849a"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AttackMelee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -216,6 +244,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_CamRotLeft = m_Camera.FindAction("CamRotLeft", throwIfNotFound: true);
         m_Camera_CamRotRight = m_Camera.FindAction("CamRotRight", throwIfNotFound: true);
+        // Combat
+        m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
+        m_Combat_AttackMelee = m_Combat.FindAction("AttackMelee", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -397,6 +428,52 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         }
     }
     public CameraActions @Camera => new CameraActions(this);
+
+    // Combat
+    private readonly InputActionMap m_Combat;
+    private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
+    private readonly InputAction m_Combat_AttackMelee;
+    public struct CombatActions
+    {
+        private @InputSystem m_Wrapper;
+        public CombatActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
+        public InputAction @AttackMelee => m_Wrapper.m_Combat_AttackMelee;
+        public InputActionMap Get() { return m_Wrapper.m_Combat; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CombatActions set) { return set.Get(); }
+        public void AddCallbacks(ICombatActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CombatActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CombatActionsCallbackInterfaces.Add(instance);
+            @AttackMelee.started += instance.OnAttackMelee;
+            @AttackMelee.performed += instance.OnAttackMelee;
+            @AttackMelee.canceled += instance.OnAttackMelee;
+        }
+
+        private void UnregisterCallbacks(ICombatActions instance)
+        {
+            @AttackMelee.started -= instance.OnAttackMelee;
+            @AttackMelee.performed -= instance.OnAttackMelee;
+            @AttackMelee.canceled -= instance.OnAttackMelee;
+        }
+
+        public void RemoveCallbacks(ICombatActions instance)
+        {
+            if (m_Wrapper.m_CombatActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(ICombatActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CombatActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CombatActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public CombatActions @Combat => new CombatActions(this);
     public interface IMovementActions
     {
         void OnMove(InputAction.CallbackContext context);
@@ -408,5 +485,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     {
         void OnCamRotLeft(InputAction.CallbackContext context);
         void OnCamRotRight(InputAction.CallbackContext context);
+    }
+    public interface ICombatActions
+    {
+        void OnAttackMelee(InputAction.CallbackContext context);
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RangedWeaponsSwap : MonoBehaviour
@@ -10,7 +8,7 @@ public class RangedWeaponsSwap : MonoBehaviour
     [Header("Swap Key")]
     [SerializeField] private KeyCode swapKey;
 
-    [HideInInspector] public int lastSelectedWeaponIndex;
+    private int lastSelectedWeaponIndex;
     private bool isSelectorActive = true;
 
     void Start()
@@ -19,13 +17,13 @@ public class RangedWeaponsSwap : MonoBehaviour
         SetActiveWeapon(lastSelectedWeaponIndex);
     }
 
-    
     void Update()
     {
         if (isSelectorActive && Input.GetKeyDown(swapKey))
         {
             lastSelectedWeaponIndex = (lastSelectedWeaponIndex + 1) % rangedWeapons.Length;
             SetActiveWeapon(lastSelectedWeaponIndex);
+            Debug.Log("Ranged Weapon Selected: " + GetActiveWeaponName());
         }
     }
 
@@ -35,15 +33,42 @@ public class RangedWeaponsSwap : MonoBehaviour
         gameObject.SetActive(isActive);
     }
 
-
     private void SetActiveWeapon(int weaponIndex)
     {
-
         foreach (GameObject weapon in rangedWeapons)
         {
             weapon.SetActive(false);
         }
 
         rangedWeapons[weaponIndex].SetActive(true);
+    }
+
+    public bool IsActive()
+    {
+        return isSelectorActive;
+    }
+
+    public string GetActiveWeaponName()
+    {
+        if (lastSelectedWeaponIndex >= 0 && lastSelectedWeaponIndex < rangedWeapons.Length)
+        {
+            GameObject activeWeapon = rangedWeapons[lastSelectedWeaponIndex];
+            if (activeWeapon != null)
+            {
+                return activeWeapon.name;
+            }
+        }
+        return "Nenhuma arma ativa";
+    }
+
+    public int GetWeaponCount()
+    {
+        return rangedWeapons.Length;
+    }
+
+    public void SwitchToWeapon(int weaponIndex)
+    {
+        lastSelectedWeaponIndex = Mathf.Clamp(weaponIndex, 0, rangedWeapons.Length - 1);
+        SetActiveWeapon(lastSelectedWeaponIndex);
     }
 }

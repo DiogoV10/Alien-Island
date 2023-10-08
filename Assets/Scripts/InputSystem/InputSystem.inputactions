@@ -44,7 +44,7 @@
             ],
             "bindings": [
                 {
-                    "name": "2D Vector",
+                    "name": "WASD",
                     "id": "e60c246e-05ef-43d2-b4b6-69ba872156cd",
                     "path": "2DVector",
                     "interactions": "",
@@ -176,6 +176,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "CamRotRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Combat",
+            "id": "cd7916f1-9349-45d1-a0de-84c3ee729780",
+            "actions": [
+                {
+                    "name": "AttackMelee",
+                    "type": "Button",
+                    "id": "a17385d1-0c3a-48fc-98a0-dfe1a88f51eb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1f1c8283-da50-4754-a53c-88e95775849a",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AttackMelee",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

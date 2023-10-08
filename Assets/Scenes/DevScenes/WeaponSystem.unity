@@ -479,7 +479,6 @@ MonoBehaviour:
   - {fileID: 1093036704}
   - {fileID: 1277691457}
   swapKey: 50
-  lastSelectedWeaponIndex: 0
 --- !u!1 &816201613
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +531,6 @@ MonoBehaviour:
   - {fileID: 1688111837}
   - {fileID: 1900433124}
   swapKey: 49
-  lastSelectedWeaponIndex: 0
 --- !u!1 &1093036704
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,11 +757,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0d516041c3523468dbc5370a42728f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponsSystem:
-  - {fileID: 816201614}
-  - {fileID: 404899262}
-  keys: 4301000044010000
+  meleeSystemKey: 323
+  rangedSystemKey: 324
   switchTime: 1
+  meleeWeaponsSelector: {fileID: 816201615}
+  rangedWeaponsSelector: {fileID: 404899263}
 --- !u!1 &1688111837
 GameObject:
   m_ObjectHideFlags: 0
