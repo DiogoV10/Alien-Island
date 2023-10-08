@@ -5,14 +5,20 @@ using UnityEngine.InputSystem;
 public class Dash : MonoBehaviour
 {
     private InputSystem inputSystem;
+    private InputAction mov;
+    private PlayerInput playerInput;
     private Rigidbody rigidBody;
-    [SerializeField] float dashTime;
-    [SerializeField] float dashSpeed;
+    [SerializeField] private Camera follow;
+    [SerializeField] private float dashTime;
+    [SerializeField] private float dashSpeed;
+    [SerializeField] private float rotationSpeed = 10f;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rigidBody = GetComponent<Rigidbody>();
+        playerInput = GetComponent<PlayerInput>();
+        mov = playerInput.actions.FindAction("Move");
     }
 
     private void OnEnable()
@@ -35,21 +41,37 @@ public class Dash : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
         
-    }
+    //}
 
     IEnumerator Dashing()
     {
         float startTime = Time.time;
+        Vector3 movementDirection = SyncWithCameraRotation();
         Debug.Log("1");
 
-        while(Time.time < startTime + dashTime)
+        while (Time.time < startTime + dashTime)
         {
-            rigidBody.MovePosition(transform.position * dashSpeed * Time.fixedDeltaTime);
             Debug.Log("2");
+            rigidBody.velocity = movementDirection * dashSpeed;
+            Debug.Log(rigidBody.velocity);
             yield return null;
         }
+    }
+
+    Vector3 SyncWithCameraRotation()
+    {
+        Vector2 direction = mov.ReadValue<Vector2>();
+        Vector3 movementInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
+        Vector3 movementDirection = movementInput.normalized;
+        if (movementDirection != Vector3.zero)
+        {
+            Quaternion desiredRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        return movementDirection;
     }
 }

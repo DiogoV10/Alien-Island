@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     // Start is called before the first frame update
     private PlayerInput playerInput;
-    private InputAction mov, run, dash;
+    private InputAction mov, dash;
     private InputSystem inputSystem;
     private Rigidbody rigidBody;
     [SerializeField] private Camera follow;
@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isRunning = false;
+    private bool isDashing = false;
 
     [Header("Dash")]
     [SerializeField] float dashTime;
@@ -62,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
         isGrouded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
         if (isRunning) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
-        else MovePlayer();
+        else if(isDashing == false) MovePlayer();
         //Debug.Log(rigidBody.velocity.y);
 
 
@@ -90,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator Dashing()
     {
+        isDashing = true;
         float startTime = Time.time;
         Vector3 movementDirection = SyncWithCameraRotation();
 
@@ -97,7 +99,8 @@ public class PlayerMovement : MonoBehaviour
         {
             rigidBody.MovePosition(transform.position + movementDirection * Time.deltaTime * dashSpeed); ;
             yield return null;
-        } 
+            isDashing = false;
+        }
     }
 
     Vector3 SyncWithCameraRotation()
