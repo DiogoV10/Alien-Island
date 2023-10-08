@@ -1,79 +1,67 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponSelector : MonoBehaviour
 {
-
-    [Header("Weapons Systems")]
-    [SerializeField] private Transform[] weaponsSystem;
-
     [Header("Systems Keys")]
-    [SerializeField] private KeyCode[] keys;
+    [SerializeField] private KeyCode meleeSystemKey;
+    [SerializeField] private KeyCode rangedSystemKey;
 
     [Header("Misc")]
     [SerializeField] private float switchTime;
 
-    private int selectedSystem;
-    private float timeSinceLastSystemSwitch;
-    
-    void Start()
+    public MeleeWeaponsSelector meleeWeaponsSelector;
+    public RangedWeaponsSwap rangedWeaponsSelector;
+
+    private float timeSinceLastWeaponSwitch;
+
+    private int meleeWeaponIndex = 0;
+    private int rangedWeaponIndex = 0;
+
+    private void Start()
     {
-        SetSystems();
-        SelectSystem(selectedSystem);
-        timeSinceLastSystemSwitch = 0f;
+        SelectSystem(0); 
+        timeSinceLastWeaponSwitch = 0f;
     }
 
-    
-    void Update()
+    private void Update()
     {
-        int previousSelectedSystem = selectedSystem;
+        timeSinceLastWeaponSwitch += Time.deltaTime;
 
-        for(int i = 0; i < keys.Length; i++)
+        if (Input.GetKeyDown(meleeSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
         {
-            if (Input.GetKeyDown(keys[i]) && timeSinceLastSystemSwitch >= switchTime) selectedSystem = i;
+            SelectSystem(0); 
+        }
+        else if (Input.GetKeyDown(rangedSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
+        {
+            SelectSystem(1); 
         }
 
-        if(previousSelectedSystem != selectedSystem) SelectSystem(selectedSystem);
-
-        timeSinceLastSystemSwitch += Time.deltaTime;
-    }
-
-    public bool IsSwitching => timeSinceLastSystemSwitch != 0;
-
-    public void SetSystems()
-    {
-        weaponsSystem = new Transform[transform.childCount];
-
-        for (int i = 0; i < transform.childCount; i++)
+        if (Input.GetKeyDown(KeyCode.Alpha1) && meleeWeaponsSelector.IsActive())
         {
-            weaponsSystem[i] = transform.GetChild(i);
+            meleeWeaponIndex = (meleeWeaponIndex + 1) % meleeWeaponsSelector.GetWeaponCount();
+            meleeWeaponsSelector.SwitchToWeapon(meleeWeaponIndex);
         }
-
-        if (keys == null) keys = new KeyCode[weaponsSystem.Length];
-
-        for(int i = 0; i < keys.Length; ++i)
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && rangedWeaponsSelector.IsActive())
         {
-            Debug.Log(weaponsSystem[i]);
-            Debug.Log(i);
+            rangedWeaponIndex = (rangedWeaponIndex + 1) % rangedWeaponsSelector.GetWeaponCount();
+            rangedWeaponsSelector.SwitchToWeapon(rangedWeaponIndex);
         }
     }
 
     private void SelectSystem(int systemIndex)
-    {   
-        for(int i = 0; i < weaponsSystem.Length; i++)
-        {
-            weaponsSystem[i].gameObject.SetActive(i == systemIndex);
-        }
+    {
+        meleeWeaponsSelector.SetActive(systemIndex == 0);
+        rangedWeaponsSelector.SetActive(systemIndex == 1);
 
-        timeSinceLastSystemSwitch = 0f;
+        timeSinceLastWeaponSwitch = 0f;
 
-        OnSystemSelected();
+        OnSystemSelected(systemIndex);
     }
 
-    private void OnSystemSelected()
+    private void OnSystemSelected(int systemIndex)
     {
-
+        
     }
 }
