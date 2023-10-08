@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
             inputSystem = new InputSystem();
             inputSystem.Movement.Jump.performed += i => Jump(); 
             inputSystem.Movement.Run.performed += i => isRunning = !isRunning; 
-            inputSystem.Movement.Dash.performed += i => StartCoroutine(Dashing()); 
+            //inputSystem.Movement.Dash.performed += i => StartCoroutine(Dashing()); 
         }
 
         inputSystem.Enable();
@@ -64,8 +64,7 @@ public class PlayerMovement : MonoBehaviour
         isGrouded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
         if (isRunning) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
-        else if(isDashing == false) MovePlayer();
-        //Debug.Log(rigidBody.velocity.y);
+        else MovePlayer();
 
     }
 
@@ -115,7 +114,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (direction == Vector2.zero)
+        {
             isWalking = false;
+            isRunning = false;
+        }
+            
         else
             isWalking = true;
 
