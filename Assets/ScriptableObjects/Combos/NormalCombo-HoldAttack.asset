@@ -16,4 +16,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 01f13ea355d9992478940c349d963868, type: 2}
   comboType: 1
   weaponName: AllMelee
-  nextComboDelay: 2
+  nextComboDelay: 0.5
