@@ -95,6 +95,7 @@ public class PlayerCombat : MonoBehaviour
             buttonPressed = true;
             canChangeCombo = false;
             isMelee = true;
+            isAttacking = true;
 
             canAttack = false;
         }
@@ -114,13 +115,13 @@ public class PlayerCombat : MonoBehaviour
             ExitCombo();
         }
 
-        //Debug.Log(comboCounter);
-        //Debug.Log(currentCombo.comboType.ToString());
+        Debug.Log(isAttacking);
+        Debug.Log(canAttack);
     }
 
     void Attack()
     {
-        if (!animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot"))
+        if (!animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
             isAttacking = true;
 
         if (isExitingCombo)
@@ -130,13 +131,14 @@ public class PlayerCombat : MonoBehaviour
             isExitingCombo = false;
         }
 
-
         if (clipNumber > 2)
             clipNumber = 1;
 
         animatorOverrideController["Attack" + clipNumber] = currentCombo.combo[comboCounter].animationClip;
 
-        animator.Play("Attack" + clipNumber, 0, 0);
+
+        animator.CrossFade("Attack" + clipNumber, 0.2f);
+        //animator.Play("Attack" + clipNumber, 0, 0);
         //weapon.damage = combo[comboCounter].damage;
 
         nextAttack = false;
@@ -147,6 +149,7 @@ public class PlayerCombat : MonoBehaviour
     public void NextAttack()
     { 
         nextAttack = true;
+        isMelee = false;
     }
 
     void ChangeCombo()
@@ -185,11 +188,9 @@ public class PlayerCombat : MonoBehaviour
             comboCounter++;
         }
 
-        //Debug.Log("CanAttack");
         canAttack = true;
         buttonPressed = false;
         nextAttack = false;
-        isMelee = false;
     }
 
     public void CanShoot()
@@ -199,8 +200,6 @@ public class PlayerCombat : MonoBehaviour
 
     void EndCombo()
     {
-        Debug.Log("End");
-
         isMelee = false;
         canAttack = true;
         buttonPressed = false;
@@ -208,8 +207,6 @@ public class PlayerCombat : MonoBehaviour
         comboCounter = 0;
         isExitingCombo = false;
         canChangeCombo = false;
-
-        //Debug.Log("Combo Reset: " + comboCounter);
 
         currentCombo = availableCombos[0];
     }
@@ -222,7 +219,6 @@ public class PlayerCombat : MonoBehaviour
             EndCombo();
             endCombo = true;
         }
-        
     }
 
     private void HasAnimationEnded()
@@ -231,9 +227,6 @@ public class PlayerCombat : MonoBehaviour
             isAttacking = true;
         else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot"))
             isAttacking = false;
-
-        Debug.Log(animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot"));
-        Debug.Log(isAttacking);
     }
 
     public bool IsAttacking()
@@ -241,8 +234,8 @@ public class PlayerCombat : MonoBehaviour
         return isAttacking;
     }
 
-    public bool CanChangeWeapon()
+    public bool IsMelee()
     {
-        return canShoot;
+        return isMelee;
     }
 }
