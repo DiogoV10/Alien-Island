@@ -15,4 +15,4 @@ MonoBehaviour:
   attackName: Normal Attack 3
   animationClip: {fileID: 7400000, guid: 156595849962d75428f12a5cb4ee463c, type: 2}
   damage: 10
-  nextAttackDelay: 2
+  nextAttackDelay: 0.5

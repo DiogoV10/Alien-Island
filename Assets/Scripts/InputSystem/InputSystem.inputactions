@@ -191,7 +191,16 @@
                     "id": "a17385d1-0c3a-48fc-98a0-dfe1a88f51eb",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "SlowTap",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AttackMeleeHold",
+                    "type": "Button",
+                    "id": "313e66e6-0e2c-4fb5-808d-42a285bab69c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold",
                     "initialStateCheck": false
                 }
             ],
@@ -204,6 +213,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "AttackMelee",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f35bd4ba-6bc2-4548-99e3-136ca83d5e93",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AttackMeleeHold",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

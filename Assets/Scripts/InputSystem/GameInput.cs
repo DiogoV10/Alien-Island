@@ -19,6 +19,7 @@ namespace V10
 
 
         public event EventHandler OnAttackMeleeAction;
+        public event EventHandler OnAttackMeleeHoldAction;
         public event EventHandler OnJumpAction;
 
 
@@ -54,8 +55,14 @@ namespace V10
             playerInputActions.Camera.Enable();
             playerInputActions.Combat.Enable();
 
-            playerInputActions.Combat.AttackMelee.performed += AttackMelee_performed;
+            playerInputActions.Combat.AttackMelee.canceled += AttackMelee_canceled;
+            playerInputActions.Combat.AttackMeleeHold.performed += AttackMeleeHold_performed;
             playerInputActions.Movement.Jump.performed += Jump_performed;
+        }
+
+        private void AttackMeleeHold_performed(InputAction.CallbackContext obj)
+        {
+            OnAttackMeleeHoldAction?.Invoke(this, EventArgs.Empty);
         }
 
         private void Jump_performed(InputAction.CallbackContext obj)
@@ -63,7 +70,7 @@ namespace V10
             OnJumpAction?.Invoke(this, EventArgs.Empty);
         }
 
-        private void AttackMelee_performed(InputAction.CallbackContext obj)
+        private void AttackMelee_canceled(InputAction.CallbackContext obj)
         {
             OnAttackMeleeAction?.Invoke(this, EventArgs.Empty);
         }

@@ -5,6 +5,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+
+
+    public static PlayerMovement Instance { get; private set; }
+
+
     // Start is called before the first frame update
     private PlayerInput playerInput;
     private InputAction mov, dash;
@@ -34,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
+
         rigidBody = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
         mov = playerInput.actions.FindAction("Move");
@@ -62,9 +69,9 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         isGrouded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
-        if (isRunning) Run();
+        if (isRunning && !PlayerCombat.Instance.IsAttacking()) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
-        else MovePlayer();
+        else if (!PlayerCombat.Instance.IsAttacking()) MovePlayer();
 
     }
 

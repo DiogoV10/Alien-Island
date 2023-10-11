@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Attacks/Normal Attack")]
+[CreateAssetMenu(menuName = "Combat/Attack")]
 public class AttackSO : ScriptableObject
 {
     public string attackName;

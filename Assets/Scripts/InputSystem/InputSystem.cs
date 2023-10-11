@@ -213,7 +213,16 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""id"": ""a17385d1-0c3a-48fc-98a0-dfe1a88f51eb"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""SlowTap"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AttackMeleeHold"",
+                    ""type"": ""Button"",
+                    ""id"": ""313e66e6-0e2c-4fb5-808d-42a285bab69c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 }
             ],
@@ -226,6 +235,17 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""AttackMelee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f35bd4ba-6bc2-4548-99e3-136ca83d5e93"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AttackMeleeHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -247,6 +267,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         // Combat
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_AttackMelee = m_Combat.FindAction("AttackMelee", throwIfNotFound: true);
+        m_Combat_AttackMeleeHold = m_Combat.FindAction("AttackMeleeHold", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -433,11 +454,13 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Combat;
     private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
     private readonly InputAction m_Combat_AttackMelee;
+    private readonly InputAction m_Combat_AttackMeleeHold;
     public struct CombatActions
     {
         private @InputSystem m_Wrapper;
         public CombatActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @AttackMelee => m_Wrapper.m_Combat_AttackMelee;
+        public InputAction @AttackMeleeHold => m_Wrapper.m_Combat_AttackMeleeHold;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -450,6 +473,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackMelee.started += instance.OnAttackMelee;
             @AttackMelee.performed += instance.OnAttackMelee;
             @AttackMelee.canceled += instance.OnAttackMelee;
+            @AttackMeleeHold.started += instance.OnAttackMeleeHold;
+            @AttackMeleeHold.performed += instance.OnAttackMeleeHold;
+            @AttackMeleeHold.canceled += instance.OnAttackMeleeHold;
         }
 
         private void UnregisterCallbacks(ICombatActions instance)
@@ -457,6 +483,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackMelee.started -= instance.OnAttackMelee;
             @AttackMelee.performed -= instance.OnAttackMelee;
             @AttackMelee.canceled -= instance.OnAttackMelee;
+            @AttackMeleeHold.started -= instance.OnAttackMeleeHold;
+            @AttackMeleeHold.performed -= instance.OnAttackMeleeHold;
+            @AttackMeleeHold.canceled -= instance.OnAttackMeleeHold;
         }
 
         public void RemoveCallbacks(ICombatActions instance)
@@ -489,5 +518,6 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     public interface ICombatActions
     {
         void OnAttackMelee(InputAction.CallbackContext context);
+        void OnAttackMeleeHold(InputAction.CallbackContext context);
     }
 }

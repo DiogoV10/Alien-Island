@@ -161,7 +161,7 @@ Transform:
   m_GameObject: {fileID: 188611800}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.14503503, y: 1.4167371, z: 1.7364273}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraRotationSpeed: 100
-  target: {fileID: 1672941282}
+  target: {fileID: 2267500692035113733}
 --- !u!114 &349345621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,21 +637,6 @@ PrefabInstance:
       propertyPath: follow
       value: 
       objectReference: {fileID: 349345623}
-    - target: {fileID: 4178152021638574490, guid: 4bc4401eb728443409ecd839b202550a,
-        type: 3}
-      propertyPath: m_UpdateMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4178152021638574490, guid: 4bc4401eb728443409ecd839b202550a,
-        type: 3}
-      propertyPath: m_CullingMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5108116066315328292, guid: 4bc4401eb728443409ecd839b202550a,
-        type: 3}
-      propertyPath: gameInput
-      value: 
-      objectReference: {fileID: 188611801}
     - target: {fileID: 5295899729647019625, guid: 4bc4401eb728443409ecd839b202550a,
         type: 3}
       propertyPath: m_Camera
@@ -812,12 +797,6 @@ MonoBehaviour:
   m_YawDamping: 0
   m_RollDamping: 0
   m_AngularDamping: 0
---- !u!4 &1672941282 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2267500692941273117, guid: 4bc4401eb728443409ecd839b202550a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1308879640}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1727135108
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +869,12 @@ Transform:
   - {fileID: 1450123494}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2267500692035113733 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2267500692941273117, guid: 4bc4401eb728443409ecd839b202550a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1308879640}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
