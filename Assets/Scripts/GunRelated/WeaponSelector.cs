@@ -40,8 +40,6 @@ public class WeaponSelector : MonoBehaviour
     {
         timeSinceLastWeaponSwitch += Time.deltaTime;
 
-        //Debug.Log("Yes");
-
         //if (Input.GetKeyDown(meleeSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
         //{
         //    SelectSystem(0); 
