@@ -23,6 +23,7 @@ public class PlayerCombat : MonoBehaviour
 
     private int comboCounter;
     private int clipNumber = 1;
+
     private bool canAttack = true;
     private bool nextAttack = true;
     private bool buttonPressed = false;
@@ -30,6 +31,8 @@ public class PlayerCombat : MonoBehaviour
     private bool endCombo = false;
     private bool isAttacking = false;
     private bool canChangeCombo = false;
+    private bool canShoot = true;
+    private bool isMelee = false;
 
     private AnimatorOverrideController animatorOverrideController;
 
@@ -44,6 +47,7 @@ public class PlayerCombat : MonoBehaviour
     {
         GameInput.Instance.OnAttackMeleeAction += GameInput_OnAttackMeleeAction;
         GameInput.Instance.OnAttackMeleeHoldAction += GameInput_OnAttackMeleeHoldAction;
+        GameInput.Instance.OnAttackRangeAction += GameInput_OnAttackRangeAction;
 
         animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         animator.runtimeAnimatorController = animatorOverrideController;
@@ -51,10 +55,29 @@ public class PlayerCombat : MonoBehaviour
         currentCombo = availableCombos[0];
     }
 
+    private void GameInput_OnAttackRangeAction(object sender, System.EventArgs e)
+    {
+        if (canAttack && canShoot)
+        {
+            animator.SetTrigger("Shoot");
+            WeaponSelector.Instance.ChangeSystem(1);
+
+            buttonPressed = false;
+            isAttacking = false;
+            isMelee = false;
+
+            ExitCombo();
+
+            canShoot = false;
+        }
+    }
+
     private void GameInput_OnAttackMeleeHoldAction(object sender, System.EventArgs e)
     {
         if (canAttack && canChangeCombo)
         {
+            WeaponSelector.Instance.ChangeSystem(0);
+
             buttonPressed = true;
             canAttack = false;
             nextCombo = availableCombos[1];
@@ -64,11 +87,15 @@ public class PlayerCombat : MonoBehaviour
 
     private void GameInput_OnAttackMeleeAction(object sender, System.EventArgs e)
     {
-        if (canAttack && currentCombo.comboType == ComboType.Normal)
+        if (canAttack && currentCombo.comboType == ComboType.Normal && canShoot)
         {
+            WeaponSelector.Instance.ChangeSystem(0);
+
             buttonPressed = true;
-            canAttack = false;
             canChangeCombo = false;
+            isMelee = true;
+
+            canAttack = false;
         }
     }
 
@@ -86,13 +113,14 @@ public class PlayerCombat : MonoBehaviour
             ExitCombo();
         }
 
-        Debug.Log(comboCounter);
-        Debug.Log(currentCombo.comboType.ToString());
+        //Debug.Log(comboCounter);
+        //Debug.Log(currentCombo.comboType.ToString());
     }
 
     void Attack()
     {
-        isAttacking = true;
+        if (!animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot"))
+            isAttacking = true;
 
         if (isExitingCombo)
         {
@@ -160,12 +188,19 @@ public class PlayerCombat : MonoBehaviour
         canAttack = true;
         buttonPressed = false;
         nextAttack = false;
+        isMelee = false;
+    }
+
+    public void CanShoot()
+    {
+        canShoot = true;
     }
 
     void EndCombo()
     {
         Debug.Log("End");
 
+        isMelee = false;
         canAttack = true;
         buttonPressed = false;
         nextAttack = true;
@@ -191,14 +226,22 @@ public class PlayerCombat : MonoBehaviour
 
     private void HasAnimationEnded()
     {
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-            isAttacking = false;
-        else
+        if (isMelee)
             isAttacking = true;
+        else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot"))
+            isAttacking = false;
+
+        Debug.Log(animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot"));
+        Debug.Log(isAttacking);
     }
 
     public bool IsAttacking()
     {
         return isAttacking;
+    }
+
+    public bool CanChangeWeapon()
+    {
+        return canShoot;
     }
 }

@@ -20,6 +20,7 @@ namespace V10
 
         public event EventHandler OnAttackMeleeAction;
         public event EventHandler OnAttackMeleeHoldAction;
+        public event EventHandler OnAttackRangeAction;
         public event EventHandler OnJumpAction;
 
 
@@ -57,7 +58,13 @@ namespace V10
 
             playerInputActions.Combat.AttackMelee.canceled += AttackMelee_canceled;
             playerInputActions.Combat.AttackMeleeHold.performed += AttackMeleeHold_performed;
+            playerInputActions.Combat.AttackRange.canceled += AttackRange_canceled;
             playerInputActions.Movement.Jump.performed += Jump_performed;
+        }
+
+        private void AttackRange_canceled(InputAction.CallbackContext obj)
+        {
+            OnAttackRangeAction?.Invoke(this, EventArgs.Empty);
         }
 
         private void AttackMeleeHold_performed(InputAction.CallbackContext obj)
