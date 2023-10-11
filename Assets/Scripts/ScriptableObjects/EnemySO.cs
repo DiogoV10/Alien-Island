@@ -8,6 +8,7 @@ public class EnemySO : ScriptableObject
     [Header("Enemy Info")]
     public string enemyName;
     public float enemyHP;
+    public float speed;
 
     [Header("Attack Info")]
     public float damageAmount;
