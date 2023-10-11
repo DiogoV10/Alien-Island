@@ -15,4 +15,5 @@ public class EnemySO : ScriptableObject
     public float attackRange;
     public float sightRange;
     public float fireRate;
+    public float timeBetweenAttacks;
 }
