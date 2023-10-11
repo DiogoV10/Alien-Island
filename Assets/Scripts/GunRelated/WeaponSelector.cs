@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class WeaponSelector : MonoBehaviour
 {
+
+
+    public static WeaponSelector Instance { get; private set; }
+
+
     [Header("Systems Keys")]
     [SerializeField] private KeyCode meleeSystemKey;
     [SerializeField] private KeyCode rangedSystemKey;
@@ -19,6 +24,12 @@ public class WeaponSelector : MonoBehaviour
     private int meleeWeaponIndex = 0;
     private int rangedWeaponIndex = 0;
 
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         SelectSystem(0); 
@@ -29,14 +40,16 @@ public class WeaponSelector : MonoBehaviour
     {
         timeSinceLastWeaponSwitch += Time.deltaTime;
 
-        if (Input.GetKeyDown(meleeSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
-        {
-            SelectSystem(0); 
-        }
-        else if (Input.GetKeyDown(rangedSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
-        {
-            SelectSystem(1); 
-        }
+        //Debug.Log("Yes");
+
+        //if (Input.GetKeyDown(meleeSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
+        //{
+        //    SelectSystem(0); 
+        //}
+        //else if (Input.GetKeyDown(rangedSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
+        //{
+        //    SelectSystem(1); 
+        //}
 
         if (Input.GetKeyDown(KeyCode.Alpha1) && meleeWeaponsSelector.IsActive())
         {
@@ -63,5 +76,10 @@ public class WeaponSelector : MonoBehaviour
     private void OnSystemSelected(int systemIndex)
     {
         
+    }
+
+    public void ChangeSystem(int systemIndex)
+    {
+        SelectSystem(systemIndex);
     }
 }

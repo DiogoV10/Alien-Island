@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a3c32ae5dab59a428afb259a3b09b49, type: 3}
-  m_Name: Enemy1
+  m_Script: {fileID: 11500000, guid: b6c14c1a4a403334fa6cda0f71b9da13, type: 3}
+  m_Name: RangeAttack
   m_EditorClassIdentifier: 
-  enemyName: 
-  enemyHP: 100
-  speed: 5
-  damageAmount: 20
-  attackRange: 1
-  sightRange: 50
-  timeBetweenAttacks: 1
+  attackName: 
+  animationClip: {fileID: 0}
+  damage: 0
+  nextAttackDelay: 0

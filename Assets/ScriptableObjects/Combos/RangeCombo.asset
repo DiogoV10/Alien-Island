@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a3c32ae5dab59a428afb259a3b09b49, type: 3}
-  m_Name: Enemy1
+  m_Script: {fileID: 11500000, guid: d6c7998f343c1834e9cb9b47293af3ca, type: 3}
+  m_Name: RangeCombo
   m_EditorClassIdentifier: 
-  enemyName: 
-  enemyHP: 100
-  speed: 5
-  damageAmount: 20
-  attackRange: 1
-  sightRange: 50
-  timeBetweenAttacks: 1
+  combo: []
+  comboType: 3
+  weaponName: AllRange
+  nextComboDelay: 0

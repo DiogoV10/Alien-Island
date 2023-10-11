@@ -224,6 +224,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AttackRange"",
+                    ""type"": ""Button"",
+                    ""id"": ""eff7c75d-c4c1-4b2d-bf21-df88952fb42b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""SlowTap"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -248,6 +257,17 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""AttackMeleeHold"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6875c5a-9fd2-45a7-b80a-0f816a4e856d"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AttackRange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -268,6 +288,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_AttackMelee = m_Combat.FindAction("AttackMelee", throwIfNotFound: true);
         m_Combat_AttackMeleeHold = m_Combat.FindAction("AttackMeleeHold", throwIfNotFound: true);
+        m_Combat_AttackRange = m_Combat.FindAction("AttackRange", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -455,12 +476,14 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
     private readonly InputAction m_Combat_AttackMelee;
     private readonly InputAction m_Combat_AttackMeleeHold;
+    private readonly InputAction m_Combat_AttackRange;
     public struct CombatActions
     {
         private @InputSystem m_Wrapper;
         public CombatActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @AttackMelee => m_Wrapper.m_Combat_AttackMelee;
         public InputAction @AttackMeleeHold => m_Wrapper.m_Combat_AttackMeleeHold;
+        public InputAction @AttackRange => m_Wrapper.m_Combat_AttackRange;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -476,6 +499,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackMeleeHold.started += instance.OnAttackMeleeHold;
             @AttackMeleeHold.performed += instance.OnAttackMeleeHold;
             @AttackMeleeHold.canceled += instance.OnAttackMeleeHold;
+            @AttackRange.started += instance.OnAttackRange;
+            @AttackRange.performed += instance.OnAttackRange;
+            @AttackRange.canceled += instance.OnAttackRange;
         }
 
         private void UnregisterCallbacks(ICombatActions instance)
@@ -486,6 +512,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackMeleeHold.started -= instance.OnAttackMeleeHold;
             @AttackMeleeHold.performed -= instance.OnAttackMeleeHold;
             @AttackMeleeHold.canceled -= instance.OnAttackMeleeHold;
+            @AttackRange.started -= instance.OnAttackRange;
+            @AttackRange.performed -= instance.OnAttackRange;
+            @AttackRange.canceled -= instance.OnAttackRange;
         }
 
         public void RemoveCallbacks(ICombatActions instance)
@@ -519,5 +548,6 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     {
         void OnAttackMelee(InputAction.CallbackContext context);
         void OnAttackMeleeHold(InputAction.CallbackContext context);
+        void OnAttackRange(InputAction.CallbackContext context);
     }
 }
