@@ -6,10 +6,13 @@ public class PlayerAnimation : MonoBehaviour
 {
 
 
+    private const string IS_WALKING = "IsWalking";
     private const string IS_RUNNING = "IsRunning";
+    private const string IS_JUMPING = "IsJumping";
+    private const string IS_FALLING = "IsFalling";
+    private const string IS_LANDING = "IsLanding";
+    
 
-
-    [SerializeField] private PlayerMovement playerMovement;
     private Animator animator;
 
 
@@ -20,7 +23,11 @@ public class PlayerAnimation : MonoBehaviour
 
     private void Update()
     {
-        animator.SetBool(IS_RUNNING, playerMovement.IsWalking());
+        animator.SetBool(IS_WALKING, PlayerMovement.Instance.IsWalking());
+        animator.SetBool(IS_RUNNING, PlayerMovement.Instance.IsRunning());
+        animator.SetBool(IS_JUMPING, PlayerMovement.Instance.IsJumping());
+        animator.SetBool(IS_FALLING, PlayerMovement.Instance.IsFalling());
+        animator.SetBool(IS_LANDING, PlayerMovement.Instance.IsLanding());
     }
 
 

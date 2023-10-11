@@ -11,8 +11,10 @@ public class PlayerCombat : MonoBehaviour
 
 
     [SerializeField] private List<ComboSO> availableCombos;
-    [SerializeField] private Animator animator;
     //[SerializeField] Weapon weapon;
+
+
+    private Animator animator;
 
 
     private ComboSO currentCombo;
@@ -35,6 +37,7 @@ public class PlayerCombat : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        animator = GetComponent<Animator>();
     }
 
     private void Start()

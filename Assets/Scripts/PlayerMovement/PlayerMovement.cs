@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f;
     private bool isJumping = false;
     private bool isFalling = false;
+    private bool isLanding = false;
     private bool isRunning = false;
     private bool isWalking = false;
     private bool isDashing = false;
@@ -31,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jump")]
     [SerializeField] float jumpvalue = 1f;
-    [SerializeField] private bool isGrouded = false;
+    [SerializeField] private bool isGrounded = false;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask whatIsGround;
@@ -68,10 +69,28 @@ public class PlayerMovement : MonoBehaviour
     //Update is called once per frame
     void FixedUpdate()
     {
-        isGrouded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
         if (isRunning && !PlayerCombat.Instance.IsAttacking()) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
         else if (!PlayerCombat.Instance.IsAttacking()) MovePlayer();
+
+        if (isGrounded)
+        {
+            if (isFalling)
+            {
+                isLanding = true;
+            }
+            isJumping = false;
+            isFalling = false;
+        }
+        else
+        {
+            if (!isJumping)
+            {
+                isFalling = true;
+            }
+            isLanding = false;
+        }
 
     }
 
@@ -91,7 +110,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Jump()
     {
-        if (!isGrouded) return;
+        if (!isGrounded) return;
+        isJumping = true;
+        isFalling = false;
+        isLanding = false;
         rigidBody.AddForce(Vector3.up * jumpvalue, ForceMode.Impulse);
     }
 
@@ -140,5 +162,20 @@ public class PlayerMovement : MonoBehaviour
     public bool IsWalking()
     {
         return isWalking;
+    }
+
+    public bool IsJumping()
+    {
+        return isJumping;
+    }
+
+    public bool IsFalling()
+    {
+        return isFalling;
+    }
+
+    public bool IsLanding()
+    {
+        return isLanding;
     }
 }
