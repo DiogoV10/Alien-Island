@@ -42,6 +42,7 @@ public class MeleeWeapon : MonoBehaviour
             { 
                 enemies.Add(other);
                 Debug.Log("Hit");
+                Destroy(other.gameObject);
             }
         }
     }

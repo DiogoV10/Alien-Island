@@ -68842,8 +68842,22 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.46666667
+    functionName: CanHit
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 1.2666667
     functionName: NextAttack
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.2666667
+    functionName: CannotHit
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

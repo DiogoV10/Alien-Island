@@ -136,13 +136,13 @@ GameObject:
   - component: {fileID: 54237878}
   - component: {fileID: 54237877}
   - component: {fileID: 54237876}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &54237876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,13 +258,14 @@ GameObject:
   - component: {fileID: 183172718}
   - component: {fileID: 183172717}
   - component: {fileID: 183172716}
-  m_Layer: 0
+  - component: {fileID: 183172720}
+  m_Layer: 7
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &183172716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,6 +343,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &183172720
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183172715}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &188611800
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,13 +717,13 @@ GameObject:
   - component: {fileID: 696010233}
   - component: {fileID: 696010232}
   - component: {fileID: 696010231}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &696010231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1442,24 +1464,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1114927805 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8830202832319301517, guid: 4bc4401eb728443409ecd839b202550a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1308879640}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1114927810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1114927805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2eb354091663604f969b9158df3b25e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1308879640
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1473,11 +1477,6 @@ PrefabInstance:
       propertyPath: follow
       value: 
       objectReference: {fileID: 349345623}
-    - target: {fileID: 542073957008228373, guid: 4bc4401eb728443409ecd839b202550a,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5295899729647019625, guid: 4bc4401eb728443409ecd839b202550a,
         type: 3}
       propertyPath: m_Camera
@@ -1538,24 +1537,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRM
       objectReference: {fileID: 0}
-    - target: {fileID: 7605998346463513902, guid: 4bc4401eb728443409ecd839b202550a,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7605998346463513902, guid: 4bc4401eb728443409ecd839b202550a,
-        type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8830202832319301517, guid: 4bc4401eb728443409ecd839b202550a,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1114927810}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4bc4401eb728443409ecd839b202550a, type: 3}
 --- !u!1 &1450123493
 GameObject:
