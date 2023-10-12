@@ -34,6 +34,8 @@ public class PlayerCombat : MonoBehaviour
     private bool canChangeCombo = false;
     private bool canShoot = true;
     private bool isMelee = false;
+    private bool canJump = true;
+    private bool canRun = true;
 
     private AnimatorOverrideController animatorOverrideController;
 
@@ -63,6 +65,8 @@ public class PlayerCombat : MonoBehaviour
             animator.SetTrigger("Shoot");
             WeaponSelector.Instance.ChangeSystem(1);
 
+            PlayerMovement.Instance.ToggleFaceObject(true);
+
             buttonPressed = false;
             isAttacking = false;
             isMelee = false;
@@ -70,6 +74,7 @@ public class PlayerCombat : MonoBehaviour
             ExitCombo();
 
             canShoot = false;
+            canRun = false;
         }
     }
 
@@ -114,13 +119,13 @@ public class PlayerCombat : MonoBehaviour
         {
             ExitCombo();
         }
-
-        //Debug.Log(isAttacking);
-        //Debug.Log(canAttack);
     }
 
     void Attack()
     {
+        canJump = false;
+        canRun = true;
+
         if (!animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
             isAttacking = true;
 
@@ -137,9 +142,14 @@ public class PlayerCombat : MonoBehaviour
         animatorOverrideController["Attack" + clipNumber] = currentCombo.combo[comboCounter].animationClip;
 
 
-        animator.CrossFade("Attack" + clipNumber, 0.2f);
+        animator.Play("Attack" + clipNumber, 0, 0);
         //animator.Play("Attack" + clipNumber, 0, 0);
         //weapon.damage = combo[comboCounter].damage;
+
+        if (PlayerMovement.Instance.IsFalling())
+        {
+            PlayerMovement.Instance.AddForceOnAirAttack(2);
+        }
 
         nextAttack = false;
         buttonPressed = false;
@@ -150,6 +160,7 @@ public class PlayerCombat : MonoBehaviour
     { 
         nextAttack = true;
         isMelee = false;
+        canJump = true;
     }
 
     void ChangeCombo()
@@ -198,6 +209,12 @@ public class PlayerCombat : MonoBehaviour
         canShoot = true;
     }
 
+    public void UntoggleLockOn()
+    {
+        PlayerMovement.Instance.ToggleFaceObject(false);
+        canRun = true;
+    }
+
     void EndCombo()
     {
         isMelee = false;
@@ -207,6 +224,7 @@ public class PlayerCombat : MonoBehaviour
         comboCounter = 0;
         isExitingCombo = false;
         canChangeCombo = false;
+        canJump = true;
 
         currentCombo = availableCombos[0];
     }
@@ -237,5 +255,15 @@ public class PlayerCombat : MonoBehaviour
     public bool IsMelee()
     {
         return isMelee;
+    }
+
+    public bool CanJump()
+    {
+        return canJump;
+    }
+
+    public bool CanRun()
+    {
+        return canRun;
     }
 }

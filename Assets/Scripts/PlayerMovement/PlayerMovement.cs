@@ -19,12 +19,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float runValue = 20f;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float lockRotationSpeed = 25f;
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isLanding = false;
     private bool isRunning = false;
     private bool isWalking = false;
     private bool isDashing = false;
+
+    public bool shouldFaceObject = false; // Initially, the player won't face the specific object 
+
+
+    [SerializeField] private GameObject lockOnTarget;
 
     [Header("Dash")]
     [SerializeField] float dashTime;
@@ -70,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
-        if (isRunning && !PlayerCombat.Instance.IsAttacking()) Run();
+        if (isRunning && !PlayerCombat.Instance.IsAttacking() && PlayerCombat.Instance.CanRun()) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
         else if (!PlayerCombat.Instance.IsAttacking()) MovePlayer();
 
@@ -91,7 +97,31 @@ public class PlayerMovement : MonoBehaviour
             }
             isLanding = false;
         }
+    }
 
+    private void Update()
+    {
+        Vector2 direction = mov.ReadValue<Vector2>();
+
+        lockOnTarget = LockOn.Instance.GetLockedEnemy();
+
+        if (lockOnTarget == null)
+        {
+            shouldFaceObject = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            ToggleFaceObject(!shouldFaceObject);
+        }
+
+        if (direction == Vector2.zero)
+        {
+            isWalking = false;
+            isRunning = false;
+        }
+        else
+            isWalking = true;
     }
 
     void MovePlayer()
@@ -110,11 +140,23 @@ public class PlayerMovement : MonoBehaviour
 
     void Jump()
     {
-        if (!isGrounded) return;
+        if (!isGrounded || !PlayerCombat.Instance.CanJump()) return;
         isJumping = true;
         isFalling = false;
         isLanding = false;
         rigidBody.AddForce(Vector3.up * jumpvalue, ForceMode.Impulse);
+    }
+
+    public void AddForceOnAirAttack(float forceValue)
+    {
+        rigidBody.useGravity = false;
+        rigidBody.AddForce(Vector3.up * forceValue, ForceMode.Impulse);
+        Invoke("EnableGravity", 0.5f);
+    }
+
+    private void EnableGravity()
+    {
+        rigidBody.useGravity = true;
     }
 
     IEnumerator Dashing()
@@ -134,29 +176,55 @@ public class PlayerMovement : MonoBehaviour
     Vector3 SyncWithCameraRotation()
     {
         Vector2 direction = mov.ReadValue<Vector2>();
-        Vector3 movementInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
+        Vector3 movementInput = Vector3.zero;
         Vector3 movementDirection = movementInput.normalized;
-        if (movementDirection != Vector3.zero)
-        {
-            Quaternion desiredRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
-        }
 
-        if (direction == Vector2.zero)
+        if (shouldFaceObject && lockOnTarget != null)
         {
-            isWalking = false;
-            isRunning = false;
+             // Calculate the direction from the player to the specific object
+            Vector3 objectDirection = lockOnTarget.transform.position - transform.position;
+            objectDirection.y = 0f; // Ignore the vertical component
+            objectDirection.Normalize();
+
+            // Set the rotation of the rigidBody to face the specific object
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(objectDirection, Vector3.up), lockRotationSpeed * Time.deltaTime);
+
+            // Continue moving in the direction of the input
+            movementInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
+
+            movementDirection = movementInput.normalized;
         }
-            
         else
-            isWalking = true;
+        {
+            // Calculate direction relative to the camera
+            movementInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
+
+            movementDirection = movementInput.normalized;
+
+            if (movementDirection != Vector3.zero)
+            {
+                Quaternion desiredRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
+            }
+        }
 
         return movementDirection;
     }
 
+    public void ToggleFaceObject(bool shouldFace)
+    {
+        if (lockOnTarget != null)
+            shouldFaceObject = shouldFace;
+        else
+            shouldFaceObject = false;
+    }
+
     public bool IsRunning()
     {
-        return isRunning;
+        if (PlayerCombat.Instance.CanRun())
+            return isRunning;
+        else
+            return false;
     }
 
     public bool IsWalking()
