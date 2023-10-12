@@ -881,7 +881,7 @@ GameObject:
   - component: {fileID: 822648714}
   m_Layer: 7
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -966,7 +966,7 @@ Transform:
   m_GameObject: {fileID: 822648713}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2300308, y: 0.46, z: 8.75}
+  m_LocalPosition: {x: 1.1, y: 1.753, z: 8.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1035,7 +1035,7 @@ GameObject:
   - component: {fileID: 957466659}
   m_Layer: 7
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1140,7 +1140,7 @@ GameObject:
   - component: {fileID: 994246971}
   m_Layer: 7
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1351,7 +1351,7 @@ GameObject:
   - component: {fileID: 1090315912}
   m_Layer: 7
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1442,6 +1442,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1114927805 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8830202832319301517, guid: 4bc4401eb728443409ecd839b202550a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1308879640}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1114927810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114927805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2eb354091663604f969b9158df3b25e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1308879640
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1520,10 +1538,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerRM
       objectReference: {fileID: 0}
+    - target: {fileID: 7605998346463513902, guid: 4bc4401eb728443409ecd839b202550a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7605998346463513902, guid: 4bc4401eb728443409ecd839b202550a,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8830202832319301517, guid: 4bc4401eb728443409ecd839b202550a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1114927810}
   m_SourcePrefab: {fileID: 100100000, guid: 4bc4401eb728443409ecd839b202550a, type: 3}
 --- !u!1 &1450123493
 GameObject:
