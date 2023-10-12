@@ -247,6 +247,16 @@ public class PlayerCombat : MonoBehaviour
             isAttacking = false;
     }
 
+    public void CanHit()
+    {
+        MeleeWeapon.Instance.SetCanHit(true);
+    }
+
+    public void CannotHit()
+    {
+        MeleeWeapon.Instance.SetCanHit(false);
+    }
+
     public bool IsAttacking()
     {
         return isAttacking;
