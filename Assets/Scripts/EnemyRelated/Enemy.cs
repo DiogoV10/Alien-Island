@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     [Header("Player Reference")]
     [SerializeField] GameObject player;
     [SerializeField] PlayerCombat playerCombatRef;
+    [SerializeField] LayerMask whatIsPlayer;
 
     [Header("EnemySO reference")]
     [SerializeField] EnemySO enemy;
@@ -27,15 +28,14 @@ public class Enemy : MonoBehaviour
     {
         SearchForPlayer();
         FollowPLayer();
-        if(isPlayerInAttackRange) AttackPlayer();
     }
 
     void SearchForPlayer()
     {
-        isPlayerInAttackRange = Physics.CheckSphere(transform.position, enemy.attackRange, ~3);
-        isPlayerInSightRange = Physics.CheckSphere(transform.position, enemy.sightRange, ~3);
-        Debug.Log(isPlayerInAttackRange);
-        Debug.Log(isPlayerInSightRange);
+        isPlayerInAttackRange = Physics.CheckSphere(transform.position, enemy.attackRange, whatIsPlayer);
+        isPlayerInSightRange = Physics.CheckSphere(transform.position, enemy.sightRange, whatIsPlayer);
+        //Debug.Log(isPlayerInAttackRange);
+        //Debug.Log(isPlayerInSightRange);
     }
 
     void FollowPLayer()
@@ -43,9 +43,9 @@ public class Enemy : MonoBehaviour
         if (isPlayerInSightRange)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, enemy.speed * Time.deltaTime);
-            Debug.Log("Is in Sight Range");
+            //Debug.Log("Is in Sight Range");
         }
-        if (isPlayerInAttackRange) Debug.Log("is in attack range");
+        if (isPlayerInAttackRange) AttackPlayer();
     }
 
     void AttackPlayer()
@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
         if (!alreadyAttacked)
         {
             playerCombatRef.playerHealth -= enemy.damageAmount;
-            Debug.Log(playerCombatRef.playerHealth);
+            //Debug.Log(playerCombatRef.playerHealth);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), enemy.timeBetweenAttacks);
         }

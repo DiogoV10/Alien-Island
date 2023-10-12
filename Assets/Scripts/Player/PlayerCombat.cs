@@ -115,8 +115,8 @@ public class PlayerCombat : MonoBehaviour
             ExitCombo();
         }
 
-        Debug.Log(isAttacking);
-        Debug.Log(canAttack);
+        //Debug.Log(isAttacking);
+        //Debug.Log(canAttack);
     }
 
     void Attack()

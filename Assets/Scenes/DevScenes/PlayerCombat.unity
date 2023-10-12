@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &54237876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +264,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &183172716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,6 +727,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 402958075}
   playerCombatRef: {fileID: 402958078}
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 8
   enemy: {fileID: 11400000, guid: f6c7a82277507104ea87769dedc6882f, type: 2}
 --- !u!54 &696010232
 Rigidbody:

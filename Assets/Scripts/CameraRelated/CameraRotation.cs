@@ -12,10 +12,11 @@ public class CameraRotation : MonoBehaviour
     private bool rotRight;
     private InputSystem inputSystem;
     [SerializeField] private Transform target;
-    private float distanceFromTarget = 36f;
+    [SerializeField] private float distanceFromTarget = 36f;
  
-    void Awake()
+    void Start()
     {
+        //transform.rotation = Quaternion.LookRotation(target.position - transform.position).normalized;
     }
 
     private void OnEnable()
@@ -43,6 +44,9 @@ public class CameraRotation : MonoBehaviour
         RotateCameraLeft();
         RotateCameraRight();
         transform.position = target.position - transform.forward * distanceFromTarget;
+        
+        Debug.Log(transform.forward);
+        //Debug.Log(target.position);
     }
 
     void RotateCameraLeft()

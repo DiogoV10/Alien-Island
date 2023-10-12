@@ -16,6 +16,7 @@ MonoBehaviour:
   enemyHP: 100
   speed: 5
   damageAmount: 20
-  attackRange: 1
-  sightRange: 50
+  attackRange: 2
+  sightRange: 20
+  fireRate: 0
   timeBetweenAttacks: 1
