@@ -219,6 +219,11 @@ public class PlayerMovement : MonoBehaviour
             shouldFaceObject = false;
     }
 
+    public bool ShouldFaceObject()
+    {
+        return shouldFaceObject;
+    }
+
     public bool IsRunning()
     {
         if (PlayerCombat.Instance.CanRun())

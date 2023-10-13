@@ -5,19 +5,30 @@ using UnityEngine.UIElements;
 
 public class RangedWeapon : MonoBehaviour
 {
-    public KeyCode shootKey;
 
-    public GameObject bullet;
 
-    public Transform muzzle;
+    public static RangedWeapon Instance { get; private set; }
+
+    [SerializeField] private KeyCode shootKey;
+
+    [SerializeField] private GameObject bullet;
+
+    [SerializeField] private Transform muzzle;
+
 
     [Header("Ammo Info")]
-    [SerializeField] public int magSize, currentAmmo;
+    [SerializeField] private int magSize, currentAmmo;
 
-    bool isReloading;
+    private bool isReloading;
 
     [Header("Shoot info")]
     [SerializeField] float timeSinceLastShot, gunFireRate, reloadTime;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -27,10 +38,10 @@ public class RangedWeapon : MonoBehaviour
     
     void Update()
     {   
-        if(Input.GetKeyDown(shootKey))
-        {
-            Shoot();
-        }
+        //if(Input.GetKeyDown(shootKey))
+        //{
+        //    Shoot();
+        //}
         
         /*
         timeSinceLastShot += Time.deltaTime;
@@ -44,19 +55,22 @@ public class RangedWeapon : MonoBehaviour
         */
     }
 
-    void Shoot()
+    public void Shoot()
     {
         Vector3 muzzlePosition = muzzle.position;
+
+        Debug.Log("Shoot");
 
         RaycastHit hit;
         if(Physics.Raycast(muzzle.position, muzzle.right, out hit)) 
         {
             Debug.Log(hit.transform.name);
-            GameObject currentBullet = Instantiate(bullet, hit.point, Quaternion.identity);
+            //GameObject currentBullet = Instantiate(bullet, hit.point, Quaternion.identity);
+            if (hit.transform.gameObject.CompareTag("Enemy") )
+            {
+                Destroy(hit.transform.gameObject);
+            }
         }
-        
-
-        
     }
 
     public bool GunCanShoot() => !isReloading && timeSinceLastShot > 1f / (gunFireRate / 60f) ;
