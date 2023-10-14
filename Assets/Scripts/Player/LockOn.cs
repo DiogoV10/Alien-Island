@@ -10,7 +10,10 @@ public class LockOn : MonoBehaviour
 
 
     [SerializeField] private float detectionRadius;
+    [SerializeField] private Transform targetGameObject;
     [SerializeField] private LayerMask enemyLayer;
+
+    private float offsetPositionY;
 
 
     private GameObject lockedEnemy;  // Track the currently locked enemy.
@@ -21,6 +24,11 @@ public class LockOn : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        offsetPositionY = targetGameObject.position.y;
+    }
+
     private void Update()
     {
         if (lockedEnemy == null || Vector3.Distance(transform.position, lockedEnemy.transform.position) > detectionRadius)
@@ -28,17 +36,25 @@ public class LockOn : MonoBehaviour
             // Release the lock-on if no enemy is locked or if the locked enemy is out of range.
             lockedEnemy = null;
         }
-        else
-        {
-            // Continue to lock onto the current enemy.
-            // You can add your logic for targeting here.
-        }
+
+        // Calculate an offset position just a bit in front of the player.
+        Vector3 offsetPosition = transform.position + transform.forward * 2.0f; // Adjust the "2.0f" for the desired distance in front of the player.;
+
+        offsetPosition.y = offsetPositionY;
+
+        // Set the "target" position to the offset position.
+        targetGameObject.position = offsetPosition;
 
         GameObject closestEnemy = DetectClosestEnemy();
         if (closestEnemy != null && (lockedEnemy == null || closestEnemy != lockedEnemy))
         {
             // Lock onto the closest enemy if no enemy is currently locked or if a new enemy is closer.
             lockedEnemy = closestEnemy;
+        }
+
+        if (lockedEnemy != null)
+        {
+            targetGameObject.position = lockedEnemy.transform.position;
         }
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using V10;
 
 public class PlayerCombat : MonoBehaviour
@@ -55,6 +56,8 @@ public class PlayerCombat : MonoBehaviour
         animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         animator.runtimeAnimatorController = animatorOverrideController;
 
+        ChangeRigWeight.Instance.SetRigWeight(0f);
+
         currentCombo = availableCombos[0];
     }
 
@@ -62,6 +65,8 @@ public class PlayerCombat : MonoBehaviour
     {
         if (canAttack && canShoot)
         {
+            ChangeRigWeight.Instance.SetRigWeight(1f);
+
             animator.SetTrigger("Shoot");
             WeaponSelector.Instance.ChangeSystem(1);
 
@@ -209,10 +214,16 @@ public class PlayerCombat : MonoBehaviour
         canShoot = true;
     }
 
+    public void Shoot()
+    {
+        RangedWeapon.Instance.Shoot();
+    }
+
     public void UntoggleLockOn()
     {
         PlayerMovement.Instance.ToggleFaceObject(false);
         canRun = true;
+        ChangeRigWeight.Instance.SetRigWeight(0f);
     }
 
     void EndCombo()
