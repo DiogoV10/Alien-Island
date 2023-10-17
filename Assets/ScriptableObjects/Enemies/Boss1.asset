@@ -19,3 +19,4 @@ MonoBehaviour:
   attackRange: 0
   sightRange: 0
   fireRate: 0.5
+  timeBetweenAttacks: 0
