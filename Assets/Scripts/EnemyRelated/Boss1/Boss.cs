@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : MonoBehaviour
+public class Boss : MonoBehaviour, IEntity
 {
     [SerializeField] private Transform target;
     //public GameObject obj;
@@ -98,4 +98,21 @@ public class Boss : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        bossHealth -= damage;
+        Debug.Log(bossHealth);
+        if (bossHealth <= 0f) Die();
+    }
+
+    public void Die()
+    {
+        Destroy(this.gameObject);
+        OnEntityDeath();
+    }
+
+    public void OnEntityDeath()
+    {
+        Debug.Log("Boss Died!");
+    }
 }

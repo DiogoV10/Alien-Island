@@ -64,7 +64,11 @@ public class RangedWeapon : MonoBehaviour
             if (hit.transform.gameObject.CompareTag("Enemy") )
             {
                 //Destroy(hit.transform.gameObject);
-                
+                IEntity entity = hit.collider.GetComponent<IEntity>();
+                if (entity != null)
+                {
+                    entity.TakeDamage(gunDamage);
+                }
             }
         }
     }

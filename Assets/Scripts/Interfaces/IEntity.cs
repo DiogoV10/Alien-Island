@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IEnemy
+public interface IEntity
 {
     public void TakeDamage(float damage);
     public void Die();
-    public void OnEnemyDeath();
+    public void OnEntityDeath();
 }
