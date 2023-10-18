@@ -76,9 +76,9 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
-        if (isRunning && !PlayerCombat.Instance.IsAttacking() && PlayerCombat.Instance.CanRun()) Run();
+        if (isRunning && PlayerCombat.Instance.CanMove() && PlayerCombat.Instance.CanRun()) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
-        else if (!PlayerCombat.Instance.IsAttacking()) MovePlayer();
+        else if (PlayerCombat.Instance.CanMove()) MovePlayer();
 
         if (isGrounded)
         {
@@ -149,9 +149,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void AddForceOnAirAttack(float forceValue)
     {
-        rigidBody.useGravity = false;
+        //rigidBody.useGravity = false;
         rigidBody.AddForce(Vector3.up * forceValue, ForceMode.Impulse);
-        Invoke("EnableGravity", 0.5f);
+        //Invoke("EnableGravity", 0.5f);
     }
 
     private void EnableGravity()
@@ -209,6 +209,18 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return movementDirection;
+    }
+
+    public void RotatePlayerTowardsInput()
+    {
+        Vector2 direction = mov.ReadValue<Vector2>();
+        Vector3 directionInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
+
+        if (direction != Vector2.zero)
+        {
+            Quaternion desiredRotation = Quaternion.LookRotation(directionInput, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, 500 * Time.deltaTime);
+        }
     }
 
     public void ToggleFaceObject(bool shouldFace)

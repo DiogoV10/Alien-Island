@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 2306734552937671685}
   - component: {fileID: 6218299321197743421}
   - component: {fileID: 4544471574702872473}
+  - component: {fileID: 5721957291002336650}
   m_Layer: 3
   m_Name: PlayerRM
   m_TagString: Player
@@ -198,6 +199,7 @@ MonoBehaviour:
   availableCombos:
   - {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
   - {fileID: 11400000, guid: 5d837994c255b6a449bd278c88adc06b, type: 2}
+  - {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
   playerHealth: 100
 --- !u!95 &4178152021638574490
 Animator:
@@ -265,6 +267,19 @@ MonoBehaviour:
   - m_Rig: {fileID: 5392766784132453514}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &5721957291002336650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508388398197950362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d95d4d6865b761748b932e6f69402238, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHealth: 100
 --- !u!1 &6593446471853751904
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,6 +473,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4482272305463643141, guid: e8308649f2c2c3f4da979cf84207b2ba,
+        type: 3}
+      propertyPath: gunDamage
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -13,6 +13,9 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private List<ComboSO> availableCombos;
     //[SerializeField] Weapon weapon;
+
+    [SerializeField] public float playerHealth;
+
     private Animator animator;
 
 
@@ -23,17 +26,19 @@ public class PlayerCombat : MonoBehaviour
     private int comboCounter;
     private int clipNumber = 1;
 
-    private bool canAttack = true;
-    private bool nextAttack = true;
-    private bool buttonPressed = false;
-    private bool isExitingCombo;
-    private bool endCombo = false;
-    private bool isAttacking = false;
     private bool canChangeCombo = false;
     private bool canShoot = true;
     private bool isMelee = false;
-    private bool canJump = true;
+    
+    
+    private bool canMove = true;
     private bool canRun = true;
+    private bool canJump = true;
+    private bool canAttack = true;
+    private bool nextAttack = true;
+    private bool buttonPressed = false;
+    private bool isAttacking = false;
+
 
     private AnimatorOverrideController animatorOverrideController;
 
@@ -70,10 +75,9 @@ public class PlayerCombat : MonoBehaviour
             PlayerMovement.Instance.ToggleFaceObject(true);
 
             buttonPressed = false;
-            isAttacking = false;
             isMelee = false;
 
-            ExitCombo();
+            InterruptCombo();
 
             canShoot = false;
             canRun = false;
@@ -95,48 +99,39 @@ public class PlayerCombat : MonoBehaviour
 
     private void GameInput_OnAttackMeleeAction(object sender, System.EventArgs e)
     {
-        if (canAttack && currentCombo.comboType == ComboType.Normal && canShoot)
+        if (canAttack)
         {
             WeaponSelector.Instance.ChangeSystem(0);
 
             buttonPressed = true;
-            canChangeCombo = false;
-            isMelee = true;
+            //canChangeCombo = false;
+            //isMelee = true;
             isAttacking = true;
-
+            canMove = false;
+            canRun = false;
+            canJump = false;
             canAttack = false;
         }
     }
 
     private void Update()
     {
-        HasAnimationEnded();
-
         if (nextAttack && buttonPressed)
         {
             Attack();
         }
 
-        if ((PlayerMovement.Instance.IsRunning() || PlayerMovement.Instance.IsWalking()) && !isAttacking)
+        if ((PlayerMovement.Instance.IsRunning() || PlayerMovement.Instance.IsWalking()) && canMove)
         {
-            ExitCombo();
+            InterruptCombo();
         }
+
+        animator.SetBool("IsAttacking", isAttacking);
     }
 
     void Attack()
     {
-        canJump = false;
-        canRun = true;
-
-        if (!animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot") && !animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-            isAttacking = true;
-
-        if (isExitingCombo)
-        {
-            //Debug.Log("CancelInvoke");
-            CancelInvoke("EndCombo");
-            isExitingCombo = false;
-        }
+        animator.ResetTrigger("Attack" + (clipNumber - 1));
 
         if (clipNumber > 2)
             clipNumber = 1;
@@ -144,66 +139,73 @@ public class PlayerCombat : MonoBehaviour
         animatorOverrideController["Attack" + clipNumber] = currentCombo.combo[comboCounter].animationClip;
 
 
-        animator.Play("Attack" + clipNumber, 0, 0);
+        animator.SetTrigger("Attack" + clipNumber);
         //animator.Play("Attack" + clipNumber, 0, 0);
         //weapon.damage = combo[comboCounter].damage;
 
         if (PlayerMovement.Instance.IsFalling())
         {
-            PlayerMovement.Instance.AddForceOnAirAttack(2);
+            PlayerMovement.Instance.AddForceOnAirAttack(10f);
         }
 
         nextAttack = false;
         buttonPressed = false;
         clipNumber++;
+
+        PlayerMovement.Instance.RotatePlayerTowardsInput();
     }
 
     public void NextAttack()
     { 
         nextAttack = true;
-        isMelee = false;
         canJump = true;
     }
 
     void ChangeCombo()
     {
+        nextCombo = availableCombos[2];
+        comboCounter = 0;
+        currentCombo = nextCombo;
+        Debug.Log(canMove);
+    }
+
+    void ResetCombo ()
+    {
+        nextCombo = availableCombos[0];
         comboCounter = 0;
         currentCombo = nextCombo;
     }
 
-    public void ExitAttack()
-    {
-        if (!isExitingCombo)
-        {
-            //Debug.Log("ExitAttack " + comboCounter);
-
-            if (canChangeCombo)
-            {
-                Debug.Log("Wait");
-                Invoke("EndCombo", currentCombo.nextComboDelay);
-            }else
-                Invoke("EndCombo", currentCombo.combo[comboCounter].nextAttackDelay);
-
-            endCombo = false;
-            isExitingCombo = true;
-        }
-    }
-
-    public void CanAttack()
+    public void IncrementCombo()
     {
         if (comboCounter + 2 > currentCombo.combo.Count)
         {
-            canChangeCombo = true;
+            //canChangeCombo = true;
             comboCounter = 0;
         }
         else
         {
             comboCounter++;
         }
+    }
 
+    public void CanMoveAndRun()
+    {
+        canMove = true;
+        canRun = true;
         canAttack = true;
-        buttonPressed = false;
-        nextAttack = false;
+    }
+
+    public void CanAttack()
+    {
+        canAttack = true;
+        //buttonPressed = false;
+        //nextAttack = false;
+    }
+
+    public void CannotAttack()
+    {
+        canAttack = false;
     }
 
     public void CanShoot()
@@ -223,36 +225,21 @@ public class PlayerCombat : MonoBehaviour
         ChangeRigWeight.Instance.SetRigWeight(0f);
     }
 
-    void EndCombo()
+    public void InterruptCombo()
     {
         isMelee = false;
         canAttack = true;
         buttonPressed = false;
         nextAttack = true;
-        comboCounter = 0;
-        isExitingCombo = false;
         canChangeCombo = false;
         canJump = true;
+        canMove = true;
+        canRun = true;
+        isAttacking = false;
 
-        currentCombo = availableCombos[0];
-    }
-
-    void ExitCombo()
-    {
-        if (!endCombo)
-        {
-            CancelInvoke("EndCombo");
-            EndCombo();
-            endCombo = true;
-        }
-    }
-
-    private void HasAnimationEnded()
-    {
-        if (isMelee)
-            isAttacking = true;
-        else if (!animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack") || animator.GetCurrentAnimatorStateInfo(1).IsTag("Shoot"))
-            isAttacking = false;
+        nextCombo = availableCombos[0];
+        comboCounter = 0;
+        currentCombo = nextCombo;
     }
 
     public void CanHit()
@@ -265,9 +252,9 @@ public class PlayerCombat : MonoBehaviour
         MeleeWeapon.Instance.SetCanHit(false);
     }
 
-    public bool IsAttacking()
+    public void SetIsAttacking(bool choice)
     {
-        return isAttacking;
+        isAttacking = choice;
     }
 
     public bool IsMelee()
@@ -283,5 +270,10 @@ public class PlayerCombat : MonoBehaviour
     public bool CanRun()
     {
         return canRun;
+    }
+
+    public bool CanMove()
+    {
+        return canMove;
     }
 }
