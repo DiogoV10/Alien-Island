@@ -8,6 +8,7 @@ public class Boss : MonoBehaviour
     //public GameObject obj;
     [Header("Attributes")]
 
+    [SerializeField] private float bossHealth;
     [SerializeField] private EnemySO boss;
     [SerializeField] private List<Objectsprojectiles> objects;
     //[SerializeField] private List<int> attackList;

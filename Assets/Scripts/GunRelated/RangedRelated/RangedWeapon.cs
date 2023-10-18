@@ -9,10 +9,6 @@ public class RangedWeapon : MonoBehaviour
 
     public static RangedWeapon Instance { get; private set; }
 
-    [SerializeField] private KeyCode shootKey;
-
-    [SerializeField] private GameObject bullet;
-
     [SerializeField] private Transform muzzle;
 
 
@@ -21,9 +17,8 @@ public class RangedWeapon : MonoBehaviour
 
     private bool isReloading;
 
-    [Header("Shoot info")]
-    [SerializeField] float timeSinceLastShot, gunFireRate, reloadTime;
-
+    [Header("Shooting Info")]
+    [SerializeField] private float gunDamage;
 
     private void Awake()
     {
@@ -64,19 +59,13 @@ public class RangedWeapon : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(muzzle.position, muzzle.right, out hit)) 
         {
-            Debug.Log(hit.transform.name);
-            //GameObject currentBullet = Instantiate(bullet, hit.point, Quaternion.identity);
+            //Debug.Log(hit.transform.name);
+            
             if (hit.transform.gameObject.CompareTag("Enemy") )
             {
-                Destroy(hit.transform.gameObject);
+                //Destroy(hit.transform.gameObject);
+                
             }
         }
-    }
-
-    public bool GunCanShoot() => !isReloading && timeSinceLastShot > 1f / (gunFireRate / 60f) ;
-
-    void ResetShoot()
-    {
-        isReloading = true;
     }
 }

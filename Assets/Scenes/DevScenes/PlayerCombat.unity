@@ -156,6 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 402958085}
+  bossHealth: 100
   boss: {fileID: 11400000, guid: 4a0b576ed02991648983016e8af54293, type: 2}
   objects:
   - {fileID: 183172716}
@@ -1916,6 +1917,11 @@ PrefabInstance:
       propertyPath: targetGameObject
       value: 
       objectReference: {fileID: 1476714648}
+    - target: {fileID: 6275423639120060523, guid: 4bc4401eb728443409ecd839b202550a,
+        type: 3}
+      propertyPath: gunDamage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6508388398197950362, guid: 4bc4401eb728443409ecd839b202550a,
         type: 3}
       propertyPath: m_Name
