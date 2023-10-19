@@ -102,6 +102,7 @@ public class PlayerCombat : MonoBehaviour
         if (canAttack)
         {
             WeaponSelector.Instance.ChangeSystem(0);
+            ChangeRigWeight.Instance.SetRigWeight(0f);
 
             buttonPressed = true;
             //canChangeCombo = false;
@@ -145,7 +146,7 @@ public class PlayerCombat : MonoBehaviour
 
         if (PlayerMovement.Instance.IsFalling())
         {
-            PlayerMovement.Instance.AddForceOnAirAttack(10f);
+            PlayerMovement.Instance.AddForceOnAirAttack(2f);
         }
 
         nextAttack = false;

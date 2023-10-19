@@ -216,10 +216,22 @@ public class PlayerMovement : MonoBehaviour
         Vector2 direction = mov.ReadValue<Vector2>();
         Vector3 directionInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
 
-        if (direction != Vector2.zero)
+        if (direction != Vector2.zero && !shouldFaceObject)
         {
-            Quaternion desiredRotation = Quaternion.LookRotation(directionInput, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, 500 * Time.deltaTime);
+            if (shouldFaceObject)
+            {
+                //Vector3 objectDirection = lockOnTarget.transform.position - transform.position;
+                ////objectDirection.y = 0f;
+                ////objectDirection.Normalize();
+                //Vector3 objectDir = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(objectDirection.x, 0, objectDirection.y);
+
+                //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(objectDir, Vector3.up), 500 * Time.deltaTime);
+            }
+            else
+            {
+                Quaternion desiredRotation = Quaternion.LookRotation(directionInput, Vector3.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, 500 * Time.deltaTime);
+            }
         }
     }
 
