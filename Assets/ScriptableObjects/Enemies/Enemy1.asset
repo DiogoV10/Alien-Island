@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Enemy1
   m_EditorClassIdentifier: 
   enemyName: 
-  enemyHP: 100
+  enemyHP: 20
   speed: 5
   damageAmount: 20
-  attackRange: 2
+  attackRange: 1.9
   sightRange: 20
   fireRate: 0
   timeBetweenAttacks: 1

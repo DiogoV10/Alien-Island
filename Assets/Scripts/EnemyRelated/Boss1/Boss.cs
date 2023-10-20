@@ -8,7 +8,6 @@ public class Boss : MonoBehaviour, IEntity
     //public GameObject obj;
     [Header("Attributes")]
 
-    [SerializeField] private float bossHealth;
     [SerializeField] private EnemySO boss;
     [SerializeField] private List<Objectsprojectiles> objects;
     //[SerializeField] private List<int> attackList;
@@ -100,9 +99,9 @@ public class Boss : MonoBehaviour, IEntity
 
     public void TakeDamage(float damage)
     {
-        bossHealth -= damage;
-        Debug.Log(bossHealth);
-        if (bossHealth <= 0f) Die();
+        boss.enemyHP -= damage;
+        Debug.Log(boss.enemyHP);
+        if (boss.enemyHP <= 0f) Die();
     }
 
     public void Die()

@@ -5,11 +5,12 @@ using UnityEngine;
 public class PlayerHealthManager : MonoBehaviour, IEntity
 {
     [Header("Player Health")]
-    [SerializeField] private float playerHealth;
+    [SerializeField] public float playerHealth;
 
     public void Die()
     {
         Debug.Log("PlayerHasDied");
+        OnEntityDeath();
     }
 
     public void OnEntityDeath()

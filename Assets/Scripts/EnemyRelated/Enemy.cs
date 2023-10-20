@@ -3,26 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IEntity
 {
     [Header("Player Reference")]
     [SerializeField] GameObject player;
-    [SerializeField] PlayerCombat playerCombatRef;
+    [SerializeField] PlayerHealthManager playerHealthManager;
     [SerializeField] LayerMask whatIsPlayer;
 
     [Header("EnemySO reference")]
     [SerializeField] EnemySO enemy;
 
-    [Header("Enemy")]
-    Rigidbody rigidBody;
-    //private Vector3 wayPoint = new Vector3();
-
     private bool isPlayerInSightRange, isPlayerInAttackRange, alreadyAttacked;
-
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
@@ -34,16 +25,13 @@ public class Enemy : MonoBehaviour
     {
         isPlayerInAttackRange = Physics.CheckSphere(transform.position, enemy.attackRange, whatIsPlayer);
         isPlayerInSightRange = Physics.CheckSphere(transform.position, enemy.sightRange, whatIsPlayer);
-        //Debug.Log(isPlayerInAttackRange);
-        //Debug.Log(isPlayerInSightRange);
     }
 
     void FollowPLayer()
     {
-        if (isPlayerInSightRange)
+        if (isPlayerInSightRange && !isPlayerInAttackRange)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, enemy.speed * Time.deltaTime);
-            //Debug.Log("Is in Sight Range");
         }
         if (isPlayerInAttackRange) AttackPlayer();
     }
@@ -54,12 +42,32 @@ public class Enemy : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-            playerCombatRef.playerHealth -= enemy.damageAmount;
-            //Debug.Log(playerCombatRef.playerHealth);
+            IEntity entity = player.GetComponent<IEntity>();
+            entity.TakeDamage(enemy.damageAmount);
+            Debug.Log("Attacked!");
+            Debug.Log(playerHealthManager.playerHealth);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), enemy.timeBetweenAttacks);
         }
     }
 
     private void ResetAttack() => alreadyAttacked = false;
+
+    public void TakeDamage(float damage)
+    {
+        enemy.enemyHP -= damage;
+        Debug.Log(enemy.enemyHP);
+        if (enemy.enemyHP <= 0f) Die();
+    }
+
+    public void Die()
+    {
+        Debug.Log("Enemy Died!");
+        OnEntityDeath();
+    }
+
+    public void OnEntityDeath()
+    {
+        Destroy(gameObject);
+    }
 }

@@ -14,8 +14,6 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private List<ComboSO> availableCombos;
     //[SerializeField] Weapon weapon;
 
-    [SerializeField] public float playerHealth;
-
     private Animator animator;
 
 
