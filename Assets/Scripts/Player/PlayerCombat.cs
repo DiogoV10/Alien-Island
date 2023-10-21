@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,6 +37,8 @@ public class PlayerCombat : MonoBehaviour
     private bool nextAttack = true;
     private bool buttonPressed = false;
     private bool isAttacking = false;
+
+    private bool[] animationActive = new bool[2];
 
 
     private AnimatorOverrideController animatorOverrideController;
@@ -130,10 +133,10 @@ public class PlayerCombat : MonoBehaviour
 
     void Attack()
     {
-        animator.ResetTrigger("Attack" + (clipNumber - 1));
-
         if (clipNumber > 2)
             clipNumber = 1;
+
+        animationActive[clipNumber - 1] = !animationActive[clipNumber - 1];
 
         animatorOverrideController["Attack" + clipNumber] = currentCombo.combo[comboCounter].animationClip;
 
@@ -162,10 +165,16 @@ public class PlayerCombat : MonoBehaviour
 
     void ChangeCombo()
     {
+        if (animationActive[0] != animationActive[1] || buttonPressed)
+        {
+            //animationActive[0] = true;
+            //animationActive[1] = true;
+            return;
+        }
+
         nextCombo = availableCombos[2];
         comboCounter = 0;
         currentCombo = nextCombo;
-        Debug.Log(canMove);
     }
 
     void ResetCombo ()
@@ -186,10 +195,20 @@ public class PlayerCombat : MonoBehaviour
         {
             comboCounter++;
         }
+
+        animationActive[0] = true; 
+        animationActive[1] = true;
     }
 
     public void CanMoveAndRun()
     {
+        if (animationActive[0] != animationActive[1] || buttonPressed) 
+        {
+            animationActive[0] = true;
+            animationActive[1] = true;
+            return;
+        }
+
         canMove = true;
         canRun = true;
         canAttack = true;
@@ -226,6 +245,13 @@ public class PlayerCombat : MonoBehaviour
 
     public void InterruptCombo()
     {
+        if (animationActive[0] != animationActive[1] || buttonPressed)
+        {
+            animationActive[0] = true;
+            animationActive[1] = true;
+            return;
+        }
+
         isMelee = false;
         canAttack = true;
         buttonPressed = false;
@@ -235,6 +261,9 @@ public class PlayerCombat : MonoBehaviour
         canMove = true;
         canRun = true;
         isAttacking = false;
+
+        animationActive[0] = true;
+        animationActive[1] = true;
 
         nextCombo = availableCombos[0];
         comboCounter = 0;

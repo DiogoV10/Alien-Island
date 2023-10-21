@@ -38504,13 +38504,6 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.6666667
-    functionName: CannotAttack
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
   - time: 0.7
     functionName: ChangeCombo
     data: 
@@ -38518,7 +38511,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.8
+  - time: 0.73333335
     functionName: CanMoveAndRun
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -38527,13 +38520,6 @@ AnimationClip:
     messageOptions: 0
   - time: 1
     functionName: ResetCombo
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.1333333
-    functionName: CannotAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
