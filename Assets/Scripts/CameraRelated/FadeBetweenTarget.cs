@@ -11,9 +11,10 @@ public class FadeBetweenTarget : MonoBehaviour
     private void FixedUpdate()
     {
         RaycastHit[] hit = Physics.RaycastAll(transform.position, GetDirection(), GetDistance());
-        if (hit.Length > 0)
+        if (hit != null)
         {
             FadeObject(hit[0]);
+            Debug.Log(hit[0]);
         }
     }
 
