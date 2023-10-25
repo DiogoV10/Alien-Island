@@ -6,15 +6,5 @@ using UnityEngine;
 public class ComboSO : ScriptableObject
 {
     public List<AttackSO> combo;
-    public ComboType comboType;
     public string weaponName;
-    public float nextComboDelay;
-}
-
-public enum ComboType
-{
-    Air,
-    Hold,
-    Wait,
-    Normal,
 }

@@ -11,7 +11,7 @@ public class PlayerAnimation : MonoBehaviour
     private const string IS_JUMPING = "IsJumping";
     private const string IS_FALLING = "IsFalling";
     private const string IS_LANDING = "IsLanding";
-    private const string IS_MELEE = "IsMelee";
+    private const string IS_ATTACKING = "IsAttacking";
     
 
     private Animator animator;
@@ -29,7 +29,7 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool(IS_JUMPING, PlayerMovement.Instance.IsJumping());
         animator.SetBool(IS_FALLING, PlayerMovement.Instance.IsFalling());
         animator.SetBool(IS_LANDING, PlayerMovement.Instance.IsLanding());
-        animator.SetBool(IS_MELEE, PlayerCombat.Instance.IsMelee());
+        animator.SetBool(IS_ATTACKING, PlayerCombat.Instance.IsAttacking());
     }
 
 

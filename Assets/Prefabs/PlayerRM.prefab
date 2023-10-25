@@ -196,11 +196,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5067bca758c30134eb682ef8e56d1487, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  comboTransitions:
+  - sourceCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    targetCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    transitionCondition: 0
+    attackIndex: 1
+    sourceWeapon: 
+    targetWeapon: 
+  - sourceCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    targetCombo: {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
+    transitionCondition: 1
+    attackIndex: 1
+    sourceWeapon: 
+    targetWeapon: 
+  - sourceCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    targetCombo: {fileID: 11400000, guid: 5d837994c255b6a449bd278c88adc06b, type: 2}
+    transitionCondition: 2
+    attackIndex: 1
+    sourceWeapon: 
+    targetWeapon: 
   availableCombos:
   - {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
   - {fileID: 11400000, guid: 5d837994c255b6a449bd278c88adc06b, type: 2}
   - {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
-  playerHealth: 100
 --- !u!95 &4178152021638574490
 Animator:
   serializedVersion: 5

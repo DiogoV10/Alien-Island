@@ -1,6 +1,9 @@
+// Ignore Spelling: Untoggle
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using V10;
@@ -12,6 +15,26 @@ public class PlayerCombat : MonoBehaviour
     public static PlayerCombat Instance { get; private set; }
 
 
+    [System.Serializable]
+    public class ComboTransition
+    {
+        public ComboSO sourceCombo;
+        public ComboSO targetCombo;
+        public ComboCondition transitionCondition;
+        public int attackIndex; // Index of the attack in the source combo when the transition can happen.
+        public string sourceWeapon; // Source weapon name.
+        public string targetWeapon; // Target weapon name.
+    }
+
+    public enum ComboCondition
+    {
+        None,
+        Wait,
+        Hold,
+    }
+
+
+    [SerializeField] private List<ComboTransition> comboTransitions;
     [SerializeField] private List<ComboSO> availableCombos;
     //[SerializeField] Weapon weapon;
 
@@ -25,9 +48,8 @@ public class PlayerCombat : MonoBehaviour
     private int comboCounter;
     private int clipNumber = 1;
 
-    private bool canChangeCombo = false;
+
     private bool canShoot = true;
-    private bool isMelee = false;
     
     
     private bool canMove = true;
@@ -76,7 +98,6 @@ public class PlayerCombat : MonoBehaviour
             PlayerMovement.Instance.ToggleFaceObject(true);
 
             buttonPressed = false;
-            isMelee = false;
 
             InterruptCombo();
 
@@ -87,14 +108,15 @@ public class PlayerCombat : MonoBehaviour
 
     private void GameInput_OnAttackMeleeHoldAction(object sender, System.EventArgs e)
     {
-        if (canAttack && canChangeCombo)
+        if (canAttack)
         {
             WeaponSelector.Instance.ChangeSystem(0);
 
-            buttonPressed = true;
-            canAttack = false;
-            nextCombo = availableCombos[1];
-            ChangeCombo();
+            if (CheckComboTransitions(ComboCondition.Hold))
+            {
+                buttonPressed = true;
+                canAttack = false;
+            }
         }
     }
 
@@ -105,9 +127,9 @@ public class PlayerCombat : MonoBehaviour
             WeaponSelector.Instance.ChangeSystem(0);
             ChangeRigWeight.Instance.SetRigWeight(0f);
 
+            CheckComboTransitions(ComboCondition.None);
+
             buttonPressed = true;
-            //canChangeCombo = false;
-            //isMelee = true;
             isAttacking = true;
             canMove = false;
             canRun = false;
@@ -129,6 +151,8 @@ public class PlayerCombat : MonoBehaviour
         }
 
         animator.SetBool("IsAttacking", isAttacking);
+
+        Debug.Log(comboCounter);
     }
 
     void Attack()
@@ -140,10 +164,7 @@ public class PlayerCombat : MonoBehaviour
 
         animatorOverrideController["Attack" + clipNumber] = currentCombo.combo[comboCounter].animationClip;
 
-
         animator.SetTrigger("Attack" + clipNumber);
-        //animator.Play("Attack" + clipNumber, 0, 0);
-        //weapon.damage = combo[comboCounter].damage;
 
         if (PlayerMovement.Instance.IsFalling())
         {
@@ -157,27 +178,43 @@ public class PlayerCombat : MonoBehaviour
         PlayerMovement.Instance.RotatePlayerTowardsInput();
     }
 
+    private bool CheckComboTransitions(ComboCondition condition)
+    {
+        //string currentWeapon = WeaponSelector.Instance.GetCurrentWeaponName();
+
+        foreach (ComboTransition transition in comboTransitions)
+        {
+            if (transition.sourceCombo == currentCombo &&
+                /*transition.sourceWeapon == currentWeapon &&*/
+                comboCounter - 1 == transition.attackIndex &&
+                transition.transitionCondition == condition)
+            {
+                currentCombo = transition.targetCombo;
+                comboCounter = 0;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void NextAttack()
     { 
         nextAttack = true;
         canJump = true;
     }
 
-    void ChangeCombo()
+    public void ChangeCombo()
     {
         if (animationActive[0] != animationActive[1] || buttonPressed)
         {
-            //animationActive[0] = true;
-            //animationActive[1] = true;
             return;
         }
 
-        nextCombo = availableCombos[2];
-        comboCounter = 0;
-        currentCombo = nextCombo;
+        CheckComboTransitions(ComboCondition.Wait);
     }
 
-    void ResetCombo ()
+    public void ResetCombo ()
     {
         nextCombo = availableCombos[0];
         comboCounter = 0;
@@ -186,15 +223,7 @@ public class PlayerCombat : MonoBehaviour
 
     public void IncrementCombo()
     {
-        if (comboCounter + 2 > currentCombo.combo.Count)
-        {
-            //canChangeCombo = true;
-            comboCounter = 0;
-        }
-        else
-        {
-            comboCounter++;
-        }
+        comboCounter++;
 
         animationActive[0] = true; 
         animationActive[1] = true;
@@ -211,14 +240,11 @@ public class PlayerCombat : MonoBehaviour
 
         canMove = true;
         canRun = true;
-        canAttack = true;
     }
 
     public void CanAttack()
     {
         canAttack = true;
-        //buttonPressed = false;
-        //nextAttack = false;
     }
 
     public void CannotAttack()
@@ -252,11 +278,9 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        isMelee = false;
         canAttack = true;
         buttonPressed = false;
         nextAttack = true;
-        canChangeCombo = false;
         canJump = true;
         canMove = true;
         canRun = true;
@@ -285,9 +309,9 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = choice;
     }
 
-    public bool IsMelee()
+    public bool IsAttacking()
     {
-        return isMelee;
+        return isAttacking;
     }
 
     public bool CanJump()
