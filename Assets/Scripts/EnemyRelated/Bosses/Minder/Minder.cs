@@ -103,7 +103,7 @@ public class Minder : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = 1;
+                int random = Random.Range(0, 2);
                 switch (random)
                 {
                     case 0:

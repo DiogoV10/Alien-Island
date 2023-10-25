@@ -68,6 +68,7 @@ public class Enemy : MonoBehaviour, IEntity
 
     public void OnEntityDeath()
     {
+        Debug.Log("Fui Morto!!!!!");
         Destroy(gameObject);
     }
 }

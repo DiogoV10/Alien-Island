@@ -45,7 +45,6 @@ public class ObjectBombingAttack : MonoBehaviour
         {
             Vector3 targetpos = new Vector3(target.position.x, 10, target.position.z);
             float distMagnitude = (targetpos - objectpos).magnitude;
-            //transform.Translate((targetpos - objectpos).normalized * Time.fixedDeltaTime);
             rigidBody.MovePosition(transform.position + ((targetpos - objectpos).normalized * (distMagnitude / goToPositionTime)) * Time.fixedDeltaTime);
             yield return null;
         }
@@ -90,6 +89,7 @@ public class ObjectBombingAttack : MonoBehaviour
             inPosition = false;
             waitUntilBombing = 1.5f;
             Vector3 vector = new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f));
+            //Criar uma funcao de separar obj depois da queda
             rigidBody.AddForce(vector * objectSeparateForce, ForceMode.Impulse);
         }
     }
