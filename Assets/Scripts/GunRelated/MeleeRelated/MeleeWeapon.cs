@@ -20,8 +20,7 @@ public class MeleeWeapon : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!canHit)
-            return;
+        if (!canHit) return;
 
         bool hasHit = false;
 
@@ -42,7 +41,9 @@ public class MeleeWeapon : MonoBehaviour
             { 
                 enemies.Add(other);
                 Debug.Log("Hit");
-                Destroy(other.gameObject);
+                //Destroy(other.gameObject);
+                other.GetComponent<HumanSummonAttack>()?.Die();
+                other.GetComponent<Enemy>()?.Die();
             }
         }
     }

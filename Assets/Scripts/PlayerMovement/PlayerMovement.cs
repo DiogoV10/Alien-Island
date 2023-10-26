@@ -275,4 +275,9 @@ public class PlayerMovement : MonoBehaviour
     {
         return isLanding;
     }
+
+    public bool IsGrounded()
+    {
+        return isGrounded; 
+    }
 }

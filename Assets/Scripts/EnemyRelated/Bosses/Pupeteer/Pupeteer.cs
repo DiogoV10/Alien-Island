@@ -11,7 +11,7 @@ public class Pupeteer : MonoBehaviour
     [Header("InvokeHumansAttack")]
     [SerializeField] private float invokeHumanPuppetsTime = 20f, timeBetweenPuppets = 4f;
     [SerializeField] GameObject humanPuppet;
-    [SerializeField] List<GameObject> listOfHumanPuppets;
+    List<GameObject> listOfHumanPuppets = new List<GameObject>();
     private bool invokeHumanPuppetsOn = false;
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class Pupeteer : MonoBehaviour
 
     void InvokeHumanPuppets()
     {
-        if (invokeHumanPuppetsOn)
+        if (invokeHumanPuppetsOn && listOfHumanPuppets.Count < 5)
         {
             if (invokeHumanPuppetsTime < 0f)
             {
@@ -34,8 +34,9 @@ public class Pupeteer : MonoBehaviour
                 return;
             }
 
-            invokeHumanPuppetsTime -= Time.deltaTime;
             timeBetweenPuppets -= Time.deltaTime;
+            invokeHumanPuppetsTime -= Time.deltaTime;
+            
             if (timeBetweenPuppets <= 0f)
             {
                 GameObject go = Instantiate(humanPuppet, new Vector3(10, 1, 20), Quaternion.identity);
@@ -44,14 +45,23 @@ public class Pupeteer : MonoBehaviour
                 listOfHumanPuppets.Add(go);
                 timeBetweenPuppets = 4f;
             }
-        } 
+        }
+        
+        else
+        {
+            invokeHumanPuppetsOn = false;
+            invokeHumanPuppetsTime = 20f;
+            timeBetweenPuppets = 4f;
+        }
     }
 
     void RemoveFromEnemiesList(GameObject go)
     {
         Debug.Log("Tou sim: " + listOfHumanPuppets.Contains(go));
         listOfHumanPuppets.Remove(go);
+        Debug.Log("Removed");
         Destroy(go);
+        Debug.Log("destroyed");
     }
 
     void RemoveDeadEnemiesFromList()
@@ -70,7 +80,6 @@ public class Pupeteer : MonoBehaviour
 
     void ChooseAttack()
     {
-        Debug.Log(invokeHumanPuppetsOn);
         if (!invokeHumanPuppetsOn)
         {
             timeToNextAttack -= Time.deltaTime;
@@ -81,7 +90,7 @@ public class Pupeteer : MonoBehaviour
                 switch (random)
                 {
                     case 0:
-                        if(listOfHumanPuppets.Count == 0)
+                        if(listOfHumanPuppets.Count < 5)
                         {
                             invokeHumanPuppetsOn = true;
                         }

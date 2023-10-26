@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -977,7 +977,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!136 &808986178
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1081,10 +1081,9 @@ MonoBehaviour:
   player: {fileID: 983769319}
   timeToNextAttack: 3
   invokeHumanPuppetsTime: 20
-  timeBetweenPuppets: 2
+  timeBetweenPuppets: 4
   humanPuppet: {fileID: 5494698316566854826, guid: fb8b3b6939f943b439ed76a880dcfe3a,
     type: 3}
-  listOfHumanPuppets: []
 --- !u!54 &808986183
 Rigidbody:
   m_ObjectHideFlags: 0
