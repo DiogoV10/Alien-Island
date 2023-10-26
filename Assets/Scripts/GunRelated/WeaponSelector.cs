@@ -54,7 +54,7 @@ public class WeaponSelector : MonoBehaviour
             meleeWeaponIndex = (meleeWeaponIndex + 1) % meleeWeaponsSelector.GetWeaponCount();
             meleeWeaponsSelector.SwitchToWeapon(meleeWeaponIndex);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && rangedWeaponsSelector.IsActive())
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && rangedWeaponsSelector.IsActive() && !PlayerSkills.Instance.IsUsingSkill())
         {
             rangedWeaponIndex = (rangedWeaponIndex + 1) % rangedWeaponsSelector.GetWeaponCount();
             rangedWeaponsSelector.SwitchToWeapon(rangedWeaponIndex);

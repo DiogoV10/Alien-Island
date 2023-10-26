@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Great Sword Jump Attack
+  m_Name: HoldAttack1
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -65965,7 +65965,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.3666667
+  - time: 1.3333334
     functionName: ResetCombo
     data: 
     objectReferenceParameter: {fileID: 0}

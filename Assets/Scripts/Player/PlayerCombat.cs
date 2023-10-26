@@ -149,16 +149,17 @@ public class PlayerCombat : MonoBehaviour
         {
             InterruptCombo();
         }
-
-        animator.SetBool("IsAttacking", isAttacking);
-
-        Debug.Log(comboCounter);
     }
 
     void Attack()
     {
         if (clipNumber > 2)
             clipNumber = 1;
+
+        if (comboCounter + 1 > currentCombo.combo.Count)
+        {
+            return;
+        }
 
         animationActive[clipNumber - 1] = !animationActive[clipNumber - 1];
 

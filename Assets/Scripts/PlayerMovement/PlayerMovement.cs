@@ -20,6 +20,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float lockRotationSpeed = 25f;
+    [SerializeField] private float smoothTime = 1f;
+
+
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isLanding = false;
@@ -28,6 +31,13 @@ public class PlayerMovement : MonoBehaviour
     private bool isDashing = false;
 
     public bool shouldFaceObject = false; // Initially, the player won't face the specific object 
+
+    private Vector2 velocity;
+
+    private float horizontalVelocity = 0f;
+    private float verticalVelocity = 0f;
+    private float currentHorizontalVelocity = 0f;
+    private float currentVerticalVelocity = 0f;
 
 
     [SerializeField] private GameObject lockOnTarget;
@@ -97,6 +107,8 @@ public class PlayerMovement : MonoBehaviour
             }
             isLanding = false;
         }
+
+        
     }
 
     private void Update()
@@ -122,19 +134,75 @@ public class PlayerMovement : MonoBehaviour
         }
         else
             isWalking = true;
+
+
+        CalculateLocomotionAnimation();
+    }
+
+    private void CalculateLocomotionAnimation()
+    {
+        if (shouldFaceObject && lockOnTarget != null)
+        {
+            Vector3 forward = transform.forward;
+            Vector3 right = transform.right;
+
+
+            Vector3 movementDirection = SyncWithCameraRotation();
+
+            Vector3 inputDirection = new Vector3(movementDirection.x, 0, movementDirection.z).normalized;
+
+            if (isRunning && isWalking)
+            {
+                horizontalVelocity = Vector3.Dot(right, inputDirection) * runValue;
+                verticalVelocity = Vector3.Dot(forward, inputDirection) * runValue;
+            }
+            else if (isWalking && !isRunning)
+            {
+                horizontalVelocity = Vector3.Dot(right, inputDirection) * speed;
+                verticalVelocity = Vector3.Dot(forward, inputDirection) * speed;
+            }
+            else
+            {
+                horizontalVelocity = 0f;
+                verticalVelocity = 0f;
+            }
+
+            velocity = new Vector2(Mathf.SmoothDamp(velocity.x, horizontalVelocity, ref currentHorizontalVelocity, smoothTime), Mathf.SmoothDamp(velocity.y, verticalVelocity, ref currentVerticalVelocity, smoothTime));
+        }
+        else
+        {
+            if (isRunning && isWalking)
+            {
+                velocity = new Vector2(0, Mathf.SmoothDamp(velocity.y, 20, ref verticalVelocity, smoothTime));
+            }
+            else if (isWalking && !isRunning)
+            {
+                velocity = new Vector2(0, Mathf.SmoothDamp(velocity.y, 10, ref verticalVelocity, smoothTime));
+            }
+            else
+            {
+                velocity = new Vector2(Mathf.SmoothDamp(velocity.x, 0, ref horizontalVelocity, smoothTime), Mathf.SmoothDamp(velocity.y, 0, ref verticalVelocity, smoothTime));
+            }
+        }
     }
 
     void MovePlayer()
     {
         Vector3 movementDirection = SyncWithCameraRotation();
-        rigidBody.MovePosition(transform.position + movementDirection * Time.deltaTime * speed);
+
+        Vector3 newPosition = transform.position + movementDirection * Time.deltaTime * speed;
+
+        rigidBody.MovePosition(newPosition);
 
     }
 
     void Run()
     {
         Vector3 movementDirection = SyncWithCameraRotation();
-        rigidBody.MovePosition(transform.position + movementDirection * Time.deltaTime * runValue);
+
+        Vector3 newPosition = transform.position + movementDirection * Time.deltaTime * runValue;
+
+        rigidBody.MovePosition(newPosition);
 
     }
 
@@ -186,7 +254,7 @@ public class PlayerMovement : MonoBehaviour
             objectDirection.y = 0f; // Ignore the vertical component
             objectDirection.Normalize();
 
-            // Set the rotation of the rigidBody to face the specific object
+            // Set the rotation to face the specific object
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(objectDirection, Vector3.up), lockRotationSpeed * Time.deltaTime);
 
             // Continue moving in the direction of the input
@@ -274,5 +342,10 @@ public class PlayerMovement : MonoBehaviour
     public bool IsLanding()
     {
         return isLanding;
+    }
+
+    public Vector2 Velocity()
+    {
+        return velocity;
     }
 }
