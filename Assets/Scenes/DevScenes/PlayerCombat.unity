@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -148,7 +148,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &54237876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 790f0e2436522a24f84dcc204c4a8786, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 983769331}
   bossHealth: 0
   boss: {fileID: 11400000, guid: 4a0b576ed02991648983016e8af54293, type: 2}
   levitateObjects:
@@ -1812,6 +1812,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1741577551}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &983769331 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6038786172914063184, guid: 4bc4401eb728443409ecd839b202550a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1741577551}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1020271525
 GameObject:
   m_ObjectHideFlags: 0
@@ -1933,7 +1939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1051712955
 Transform:
   m_ObjectHideFlags: 0
