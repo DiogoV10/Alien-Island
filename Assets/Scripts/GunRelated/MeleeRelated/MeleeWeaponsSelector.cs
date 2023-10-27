@@ -19,7 +19,7 @@ public class MeleeWeaponsSelector : MonoBehaviour
 
     void Update()
     {
-        if (isSelectorActive && Input.GetKeyDown(swapKey))
+        if (isSelectorActive && Input.GetKeyDown(swapKey) && !PlayerSkills.Instance.IsUsingSkill())
         {
             lastSelectedWeaponIndex = (lastSelectedWeaponIndex + 1) % meleeWeapons.Length;
             SetActiveWeapon(lastSelectedWeaponIndex);

@@ -72,4 +72,9 @@ public class RangedWeapon : MonoBehaviour
             }
         }
     }
+
+    public float GunDamage()
+    {
+        return gunDamage;
+    }
 }

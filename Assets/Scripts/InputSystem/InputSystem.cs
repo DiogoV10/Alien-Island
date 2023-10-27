@@ -233,6 +233,33 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""SlowTap"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UltimateMelee"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6b8edaf-6633-4525-a28a-bc1ab0366e3f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UltimateRange"",
+                    ""type"": ""Button"",
+                    ""id"": ""37e604d7-5737-42fd-b6f2-d2b6c5689be9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""505c6ca3-cbea-4325-acb3-0ac4ece27554"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -268,6 +295,39 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""AttackRange"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8da8c916-f6a9-46de-b030-9826a1991603"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UltimateMelee"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ca691db8-07a1-4bec-b74d-e27e774dbbff"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UltimateRange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3cc95643-e2c9-4dd3-8d15-233ed6ee9643"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -289,6 +349,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Combat_AttackMelee = m_Combat.FindAction("AttackMelee", throwIfNotFound: true);
         m_Combat_AttackMeleeHold = m_Combat.FindAction("AttackMeleeHold", throwIfNotFound: true);
         m_Combat_AttackRange = m_Combat.FindAction("AttackRange", throwIfNotFound: true);
+        m_Combat_UltimateMelee = m_Combat.FindAction("UltimateMelee", throwIfNotFound: true);
+        m_Combat_UltimateRange = m_Combat.FindAction("UltimateRange", throwIfNotFound: true);
+        m_Combat_Skill = m_Combat.FindAction("Skill", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -477,6 +540,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_AttackMelee;
     private readonly InputAction m_Combat_AttackMeleeHold;
     private readonly InputAction m_Combat_AttackRange;
+    private readonly InputAction m_Combat_UltimateMelee;
+    private readonly InputAction m_Combat_UltimateRange;
+    private readonly InputAction m_Combat_Skill;
     public struct CombatActions
     {
         private @InputSystem m_Wrapper;
@@ -484,6 +550,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         public InputAction @AttackMelee => m_Wrapper.m_Combat_AttackMelee;
         public InputAction @AttackMeleeHold => m_Wrapper.m_Combat_AttackMeleeHold;
         public InputAction @AttackRange => m_Wrapper.m_Combat_AttackRange;
+        public InputAction @UltimateMelee => m_Wrapper.m_Combat_UltimateMelee;
+        public InputAction @UltimateRange => m_Wrapper.m_Combat_UltimateRange;
+        public InputAction @Skill => m_Wrapper.m_Combat_Skill;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -502,6 +571,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackRange.started += instance.OnAttackRange;
             @AttackRange.performed += instance.OnAttackRange;
             @AttackRange.canceled += instance.OnAttackRange;
+            @UltimateMelee.started += instance.OnUltimateMelee;
+            @UltimateMelee.performed += instance.OnUltimateMelee;
+            @UltimateMelee.canceled += instance.OnUltimateMelee;
+            @UltimateRange.started += instance.OnUltimateRange;
+            @UltimateRange.performed += instance.OnUltimateRange;
+            @UltimateRange.canceled += instance.OnUltimateRange;
+            @Skill.started += instance.OnSkill;
+            @Skill.performed += instance.OnSkill;
+            @Skill.canceled += instance.OnSkill;
         }
 
         private void UnregisterCallbacks(ICombatActions instance)
@@ -515,6 +593,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackRange.started -= instance.OnAttackRange;
             @AttackRange.performed -= instance.OnAttackRange;
             @AttackRange.canceled -= instance.OnAttackRange;
+            @UltimateMelee.started -= instance.OnUltimateMelee;
+            @UltimateMelee.performed -= instance.OnUltimateMelee;
+            @UltimateMelee.canceled -= instance.OnUltimateMelee;
+            @UltimateRange.started -= instance.OnUltimateRange;
+            @UltimateRange.performed -= instance.OnUltimateRange;
+            @UltimateRange.canceled -= instance.OnUltimateRange;
+            @Skill.started -= instance.OnSkill;
+            @Skill.performed -= instance.OnSkill;
+            @Skill.canceled -= instance.OnSkill;
         }
 
         public void RemoveCallbacks(ICombatActions instance)
@@ -549,5 +636,8 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         void OnAttackMelee(InputAction.CallbackContext context);
         void OnAttackMeleeHold(InputAction.CallbackContext context);
         void OnAttackRange(InputAction.CallbackContext context);
+        void OnUltimateMelee(InputAction.CallbackContext context);
+        void OnUltimateRange(InputAction.CallbackContext context);
+        void OnSkill(InputAction.CallbackContext context);
     }
 }

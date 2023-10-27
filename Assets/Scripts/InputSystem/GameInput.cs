@@ -21,6 +21,9 @@ namespace V10
         public event EventHandler OnAttackMeleeAction;
         public event EventHandler OnAttackMeleeHoldAction;
         public event EventHandler OnAttackRangeAction;
+        public event EventHandler OnUltimateMeleeAction;
+        public event EventHandler OnUltimateRangeAction;
+        public event EventHandler OnSkillAction;
         public event EventHandler OnJumpAction;
 
 
@@ -59,7 +62,25 @@ namespace V10
             playerInputActions.Combat.AttackMelee.canceled += AttackMelee_canceled;
             playerInputActions.Combat.AttackMeleeHold.performed += AttackMeleeHold_performed;
             playerInputActions.Combat.AttackRange.canceled += AttackRange_canceled;
+            playerInputActions.Combat.UltimateMelee.performed += UltimateMelee_performed;
+            playerInputActions.Combat.UltimateRange.performed += UltimateRange_performed;
+            playerInputActions.Combat.Skill.performed += Skill_performed;
             playerInputActions.Movement.Jump.performed += Jump_performed;
+        }
+
+        private void Skill_performed(InputAction.CallbackContext obj)
+        {
+            OnSkillAction?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void UltimateRange_performed(InputAction.CallbackContext obj)
+        {
+            OnUltimateRangeAction?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void UltimateMelee_performed(InputAction.CallbackContext obj)
+        {
+            OnUltimateMeleeAction?.Invoke(this, EventArgs.Empty);
         }
 
         private void AttackRange_canceled(InputAction.CallbackContext obj)
