@@ -348,4 +348,9 @@ public class PlayerMovement : MonoBehaviour
     {
         return velocity;
     }
+
+    public bool IsGrounded()
+    {
+        return isGrounded;
+    }
 }

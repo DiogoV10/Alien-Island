@@ -6,7 +6,9 @@ public class LevitateAttack : MonoBehaviour
 {
     private Transform target;
     private Rigidbody rigidbody;
-    
+    [SerializeField] MinderSO minderSO;
+    Collider collider;
+
     [Header("Attack")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float levitateTime = 3f;
@@ -19,6 +21,7 @@ public class LevitateAttack : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        collider = GetComponent<Collider>();
     }
 
     // Update is called once per frame
@@ -53,6 +56,7 @@ public class LevitateAttack : MonoBehaviour
 
     void DropObject()
     {
+        collider.isTrigger = false;
         rigidbody.useGravity = true;
         attackDuration = 20f;
         isLevitated = false;

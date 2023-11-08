@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Minder : MonoBehaviour
+public class Minder : MonoBehaviour, IEntity
 {
     [Header("Target")]
     [SerializeField] private Transform target;
 
     [Header("Attributes")]
-    [SerializeField] private float bossHealth;
-    [SerializeField] private EnemySO boss;
+    [SerializeField] MinderSO minderSO;
 
     [Header("Leviate Attack")]
     [SerializeField] private List<LevitateAttack> levitateObjects;
@@ -23,8 +22,8 @@ public class Minder : MonoBehaviour
     private bool objectThrowAttackOn = false, isAllLevitated = false, objectBombingAttackOn = false;
     public UnityAction colliderWithGround;
     public bool ObjectBombingAttackOn => objectBombingAttackOn;
+    public bool ObjectThrowAttackOn => objectThrowAttackOn;
 
-    //[Header("Melee Attack")]
 
 
     // Start is called before the first frame update
@@ -62,6 +61,7 @@ public class Minder : MonoBehaviour
 
     void ObjectThrowAttack()
     {
+
         if (!isAllLevitated)
         {
             LevitateAll();
@@ -71,7 +71,7 @@ public class Minder : MonoBehaviour
         else if (throwCountdown <= 0f)
         {
             ChooseRandomObject();
-            throwCountdown = 1f / boss.fireRate;
+            throwCountdown = 1f / minderSO.fireRate;
         }
 
         throwCountdown -= Time.deltaTime;
@@ -121,4 +121,22 @@ public class Minder : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        minderSO.hp -= damage;
+        Debug.Log(minderSO.hp);
+        if (minderSO.hp <= 0f) Die();
+    }
+
+    public void Die()
+    {
+        Debug.Log("Enemy Died!");
+        OnEntityDeath();
+    }
+
+    public void OnEntityDeath()
+    {
+        //callback(gameObject);
+        Destroy(gameObject);
+    }
 }

@@ -13,22 +13,22 @@ public class HumanSummonAttack : MonoBehaviour, IEntity
     [SerializeField] HumanPuppetSO humanPuppet;
 
     private bool isPlayerInSightRange, isPlayerInAttackRange, alreadyAttacked;
+   
 
     System.Action<GameObject> callback;
 
     void FixedUpdate()
     {
         SearchForPlayer();
-        FollowPLayer();
+        FollowPlayer();
     }
 
     void SearchForPlayer()
     {
         isPlayerInAttackRange = Physics.CheckSphere(transform.position, humanPuppet.attackRange, whatIsPlayer);
-        //isPlayerInSightRange = Physics.CheckSphere(transform.position, enemy.sightRange, whatIsPlayer);
     }
 
-    void FollowPLayer()
+    void FollowPlayer()
     {
         if (!isPlayerInAttackRange)
         {

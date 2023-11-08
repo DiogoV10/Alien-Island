@@ -12,14 +12,24 @@ public class Pupeteer : MonoBehaviour
     [SerializeField] private float invokeHumanPuppetsTime = 20f, timeBetweenPuppets = 4f;
     [SerializeField] GameObject humanPuppet;
     List<GameObject> listOfHumanPuppets = new List<GameObject>();
-    private bool invokeHumanPuppetsOn = false;
+    private bool invokeHumanPuppetsOn = false, pursuingPlayer = false;
+
+
+    [Header("MelleeAttack")]
+    PupeteerMeleeAttack melleeAttack;
+    private bool melleeAtackOn = false;
+
+    private void Start()
+    {
+        melleeAttack = GetComponent<PupeteerMeleeAttack>();
+    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         ChooseAttack();
         InvokeHumanPuppets();
-        //RemoveDeadEnemiesFromList();
+        MelleeAtack();
     }
 
     void InvokeHumanPuppets()
@@ -55,6 +65,27 @@ public class Pupeteer : MonoBehaviour
         }
     }
 
+    void MelleeAtack()
+    {
+        if (melleeAtackOn)
+        {
+            melleeAttack.melleeAtackTime -= Time.deltaTime;
+            if (!pursuingPlayer)
+            {
+                melleeAttack.PursuitPlayer();
+                pursuingPlayer = true;
+            }
+            
+            melleeAttack.AttackPlayer();
+            if (melleeAttack.melleeAtackTime < 0.1f)
+            {
+                melleeAtackOn = false;
+                melleeAttack.melleeAtackTime = 20f;
+                return;
+            }     
+        }
+    }
+
     void RemoveFromEnemiesList(GameObject go)
     {
         Debug.Log("Tou sim: " + listOfHumanPuppets.Contains(go));
@@ -64,28 +95,15 @@ public class Pupeteer : MonoBehaviour
         Debug.Log("destroyed");
     }
 
-    void RemoveDeadEnemiesFromList()
-    {
-        foreach (GameObject humanPuppet in listOfHumanPuppets)
-        {
-            if (humanPuppet == null)
-            {
-                Debug.Log("É nulo");
-                listOfHumanPuppets.Remove(humanPuppet);
-                return;
-            }
-        }
-    }
-
 
     void ChooseAttack()
     {
-        if (!invokeHumanPuppetsOn)
+        if (!invokeHumanPuppetsOn && !melleeAtackOn)
         {
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = 0;
+                int random = 1; //Random.Range(0, 2);
                 Debug.Log(random);
                 switch (random)
                 {
@@ -99,6 +117,7 @@ public class Pupeteer : MonoBehaviour
 
                     case 1:
                         timeToNextAttack = 3f;
+                        melleeAtackOn = true;
                         break;
                 }
             }
