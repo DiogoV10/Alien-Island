@@ -12,10 +12,10 @@ public class RangedWeapon : MonoBehaviour
     [SerializeField] private Transform muzzle;
 
 
-    [Header("Ammo Info")]
-    [SerializeField] private int magSize, currentAmmo;
+    //[Header("Ammo Info")]
+    //[SerializeField] private int magSize, currentAmmo;
 
-    private bool isReloading;
+    //private bool isReloading;
 
     [Header("Shooting Info")]
     [SerializeField] private float gunDamage;
@@ -24,12 +24,6 @@ public class RangedWeapon : MonoBehaviour
     {
         Instance = this;
     }
-
-    void Start()
-    {
-        isReloading = false;
-    }
-
     
     void Update()
     {   
@@ -52,25 +46,23 @@ public class RangedWeapon : MonoBehaviour
 
     public void Shoot()
     {
-        Vector3 muzzlePosition = muzzle.position;
+        //Debug.Log("Shoot");
 
-        Debug.Log("Shoot");
-
-        RaycastHit hit;
-        if(Physics.Raycast(muzzle.position, muzzle.right, out hit)) 
-        {
-            //Debug.Log(hit.transform.name);
+        //RaycastHit hit;
+        //if(Physics.Raycast(muzzle.position, muzzle.right, out hit)) 
+        //{
+        //    //Debug.Log(hit.transform.name);
             
-            if (hit.transform.gameObject.CompareTag("Enemy") )
-            {
-                //Destroy(hit.transform.gameObject);
-                IEntity entity = hit.collider.GetComponent<IEntity>();
-                if (entity != null)
-                {
-                    entity.TakeDamage(gunDamage);
-                }
-            }
-        }
+        //    if (hit.transform.gameObject.CompareTag("Enemy") )
+        //    {
+        //        //Destroy(hit.transform.gameObject);
+        //        IEntity entity = hit.collider.GetComponent<IEntity>();
+        //        if (entity != null)
+        //        {
+        //            entity.TakeDamage(gunDamage);
+        //        }
+        //    }
+        //}
     }
 
     public float GunDamage()

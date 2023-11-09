@@ -42,7 +42,7 @@ public class MeleeWeapon : MonoBehaviour
                 enemies.Add(other);
                 Debug.Log("Hit");
                 other.GetComponent<HumanSummonAttack>()?.Die();
-                other.GetComponent<Enemy>()?.Die();
+                other.GetComponent<Enemy>()?.TakeHit(Enemy.DamageType.Big, MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
                 other.GetComponent<PupeteerMeleeAttack>()?.Die();
                 other.GetComponent<Minder>()?.Die();
                 other.GetComponent<Venous>()?.Die();

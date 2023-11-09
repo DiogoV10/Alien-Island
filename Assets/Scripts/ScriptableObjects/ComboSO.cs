@@ -6,5 +6,4 @@ using UnityEngine;
 public class ComboSO : ScriptableObject
 {
     public List<AttackSO> combo;
-    public string weaponName;
 }

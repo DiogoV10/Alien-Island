@@ -38,7 +38,7 @@ public class Minder : MonoBehaviour, IEntity
         ChooseAttack();
         if (objectThrowAttackOn) ObjectThrowAttack();
         else if(objectBombingAttackOn) ObjectBommbingAttack();
-        Debug.Log(objectBombingAttackOn);
+        //Debug.Log(objectBombingAttackOn);
     }
 
     void LevitateAll()

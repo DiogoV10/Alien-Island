@@ -260,6 +260,33 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LockOn"",
+                    ""type"": ""Button"",
+                    ""id"": ""5fc8099d-f79b-4ae7-a3bc-188531c8d96b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeMeleeWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b11e5e0-231b-41c9-8dd4-7d39b099c6c4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeRangeWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""29b68b9f-139d-4008-a5e7-2a0fe595dfd0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -328,6 +355,39 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""Skill"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2984a406-90cb-458a-b09c-93f6cf52c7e7"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""779d4219-2221-4f40-9f39-b98e8fcbf25c"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeMeleeWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a6ae6f01-8402-4e73-bcce-5a08e1e5b733"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeRangeWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -352,6 +412,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Combat_UltimateMelee = m_Combat.FindAction("UltimateMelee", throwIfNotFound: true);
         m_Combat_UltimateRange = m_Combat.FindAction("UltimateRange", throwIfNotFound: true);
         m_Combat_Skill = m_Combat.FindAction("Skill", throwIfNotFound: true);
+        m_Combat_LockOn = m_Combat.FindAction("LockOn", throwIfNotFound: true);
+        m_Combat_ChangeMeleeWeapon = m_Combat.FindAction("ChangeMeleeWeapon", throwIfNotFound: true);
+        m_Combat_ChangeRangeWeapon = m_Combat.FindAction("ChangeRangeWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -543,6 +606,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Combat_UltimateMelee;
     private readonly InputAction m_Combat_UltimateRange;
     private readonly InputAction m_Combat_Skill;
+    private readonly InputAction m_Combat_LockOn;
+    private readonly InputAction m_Combat_ChangeMeleeWeapon;
+    private readonly InputAction m_Combat_ChangeRangeWeapon;
     public struct CombatActions
     {
         private @InputSystem m_Wrapper;
@@ -553,6 +619,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         public InputAction @UltimateMelee => m_Wrapper.m_Combat_UltimateMelee;
         public InputAction @UltimateRange => m_Wrapper.m_Combat_UltimateRange;
         public InputAction @Skill => m_Wrapper.m_Combat_Skill;
+        public InputAction @LockOn => m_Wrapper.m_Combat_LockOn;
+        public InputAction @ChangeMeleeWeapon => m_Wrapper.m_Combat_ChangeMeleeWeapon;
+        public InputAction @ChangeRangeWeapon => m_Wrapper.m_Combat_ChangeRangeWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Combat; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -580,6 +649,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Skill.started += instance.OnSkill;
             @Skill.performed += instance.OnSkill;
             @Skill.canceled += instance.OnSkill;
+            @LockOn.started += instance.OnLockOn;
+            @LockOn.performed += instance.OnLockOn;
+            @LockOn.canceled += instance.OnLockOn;
+            @ChangeMeleeWeapon.started += instance.OnChangeMeleeWeapon;
+            @ChangeMeleeWeapon.performed += instance.OnChangeMeleeWeapon;
+            @ChangeMeleeWeapon.canceled += instance.OnChangeMeleeWeapon;
+            @ChangeRangeWeapon.started += instance.OnChangeRangeWeapon;
+            @ChangeRangeWeapon.performed += instance.OnChangeRangeWeapon;
+            @ChangeRangeWeapon.canceled += instance.OnChangeRangeWeapon;
         }
 
         private void UnregisterCallbacks(ICombatActions instance)
@@ -602,6 +680,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Skill.started -= instance.OnSkill;
             @Skill.performed -= instance.OnSkill;
             @Skill.canceled -= instance.OnSkill;
+            @LockOn.started -= instance.OnLockOn;
+            @LockOn.performed -= instance.OnLockOn;
+            @LockOn.canceled -= instance.OnLockOn;
+            @ChangeMeleeWeapon.started -= instance.OnChangeMeleeWeapon;
+            @ChangeMeleeWeapon.performed -= instance.OnChangeMeleeWeapon;
+            @ChangeMeleeWeapon.canceled -= instance.OnChangeMeleeWeapon;
+            @ChangeRangeWeapon.started -= instance.OnChangeRangeWeapon;
+            @ChangeRangeWeapon.performed -= instance.OnChangeRangeWeapon;
+            @ChangeRangeWeapon.canceled -= instance.OnChangeRangeWeapon;
         }
 
         public void RemoveCallbacks(ICombatActions instance)
@@ -639,5 +726,8 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         void OnUltimateMelee(InputAction.CallbackContext context);
         void OnUltimateRange(InputAction.CallbackContext context);
         void OnSkill(InputAction.CallbackContext context);
+        void OnLockOn(InputAction.CallbackContext context);
+        void OnChangeMeleeWeapon(InputAction.CallbackContext context);
+        void OnChangeRangeWeapon(InputAction.CallbackContext context);
     }
 }

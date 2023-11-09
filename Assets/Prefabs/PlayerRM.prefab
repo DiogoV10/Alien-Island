@@ -40,17 +40,18 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6038786172914063184}
+  - component: {fileID: 4178152021638574490}
   - component: {fileID: 5623020220888646997}
   - component: {fileID: 7864778789491256192}
   - component: {fileID: 5295899729647019625}
   - component: {fileID: 10617343724447941}
   - component: {fileID: 5108116066315328292}
-  - component: {fileID: 4178152021638574490}
   - component: {fileID: 2306734552937671685}
   - component: {fileID: 6218299321197743421}
   - component: {fileID: 4544471574702872473}
   - component: {fileID: 5721957291002336650}
   - component: {fileID: 3346964783922387338}
+  - component: {fileID: 444423757897703718}
   m_Layer: 3
   m_Name: PlayerRM
   m_TagString: Player
@@ -76,6 +77,27 @@ Transform:
   - {fileID: 2267500692941273117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &4178152021638574490
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508388398197950362}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 16c4b6c36252ce14e8083291c9e774fd, type: 3}
+  m_Controller: {fileID: 9100000, guid: 163228e867a37e949b7cd1462c2af88f, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 1
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!136 &5623020220888646997
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -170,12 +192,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   follow: {fileID: 0}
-  runValue: 20
+  runValue: 15
   speed: 10
   rotationSpeed: 10
   lockRotationSpeed: 25
   smoothTime: 0.1
-  shouldFaceObject: 0
   lockOnTarget: {fileID: 0}
   dashTime: 0.5
   dashSpeed: 100
@@ -203,45 +224,80 @@ MonoBehaviour:
     targetCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
     transitionCondition: 0
     attackIndex: 1
-    sourceWeapon: 
-    targetWeapon: 
+    sourceWeapon: 1
+    targetWeapon: 1
   - sourceCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
     targetCombo: {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
     transitionCondition: 1
     attackIndex: 1
-    sourceWeapon: 
-    targetWeapon: 
+    sourceWeapon: 1
+    targetWeapon: 1
   - sourceCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
     targetCombo: {fileID: 11400000, guid: 5d837994c255b6a449bd278c88adc06b, type: 2}
     transitionCondition: 2
     attackIndex: 1
-    sourceWeapon: 
-    targetWeapon: 
-  availableCombos:
-  - {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
-  - {fileID: 11400000, guid: 5d837994c255b6a449bd278c88adc06b, type: 2}
-  - {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
---- !u!95 &4178152021638574490
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6508388398197950362}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 16c4b6c36252ce14e8083291c9e774fd, type: 3}
-  m_Controller: {fileID: 9100000, guid: 163228e867a37e949b7cd1462c2af88f, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 1
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+    sourceWeapon: 1
+    targetWeapon: 1
+  - sourceCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    targetCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    transitionCondition: 0
+    attackIndex: 1
+    sourceWeapon: 0
+    targetWeapon: 0
+  - sourceCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    targetCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    transitionCondition: 0
+    attackIndex: 1
+    sourceWeapon: 1
+    targetWeapon: 0
+  - sourceCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    targetCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    transitionCondition: 0
+    attackIndex: 0
+    sourceWeapon: 1
+    targetWeapon: 0
+  - sourceCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    targetCombo: {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
+    transitionCondition: 0
+    attackIndex: 1
+    sourceWeapon: 0
+    targetWeapon: 1
+  - sourceCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    targetCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    transitionCondition: 0
+    attackIndex: 1
+    sourceWeapon: 0
+    targetWeapon: 1
+  - sourceCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    targetCombo: {fileID: 11400000, guid: b7ac73914a509fb468285421db259507, type: 2}
+    transitionCondition: 0
+    attackIndex: 0
+    sourceWeapon: 0
+    targetWeapon: 1
+  - sourceCombo: {fileID: 11400000, guid: 5d837994c255b6a449bd278c88adc06b, type: 2}
+    targetCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    transitionCondition: 0
+    attackIndex: 0
+    sourceWeapon: 1
+    targetWeapon: 0
+  - sourceCombo: {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
+    targetCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    transitionCondition: 0
+    attackIndex: 0
+    sourceWeapon: 1
+    targetWeapon: 0
+  - sourceCombo: {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
+    targetCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    transitionCondition: 0
+    attackIndex: 1
+    sourceWeapon: 1
+    targetWeapon: 0
+  - sourceCombo: {fileID: 11400000, guid: b2328ef03912da54ab9ca26f03b5a736, type: 2}
+    targetCombo: {fileID: 11400000, guid: 543878b6a603d39449ce9c150fb1d766, type: 2}
+    transitionCondition: 0
+    attackIndex: 2
+    sourceWeapon: 1
+    targetWeapon: 0
 --- !u!114 &2306734552937671685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,13 +368,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efaf1c72c8640304895be248ed5ef4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ultimateSkills:
+  - {fileID: 11400000, guid: 87a1df4cbab42e6438ef95d1e5ea16bc, type: 2}
+  - {fileID: 11400000, guid: 0d20f7bc652df4f4ba577163654cb1e0, type: 2}
+  - {fileID: 11400000, guid: e7e802b11597d5d4eb80e658c69b589e, type: 2}
+  - {fileID: 11400000, guid: 15c3d707cec86af41885c9632c436fec, type: 2}
+  skills:
+  - {fileID: 11400000, guid: ec064143701063b4cbd53338db3b3c0d, type: 2}
+  - {fileID: 11400000, guid: 887bda398d0a6244fa3694d4b1d67c95, type: 2}
+  - {fileID: 11400000, guid: deacfb253b487cd4a8bece54ed858aa0, type: 2}
+  equippedSkillIndex: 2
+  toxicBlastPrefab: {fileID: 4873331344441937726, guid: 7eff189f682bc6741b0182f6ce2bd9ab,
+    type: 3}
+  illusionaryDecoyPrefab: {fileID: 989947294678405693, guid: 8bb6b634a9eec874284264d0e252cc15,
+    type: 3}
   damageBonus: 1
   damageDuration: 3
   damageInterval: 0.2
   ultimateCooldownTime: 5
   skillCooldownTime: 2
-  selectedObject: {fileID: 0}
   throwForce: 30
+--- !u!114 &444423757897703718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508388398197950362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 450a7c8f818c2fb439def8762a7c19e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6593446471853751904
 GameObject:
   m_ObjectHideFlags: 0

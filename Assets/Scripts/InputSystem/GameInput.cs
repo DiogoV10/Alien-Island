@@ -23,7 +23,10 @@ namespace V10
         public event EventHandler OnAttackRangeAction;
         public event EventHandler OnUltimateMeleeAction;
         public event EventHandler OnUltimateRangeAction;
+        public event EventHandler OnChangeMeleeWeapon;
+        public event EventHandler OnChangeRangeWeapon;
         public event EventHandler OnSkillAction;
+        public event EventHandler OnLockOn;
         public event EventHandler OnJumpAction;
 
 
@@ -65,7 +68,26 @@ namespace V10
             playerInputActions.Combat.UltimateMelee.performed += UltimateMelee_performed;
             playerInputActions.Combat.UltimateRange.performed += UltimateRange_performed;
             playerInputActions.Combat.Skill.performed += Skill_performed;
+            playerInputActions.Combat.ChangeMeleeWeapon.performed += ChangeMeleeWeapon_performed;
+            playerInputActions.Combat.ChangeRangeWeapon.performed += ChangeRangeWeapon_performed;
+            playerInputActions.Combat.LockOn.performed += LockOn_performed;
+
             playerInputActions.Movement.Jump.performed += Jump_performed;
+        }
+
+        private void LockOn_performed(InputAction.CallbackContext obj)
+        {
+            OnLockOn?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ChangeMeleeWeapon_performed(InputAction.CallbackContext obj)
+        {
+            OnChangeMeleeWeapon?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ChangeRangeWeapon_performed(InputAction.CallbackContext obj)
+        {
+            OnChangeRangeWeapon?.Invoke(this, EventArgs.Empty);
         }
 
         private void Skill_performed(InputAction.CallbackContext obj)
