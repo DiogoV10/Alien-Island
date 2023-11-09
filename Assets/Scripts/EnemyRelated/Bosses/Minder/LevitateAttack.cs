@@ -7,7 +7,7 @@ public class LevitateAttack : MonoBehaviour
     private Transform target;
     private Rigidbody rigidbody;
     [SerializeField] MinderSO minderSO;
-    Collider collider;
+    public Collider collider;
 
     [Header("Attack")]
     [SerializeField] private float speed = 5f;
@@ -29,7 +29,7 @@ public class LevitateAttack : MonoBehaviour
     {
         if(isLevitated) attackDuration -= Time.deltaTime;
         if (target == null) return;
-        else if (attackDuration <= 0f)
+        else if (attackDuration <= 0f || minderSO.hp <= 0)
         {
             DropObject();
         }

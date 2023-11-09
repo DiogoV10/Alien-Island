@@ -77,9 +77,10 @@ public class Pupeteer : MonoBehaviour
             }
             
             melleeAttack.AttackPlayer();
-            if (melleeAttack.melleeAtackTime < 0.1f)
+            if (melleeAttack.melleeAtackTime < 0.05f)
             {
                 melleeAtackOn = false;
+                pursuingPlayer = false;
                 melleeAttack.melleeAtackTime = 20f;
                 return;
             }     

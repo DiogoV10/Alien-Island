@@ -8,6 +8,7 @@ public class Venous : MonoBehaviour
     bool cloudAttackOn = false, projectileAttackOn = false;
     [SerializeField] float timeToNextAttack = 3f, projectileAttackDuration = 20f, venomSpawnRate;
     [SerializeField] GameObject venomSpit;
+    [SerializeField] Transform target;
 
     [Header("VenousSO reference")]
     [SerializeField] VenousSO venousSO;
@@ -43,7 +44,9 @@ public class Venous : MonoBehaviour
         {
             if(venomSpawnRate < .1f)
             {
-                Instantiate(venomSpit, transform.position, Quaternion.identity);
+                GameObject go = Instantiate(venomSpit, transform.position, Quaternion.identity);
+                go.GetComponent<VenomProjectile>().SetTarget(target);
+
                 venomSpawnRate = 1f / venousSO.fireRate;
             }
         }
@@ -62,7 +65,7 @@ public class Venous : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = 0; //Random.Range(0, 2);
+                int random = 1; //Random.Range(0, 2);
                 switch (random)
                 {
                     case 0:

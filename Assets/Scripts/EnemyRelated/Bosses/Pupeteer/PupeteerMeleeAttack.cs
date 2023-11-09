@@ -50,9 +50,12 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
                 i = 0;
             }
             //rigidBody.MovePosition(enemypath[i].worldPos);
-            transform.position = Vector3.MoveTowards(transform.position, enemypath[i].worldPos, speed * Time.deltaTime);
-
-            i++;
+            if(i <= pathToPlayer.path.Count)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(enemypath[i].worldPos.x, enemypath[i].worldPos.y + 2.5f, enemypath[i].worldPos.z), speed * Time.deltaTime);
+                i++;
+            }
+            
             yield return null;
         }
     }

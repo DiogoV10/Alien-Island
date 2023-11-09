@@ -14,7 +14,7 @@ public class PathFinding : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FindPath(seeker.position, target.position);
+        if(seeker != null) FindPath(seeker.position, target.position);
     }
 
     void FindPath(Vector3 startPos, Vector3 targetPos)

@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   venomProjectileAttack: {fileID: 0}
-  target: {fileID: 6508388398197950362, guid: 4bc4401eb728443409ecd839b202550a, type: 3}
+  target: {fileID: 6038786172914063184, guid: 4bc4401eb728443409ecd839b202550a, type: 3}
   playerHealthManager: {fileID: 5721957291002336650, guid: 4bc4401eb728443409ecd839b202550a,
     type: 3}
   playerMask: 3

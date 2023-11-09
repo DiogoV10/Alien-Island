@@ -131,6 +131,10 @@ public class Minder : MonoBehaviour, IEntity
     public void Die()
     {
         Debug.Log("Enemy Died!");
+        foreach (LevitateAttack obj in levitateObjects)
+        {
+            obj.collider.isTrigger = false;
+        }
         OnEntityDeath();
     }
 

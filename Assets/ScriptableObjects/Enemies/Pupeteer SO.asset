@@ -16,5 +16,5 @@ MonoBehaviour:
   hp: 100
   speed: 0
   damageAmount: 0
-  attackRange: 3
+  attackRange: 5
   timeBetweenAttacks: 1.5

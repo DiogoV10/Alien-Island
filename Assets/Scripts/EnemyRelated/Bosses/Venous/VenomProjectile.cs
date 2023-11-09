@@ -9,12 +9,12 @@ public class VenomProjectile : MonoBehaviour
     Rigidbody rigidBody;
     Vector3 distToPlayer;
     float speed = 20f, lifeTime = 3f;
-    bool colided = false;
+    bool colided = false, startedMoving = false;
 
     [Header("Player Reference")]
-    [SerializeField] GameObject target;
     [SerializeField] PlayerHealthManager playerHealthManager;
-    [SerializeField] private int playerMask;
+    [SerializeField] int playerMask;
+    Transform target;
 
     [Header("Attributes")]
     [SerializeField] VenousSO venousSO;
@@ -22,14 +22,21 @@ public class VenomProjectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        startedMoving = false;
         rigidBody = GetComponent<Rigidbody>();
-        distToPlayer = new Vector3(target.transform.position.x - transform.position.x, 0, target.transform.position.z - transform.position.z);
-        MoveToPlayer();
+        //distToPlayer = new Vector3(target.transform.position.x - transform.position.x, 0, target.transform.position.z - transform.position.z);
+        //MoveToPlayer();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!startedMoving)
+        {
+            DistanceToPlayer();
+            MoveToPlayer();
+            startedMoving = true;
+        }
         DestroyIfNotCollide();
     }
 
@@ -47,6 +54,11 @@ public class VenomProjectile : MonoBehaviour
         }
     }
 
+    void DistanceToPlayer()
+    {
+        distToPlayer = new Vector3(target.position.x - transform.position.x, 0, target.position.z - transform.position.z);
+    }
+
     void DamagePlayer()
     {
         IEntity entity = target.GetComponent<IEntity>();
@@ -54,7 +66,12 @@ public class VenomProjectile : MonoBehaviour
         Debug.Log(playerHealthManager.playerHealth);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void SetTarget(Transform _target) 
+    {
+        target = _target;
+    }
+
+    void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.layer == playerMask)
         {
