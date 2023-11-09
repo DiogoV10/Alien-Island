@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Knife
   weaponPrefab: {fileID: 9134970277224811975, guid: a37e3e722e4ea2746aa9053309992a3d,
     type: 3}
-  damage: 2
+  damage: 3
   attackSpeed: 1
   icon: {fileID: 0}
