@@ -3214,6 +3214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minderSO: {fileID: 11400000, guid: 6ef578e3f7b0d2f4e8d2c4d529655ac6, type: 2}
+  collider: {fileID: 0}
   speed: 20
   levitateTime: 2.95
   attackDuration: 0
@@ -29245,6 +29246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minderSO: {fileID: 11400000, guid: 6ef578e3f7b0d2f4e8d2c4d529655ac6, type: 2}
+  collider: {fileID: 0}
   speed: 20
   levitateTime: 3
   attackDuration: 0
@@ -39177,7 +39179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1788802827204626, guid: b97e595321899234b8769abaed928734, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4979083959625082, guid: b97e595321899234b8769abaed928734, type: 3}
       propertyPath: m_LocalPosition.x

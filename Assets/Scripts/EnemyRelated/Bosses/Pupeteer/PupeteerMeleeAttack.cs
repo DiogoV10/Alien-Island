@@ -44,7 +44,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
         while (melleeAtackTime >= 0.1f)
         {
             Debug.Log("Follow Player");
-            if(enemypath != pathToPlayer.path)
+            if(enemypath != pathToPlayer.path && !isPlayerInAttackRange)
             {
                 enemypath = pathToPlayer.path;
                 i = 0;

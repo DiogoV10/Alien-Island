@@ -104,7 +104,7 @@ public class Pupeteer : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = 1; //Random.Range(0, 2);
+                int random = 0; //Random.Range(0, 2);
                 Debug.Log(random);
                 switch (random)
                 {
