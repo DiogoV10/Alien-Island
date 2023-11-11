@@ -44,9 +44,6 @@ public class CameraRotation : MonoBehaviour
         RotateCameraLeft();
         RotateCameraRight();
         transform.position = target.position - transform.forward * distanceFromTarget;
-        
-        //Debug.Log(transform.forward);
-        //Debug.Log(target.position);
     }
 
     void RotateCameraLeft()
