@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isWalking = false;
     private bool isDashing = false;
 
-    public bool shouldFaceObject = false; // Initially, the player won't face the specific object 
+    private bool shouldFaceObject = false; // Initially, the player won't face the specific object 
 
     private Vector2 velocity;
 
@@ -344,13 +344,13 @@ public class PlayerMovement : MonoBehaviour
         return isLanding;
     }
 
-    public Vector2 Velocity()
-    {
-        return velocity;
-    }
-
     public bool IsGrounded()
     {
         return isGrounded;
+    }
+
+    public Vector2 Velocity()
+    {
+        return velocity;
     }
 }

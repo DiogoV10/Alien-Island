@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c14c1a4a403334fa6cda0f71b9da13, type: 3}
   m_Name: Knife_NormalAttack2
   m_EditorClassIdentifier: 
-  attackName: 
-  animationClip: {fileID: 0}
-  damage: 0
+  attackName: Knife_NormalAttack2
+  animationClip: {fileID: 7400000, guid: b9597f29832a8664a8c19b79a6a659e0, type: 2}
+  damage: 5

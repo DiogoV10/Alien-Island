@@ -10,22 +10,27 @@ public class PlayerSkills : MonoBehaviour
     public static PlayerSkills Instance { get; private set; }
 
 
-    private Animator animator;
+    [SerializeField] private List<UltimateSkillSO> ultimateSkills;
+    [SerializeField] private List<SkillSO> skills;
 
-    private string currentSkill;
+    [SerializeField] private int equippedSkillIndex = 0;
+
+    private Animator animator;
 
     private bool canUseSkill = true;
     private bool canUseUltimate = true;
     private bool isUsingSkill = false;
 
 
-    public float damageBonus = 10.0f; // Damage per second.
-    public float damageDuration = 3.0f;  // Duration of the damage effect.
-    public float damageInterval = 1.0f;
+    [SerializeField] private GameObject toxicBlastPrefab;
+    [SerializeField] private GameObject illusionaryDecoyPrefab;
 
-    public float ultimateCooldownTime = 5.0f;   // Cooldown time in seconds.
-    public float skillCooldownTime = 2.0f;   // Cooldown time in seconds.
-    private float lastSkillTime;        // Time when the skill was last used.
+    [SerializeField] private float damageBonus = 10.0f; // Damage per second.
+    [SerializeField] private float damageDuration = 3.0f;  // Duration of the damage effect.
+    [SerializeField] private float damageInterval = 1.0f;
+
+    [SerializeField] private float ultimateCooldownTime = 5.0f;   // Cooldown time in seconds.
+    [SerializeField] private float skillCooldownTime = 2.0f;   // Cooldown time in seconds.
 
 
     private enum SkillState
@@ -37,15 +42,14 @@ public class PlayerSkills : MonoBehaviour
     }
 
     private SkillState skillState = SkillState.Inactive;
-    public GameObject selectedObject = null;
+    private GameObject selectedObject = null;
     private Vector3 throwDirection;
 
-    public float throwForce = 10.0f;
+    [SerializeField] private float throwForce = 10.0f;
 
 
     private void Awake()
     {
-
         Instance = this;
         animator = GetComponent<Animator>();
     }
@@ -67,40 +71,91 @@ public class PlayerSkills : MonoBehaviour
 
     private void GameInput_OnSkillAction(object sender, System.EventArgs e)
     {
-        if (canUseSkill)
+        if (canUseSkill & !isUsingSkill)
         {
-            Skill();
+            if (equippedSkillIndex >= 0 && equippedSkillIndex < skills.Count)
+            {
+                SkillSO equippedSkill = skills[equippedSkillIndex];
+                ExecuteSkill(equippedSkill);
+            }
         }
     }
 
     private void GameInput_OnUltimateRangeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && canUseSkill)
+        if (canUseUltimate && canUseSkill && !isUsingSkill)
         {
             PlayerCombat.Instance.CannotAttack();
             isUsingSkill = true;
-            UltimateRange();
-            canUseUltimate = false;
-            lastSkillTime = Time.time;
-            StartCoroutine(UltimateCooldown());
+
+            string currentWeapon = RangedWeaponsSelector.Instance.GetActiveWeaponName();
+
+            if (currentWeapon == null)
+            {
+                return;
+            }
+
+            UltimateSkillSO ultimateSkill = ultimateSkills.Find(skill => skill.weapon.ToString() == currentWeapon);
+
+            if (ultimateSkill != null)
+            {
+                ExecuteUltimate(ultimateSkill);
+                canUseUltimate = false;
+                StartCoroutine(UltimateCooldown());
+            }
         }
     }
 
     private void GameInput_OnUltimateMeleeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && canUseSkill)
+        if (canUseUltimate && canUseSkill && !isUsingSkill)
         {
             PlayerCombat.Instance.CannotAttack();
             isUsingSkill = true;
-            UltimateMelee();
-            canUseUltimate = false;
-            lastSkillTime = Time.time;
-            StartCoroutine(UltimateCooldown());
+
+            string currentWeapon = MeleeWeaponsSelector.Instance.GetActiveWeaponName();
+
+            if (currentWeapon == null)
+            {
+                return;
+            }
+
+            UltimateSkillSO ultimateSkill = ultimateSkills.Find(skill => skill.weapon.ToString() == currentWeapon);
+
+            if (ultimateSkill != null)
+            {
+                ExecuteUltimate(ultimateSkill);
+                canUseUltimate = false;
+                StartCoroutine(UltimateCooldown());
+            }
+
         }
     }
 
-    private void Skill()
+    private void ExecuteSkill(SkillSO skill)
     {
+        switch (skill.name)
+        {
+            case "ObjectControl":
+                Skill1();
+                break;
+
+            case "ToxicBlast":
+                Skill2(skill);
+                break;
+
+            case "IllusionaryDecoy":
+                Skill3(skill);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void Skill1()
+    {
+        Debug.Log("yes");
         if (skillState == SkillState.Following)
         {
             if (selectedObject != null)
@@ -121,7 +176,6 @@ public class PlayerSkills : MonoBehaviour
                 }
                 selectedObject = null;
                 canUseSkill = false;
-                lastSkillTime = Time.time;
                 StartCoroutine(SkillCooldown());
                 skillState = SkillState.Inactive;
             }
@@ -142,7 +196,104 @@ public class PlayerSkills : MonoBehaviour
         }
     }
 
-    private void UltimateMelee()
+    private void Skill2(SkillSO skill)
+    {
+        GameObject toxicBlastObject = Instantiate(toxicBlastPrefab, transform.position, Quaternion.identity);
+        ToxicBlast toxicBlast = toxicBlastObject.GetComponent<ToxicBlast>();
+
+        Vector3 decoySize = Vector3.zero;
+        Collider decoyCollider = toxicBlastObject.GetComponent<Collider>();
+        if (decoyCollider != null)
+        {
+            decoySize = decoyCollider.bounds.size;
+        }
+
+        // Adjust the Y position to avoid spawning inside the ground.
+        Vector3 adjustedPosition = toxicBlastObject.transform.position;
+        adjustedPosition.y += decoySize.y * 0.5f; // Half of the decoy's height.
+        toxicBlastObject.transform.position = adjustedPosition;
+
+        toxicBlast.Initialize(skill);
+
+        canUseSkill = false;
+        StartCoroutine(SkillCooldown());
+    }
+
+    private void Skill3(SkillSO skill)
+    {
+        Vector3 spawnPosition = transform.position - transform.forward * 2;
+        GameObject decoy = Instantiate(illusionaryDecoyPrefab, spawnPosition, Quaternion.identity);
+
+        Vector3 decoySize = Vector3.zero;
+        Collider decoyCollider = decoy.GetComponent<Collider>();
+        if (decoyCollider != null)
+        {
+            decoySize = decoyCollider.bounds.size;
+        }
+
+        // Adjust the Y position to avoid spawning inside the ground.
+        Vector3 adjustedPosition = decoy.transform.position;
+        adjustedPosition.y += decoySize.y * 0.5f; // Half of the decoy's height.
+        decoy.transform.position = adjustedPosition;
+
+        IllusionaryDecoy decoyScript = decoy.GetComponent<IllusionaryDecoy>();
+        decoyScript.Initialize(skill);
+
+        canUseSkill = false;
+        StartCoroutine(SkillCooldown());
+    }
+
+    private void ExecuteUltimate(UltimateSkillSO ultimateSkill)
+    {
+        Debug.Log(ultimateSkill.weapon.ToString());
+
+        switch (ultimateSkill.weapon)
+        {
+            case Weapons.Knife:
+                UltimateKnife();
+                break;
+
+            case Weapons.Katana: 
+                UltimateKatana(); 
+                break;
+
+            case Weapons.Pistol:
+                UltimatePistol();
+                break;
+
+            case Weapons.Rifle:
+                UltimateRifle();
+                break;
+
+            default: 
+                break;
+        }
+    }
+
+    private void UltimateKnife()
+    {
+        WeaponSelector.Instance.ChangeSystem(0);
+
+        PlayerCombat.Instance.CannotAttack();
+
+        animator.SetTrigger("Shoot");
+
+        float eviscerateRange = 5.0f; 
+        LayerMask enemyLayer = LayerMask.GetMask("Enemy"); 
+
+        Collider[] hitEnemies = Physics.OverlapSphere(transform.position, eviscerateRange, enemyLayer);
+
+        foreach (Collider enemy in hitEnemies)
+        {
+            Health enemyHealth = enemy.GetComponent<Health>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(100);
+            }
+        }
+    }
+
+    private void UltimateKatana()
     {
         WeaponSelector.Instance.ChangeSystem(0);
 
@@ -167,13 +318,41 @@ public class PlayerSkills : MonoBehaviour
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-
                 hit.collider.GetComponent<Health>().TakeDamage(100);
             }
         }
     }
 
-    private void UltimateRange()
+    private void UltimateRifle()
+    {
+        WeaponSelector.Instance.ChangeSystem(1);
+
+        PlayerCombat.Instance.CannotAttack();
+
+        float coneAngle = 45f;
+        float detectionRadius = 20f;
+
+        Vector3 forwardDirection = transform.forward;
+        Vector3 coneOrigin = transform.position;
+
+        Collider[] colliders = Physics.OverlapSphere(coneOrigin, detectionRadius);
+
+        foreach (Collider col in colliders)
+        {
+            if (col.CompareTag("Enemy"))
+            {
+                Vector3 directionToEnemy = col.transform.position - coneOrigin;
+                float angleToEnemy = Vector3.Angle(forwardDirection, directionToEnemy);
+
+                if (angleToEnemy <= coneAngle / 2)
+                {
+                    StartCoroutine(DealDamageOverTime(col.gameObject));
+                }
+            }
+        }
+    }
+
+    private void UltimatePistol()
     {
         WeaponSelector.Instance.ChangeSystem(1);
 
@@ -224,12 +403,12 @@ public class PlayerSkills : MonoBehaviour
             }
             else
             {
-                Debug.LogError("The enemy does not have a Health component.");
+                //Debug.LogError("The enemy does not have a Health component.");
             }
         }
         else
         {
-            Debug.LogError("The enemy object is null.");
+            //Debug.LogError("The enemy object is null.");
         }
     }
 

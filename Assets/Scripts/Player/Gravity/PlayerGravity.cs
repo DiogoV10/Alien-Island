@@ -19,7 +19,7 @@ public class PlayerGravity : MonoBehaviour
     {
         if (!isGrouded.IsGrounded())
         {
-            Debug.Log("A tentar usar Gravidade");
+            //Debug.Log("A tentar usar Gravidade");
             rigidbody.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
         }
     }

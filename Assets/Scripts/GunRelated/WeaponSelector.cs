@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using V10;
 
 public class WeaponSelector : MonoBehaviour
 {
@@ -9,17 +10,12 @@ public class WeaponSelector : MonoBehaviour
     public static WeaponSelector Instance { get; private set; }
 
 
-    [Header("Systems Keys")]
-    [SerializeField] private KeyCode meleeSystemKey;
-    [SerializeField] private KeyCode rangedSystemKey;
-
     [Header("Misc")]
     [SerializeField] private float switchTime;
 
-    public MeleeWeaponsSelector meleeWeaponsSelector;
-    public RangedWeaponsSwap rangedWeaponsSelector;
 
-    private float timeSinceLastWeaponSwitch;
+    private float timeSinceLastWeaponSwitchMelee;
+    private float timeSinceLastWeaponSwitchRange;
 
     private int meleeWeaponIndex = 0;
     private int rangedWeaponIndex = 0;
@@ -32,52 +28,94 @@ public class WeaponSelector : MonoBehaviour
 
     private void Start()
     {
-        SelectSystem(0); 
-        timeSinceLastWeaponSwitch = 0f;
+        GameInput.Instance.OnChangeMeleeWeapon += GameInput_OnChangeMeleeWeapon;
+        GameInput.Instance.OnChangeRangeWeapon += GameInput_OnChangeRangeWeapon;
+
+        SelectSystem(0);
+
+        timeSinceLastWeaponSwitchMelee = 0f;
+        timeSinceLastWeaponSwitchRange = 0f;
     }
 
     private void Update()
     {
-        timeSinceLastWeaponSwitch += Time.deltaTime;
+        timeSinceLastWeaponSwitchMelee += Time.deltaTime;
+        timeSinceLastWeaponSwitchRange += Time.deltaTime;
+    }
 
-        //if (Input.GetKeyDown(meleeSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
-        //{
-        //    SelectSystem(0); 
-        //}
-        //else if (Input.GetKeyDown(rangedSystemKey) && timeSinceLastWeaponSwitch >= switchTime)
-        //{
-        //    SelectSystem(1); 
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Alpha1) && meleeWeaponsSelector.IsActive())
+    private void GameInput_OnChangeRangeWeapon(object sender, System.EventArgs e)
+    {
+        if (timeSinceLastWeaponSwitchRange >= switchTime)
         {
-            meleeWeaponIndex = (meleeWeaponIndex + 1) % meleeWeaponsSelector.GetWeaponCount();
-            meleeWeaponsSelector.SwitchToWeapon(meleeWeaponIndex);
+            rangedWeaponIndex = (rangedWeaponIndex + 1) % RangedWeaponsSelector.Instance.GetWeaponCount();
+            RangedWeaponsSelector.Instance.RequestWeaponChange(rangedWeaponIndex);
+
+            if (!PlayerSkills.Instance.IsUsingSkill() && !PlayerCombat.Instance.IsShooting())
+            {
+                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
+            }
+
+            if (PlayerCombat.Instance.IsAttacking())
+            {
+                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
+            }
+                
+            timeSinceLastWeaponSwitchRange = 0f; // Reset the time since last switch
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && rangedWeaponsSelector.IsActive() && !PlayerSkills.Instance.IsUsingSkill())
+    }
+
+    private void GameInput_OnChangeMeleeWeapon(object sender, System.EventArgs e)
+    {
+        if (timeSinceLastWeaponSwitchMelee >= switchTime)
         {
-            rangedWeaponIndex = (rangedWeaponIndex + 1) % rangedWeaponsSelector.GetWeaponCount();
-            rangedWeaponsSelector.SwitchToWeapon(rangedWeaponIndex);
+            meleeWeaponIndex = (meleeWeaponIndex + 1) % MeleeWeaponsSelector.Instance.GetWeaponCount();
+            MeleeWeaponsSelector.Instance.RequestWeaponChange(meleeWeaponIndex);
+
+            if (!PlayerSkills.Instance.IsUsingSkill() && !PlayerCombat.Instance.IsAttacking())
+            {
+                MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
+            }
+
+            timeSinceLastWeaponSwitchMelee = 0f; // Reset the time since last switch
         }
     }
 
     private void SelectSystem(int systemIndex)
     {
-        meleeWeaponsSelector.SetActive(systemIndex == 0);
-        rangedWeaponsSelector.SetActive(systemIndex == 1);
-
-        timeSinceLastWeaponSwitch = 0f;
-
-        OnSystemSelected(systemIndex);
-    }
-
-    private void OnSystemSelected(int systemIndex)
-    {
-        
+        MeleeWeaponsSelector.Instance.SetActive(systemIndex == 0);
+        RangedWeaponsSelector.Instance.SetActive(systemIndex == 1);
     }
 
     public void ChangeSystem(int systemIndex)
     {
         SelectSystem(systemIndex);
+    }
+
+    public string GetCurrentWeaponInHand()
+    {
+        if (MeleeWeaponsSelector.Instance.IsActive())
+        {
+            return MeleeWeaponsSelector.Instance.GetActiveWeaponName();
+        }
+        else if (RangedWeaponsSelector.Instance.IsActive())
+        {
+            return RangedWeaponsSelector.Instance.GetActiveWeaponName();
+        }
+
+        return "No weapon selected";
+    }
+
+    public string GetPendingWeaponInHand()
+    {
+        if (MeleeWeaponsSelector.Instance.IsActive())
+        {
+            return MeleeWeaponsSelector.Instance.GetPendingWeaponName();
+        }
+        else if (RangedWeaponsSelector.Instance.IsActive())
+        {
+            return RangedWeaponsSelector.Instance.GetPendingWeaponName();
+        }
+
+        return "No pending weapon selected";
     }
 }
