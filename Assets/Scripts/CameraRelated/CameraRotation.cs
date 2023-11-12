@@ -10,6 +10,7 @@ public class CameraRotation : MonoBehaviour
     [SerializeField] float cameraRotationSpeed = 2f;
     private bool rotLeft;
     private bool rotRight;
+    private bool inGame = false;
     private InputSystem inputSystem;
     [SerializeField] private Transform target;
     [SerializeField] private float distanceFromTarget = 36f;
@@ -17,6 +18,21 @@ public class CameraRotation : MonoBehaviour
     void Start()
     {
         //transform.rotation = Quaternion.LookRotation(target.position - transform.position).normalized;
+    }
+
+    void Awake()
+    {
+        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
+    }
+
+    private void GameManagerOnGameStateChange(GameState state)
+    {
+        inGame = state == GameState.InGame;
     }
 
     private void OnEnable()
@@ -41,6 +57,7 @@ public class CameraRotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!inGame) return;
         RotateCameraLeft();
         RotateCameraRight();
         transform.position = target.position - transform.forward * distanceFromTarget;

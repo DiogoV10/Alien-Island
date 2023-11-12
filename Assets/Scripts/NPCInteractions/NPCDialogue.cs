@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-public class NPC : MonoBehaviour
+public class NPCDialogue : MonoBehaviour
 {
     int playerMask = 3;
     InputSystem inputSystem;
@@ -12,6 +12,22 @@ public class NPC : MonoBehaviour
     [SerializeField] private GameObject image;
     [SerializeField] private Camera mainCam, dialogueCam;
     // Start is called before the first frame update
+
+    void Awake()
+    {
+        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
+    }
+
+    private void GameManagerOnGameStateChange(GameState state)
+    {
+        indialogue = state == GameState.NpcDialogue;
+    }
+
     void Start()
     {
         image.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
@@ -22,7 +38,7 @@ public class NPC : MonoBehaviour
         if(inputSystem == null)
         {
             inputSystem = new InputSystem();
-            inputSystem.Interactions.Interact.performed += i => indialogue = !indialogue;
+            inputSystem.Interactions.Interact.performed += i => ChangeState();
         }
 
         inputSystem.Enable();
@@ -31,16 +47,33 @@ public class NPC : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Interacted();
+        //if (!indialogue) return;
+        //Interacted();
         image.transform.rotation = Quaternion.Euler(0, mainCam.transform.rotation.eulerAngles.y , 0);
     }
 
-    void Interacted()
+    void ChangeState()
     {
-        if (!insideZone) return;
-        if (indialogue) EnterDialogue();
-        else ExitDialogue();
+        indialogue = !indialogue;
+        if (indialogue)
+        {
+            GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
+            image.SetActive(false);
+            EnterDialogue();
+        }
+        else
+        {
+            GameManager.Instance.UpdateGameState(GameState.InGame);
+            image.SetActive(true);
+            ExitDialogue();
+        }
     }
+
+    //void Interacted()
+    //{
+    //    if (indialogue) EnterDialogue();
+    //    else ExitDialogue();
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
@@ -64,8 +97,7 @@ public class NPC : MonoBehaviour
     {
         dialogueCam.enabled = true;
         mainCam.enabled = false;
-        //Debug.Log(playerInput.currentActionMap);
-        playerInput.currentActionMap.Disable();
+        inputSystem.Movement.Disable();
     }
 
     void ExitDialogue()
