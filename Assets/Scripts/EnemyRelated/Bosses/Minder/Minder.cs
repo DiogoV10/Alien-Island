@@ -10,6 +10,7 @@ public class Minder : MonoBehaviour, IEntity
 
     [Header("Attributes")]
     [SerializeField] MinderSO minderSO;
+    Animator animator;
 
     [Header("Leviate Attack")]
     [SerializeField] private List<LevitateAttack> levitateObjects;
@@ -30,6 +31,7 @@ public class Minder : MonoBehaviour, IEntity
     void Start()
     {
         colliderWithGround += ObjectOnFloor;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -80,6 +82,7 @@ public class Minder : MonoBehaviour, IEntity
         {
             objectThrowAttackOn = false;
             isAllLevitated = false;
+            animator.SetBool("isLevitateAttack", false);
         }
     }
 
@@ -94,6 +97,7 @@ public class Minder : MonoBehaviour, IEntity
     void ObjectOnFloor()
     {
         objectBombingAttackOn = false;
+        animator.SetBool("isBombingAttackActive", false);
     }
 
     void ChooseAttack()
@@ -108,12 +112,14 @@ public class Minder : MonoBehaviour, IEntity
                 {
                     case 0:
                         objectThrowAttackOn = true;
+                        animator.SetBool("isLevitateAttack", true);
                         foreach (LevitateAttack obj in levitateObjects) obj.attackDuration = 20f;
                         timeToNextAttack = 3f;
                         break;
 
                     case 1:
                         objectBombingAttackOn = true;
+                        animator.SetBool("isBombingAttackActive", true);
                         timeToNextAttack = 3f;
                         break;
                 }
