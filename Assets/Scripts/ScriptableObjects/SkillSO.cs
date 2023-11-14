@@ -9,6 +9,7 @@ public class SkillSO : ScriptableObject
     public int damage;
     public float duration;
     public float range;
+    public float cooldown;
     public LayerMask affectedLayers;
     public Sprite icon;
 }

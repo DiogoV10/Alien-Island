@@ -11,58 +11,67 @@ public class RangedWeapon : MonoBehaviour
 
     [SerializeField] private Transform muzzle;
 
-
-    //[Header("Ammo Info")]
-    //[SerializeField] private int magSize, currentAmmo;
-
-    //private bool isReloading;
-
     [Header("Shooting Info")]
     [SerializeField] private float gunDamage;
+
+    [SerializeField] private GameObject hitPrefab;
 
     private void Awake()
     {
         Instance = this;
     }
-    
-    void Update()
-    {   
-        //if(Input.GetKeyDown(shootKey))
-        //{
-        //    Shoot();
-        //}
-        
-        /*
-        timeSinceLastShot += Time.deltaTime;
-        if (GunCanShoot() && currentAmmo > 0)
-        {
-            if (!gameObject.activeSelf) return;
-
-            Shoot();
-            Debug.Log("Pew Pew");
-        }
-        */
-    }
 
     public void Shoot()
     {
-        //Debug.Log("Shoot");
+        if (PlayerMovement.Instance.ShouldFaceObject())
+        {
+            GameObject lockedEnemy = LockOn.Instance.GetLockedEnemy();
+            if (lockedEnemy != null /*&& !IsEnemyBehindObstacle(lockedEnemy)*/)
+            {
+                lockedEnemy.GetComponent<Enemy>()?.TakeHit(Enemy.DamageType.Small, gunDamage);
+                Debug.Log("Hit");
+            }
+            else
+            {
+                int layerMask = ~LayerMask.GetMask("Player");
+                RaycastHit hit;
+                if (Physics.Raycast(muzzle.position, muzzle.forward, out hit, Mathf.Infinity, layerMask))
+                {
+                    Debug.Log("Hit something with tag: " + hit.transform.tag);
+                    InstantiateHitEffect(hit.point);
+                }
+            }
+        }
+        else
+        {
+            int layerMask = ~LayerMask.GetMask("Player");
+            RaycastHit hit;
+            if (Physics.Raycast(muzzle.position, muzzle.forward, out hit, Mathf.Infinity, layerMask))
+            {
+                Debug.Log("Hit something with tag: " + hit.transform.tag);
+                InstantiateHitEffect(hit.point);
+            }
+        }
+    }
 
-        //RaycastHit hit;
-        //if(Physics.Raycast(muzzle.position, muzzle.right, out hit)) 
-        //{
-        //    //Debug.Log(hit.transform.name);
-            
-        //    if (hit.transform.gameObject.CompareTag("Enemy") )
-        //    {
-        //        //Destroy(hit.transform.gameObject);
-        //        IEntity entity = hit.collider.GetComponent<IEntity>();
-        //        if (entity != null)
-        //        {
-        //            entity.TakeDamage(gunDamage);
-        //        }
-        //    }
-        //}
+    private bool IsEnemyBehindObstacle(GameObject enemy)
+    {
+        if (enemy != null)
+        {
+            Enemy enemyComponent = enemy.GetComponent<Enemy>();
+
+            if (enemyComponent != null)
+            {
+                return !enemyComponent.CanSeePlayer();
+            }
+        }
+
+        return false;
+    }
+
+    private void InstantiateHitEffect(Vector3 position)
+    {
+        Instantiate(hitPrefab, position, Quaternion.identity);
     }
 
     public float GunDamage()

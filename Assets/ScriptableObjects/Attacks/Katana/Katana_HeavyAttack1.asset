@@ -15,4 +15,4 @@ MonoBehaviour:
   attackName: Heavy Attack 1
   animationClip: {fileID: 7400000, guid: 1ddeca4b728d40541a431282458aef18, type: 2}
   damage: 15
-  nextAttackDelay: 0
+  damageType: 1

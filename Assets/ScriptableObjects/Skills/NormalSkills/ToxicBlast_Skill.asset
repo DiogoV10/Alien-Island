@@ -16,6 +16,7 @@ MonoBehaviour:
   damage: 20
   duration: 5
   range: 5
+  cooldown: 15
   affectedLayers:
     serializedVersion: 2
     m_Bits: 128

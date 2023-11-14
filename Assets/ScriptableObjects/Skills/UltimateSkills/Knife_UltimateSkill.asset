@@ -15,4 +15,5 @@ MonoBehaviour:
   name: Knife Ultimate
   weapon: 0
   damage: 20
+  cooldown: 100
   icon: {fileID: 0}

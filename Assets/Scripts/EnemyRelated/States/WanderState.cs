@@ -10,9 +10,16 @@ public class WanderState : MonoBehaviour, IEnemyState
     [SerializeField] private float wanderZoneRadius = 10f;
     [SerializeField] private float idleDuration = 3.0f;
 
+    private Animator animator;
     private Transform currentWaypoint;
     private float idleTimer;
     private bool isIdling;
+    private float nextIdleActTime;
+
+    public void Initialize(Animator animator)
+    {
+        this.animator = animator;
+    }
 
     public void EnterState(Enemy enemy)
     {
@@ -20,6 +27,8 @@ public class WanderState : MonoBehaviour, IEnemyState
 
         idleTimer = 0f;
         isIdling = false;
+        animator.SetBool("Walk", true);
+        animator.SetBool("Idle", false);
 
         if (useWaypoints && waypoints != null && waypoints.Length > 0)
         {
@@ -52,8 +61,23 @@ public class WanderState : MonoBehaviour, IEnemyState
             idleTimer += Time.deltaTime;
             if (idleTimer >= idleDuration)
             {
+                animator.SetBool("Idle", false);
+                animator.SetBool("Walk", true);
                 isIdling = false;
                 EnterState(enemy);
+            }
+            else if (Time.time >= nextIdleActTime) 
+            { 
+                int randomAnimation = Random.Range(0, 3);
+
+                if (randomAnimation < 2)
+                {
+                    animator.SetTrigger($"IdleAct{randomAnimation + 1}");
+
+                    Debug.Log("Idle");
+                }
+
+                nextIdleActTime = Time.time + Random.Range(10f, 15f);
             }
         }
         else
@@ -65,6 +89,8 @@ public class WanderState : MonoBehaviour, IEnemyState
                 if (Vector3.Distance(enemy.transform.position, currentWaypoint.position) < 0.1f)
                 {
                     isIdling = true;
+                    animator.SetBool("Idle", true);
+                    animator.SetBool("Walk", false);
                 }
             }
         }
@@ -74,7 +100,7 @@ public class WanderState : MonoBehaviour, IEnemyState
     {
         if (!useWaypoints && currentWaypoint != null)
         {
-            GameObject.Destroy(currentWaypoint.gameObject);
+            Destroy(currentWaypoint.gameObject);
         }
     }
 }

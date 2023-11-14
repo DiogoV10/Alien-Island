@@ -100,14 +100,14 @@ public class MeleeWeaponsSelector : MonoBehaviour
         return "No pending weapon selected";
     }
 
-    public int GetActiveWeaponDamage()
+    public float GetActiveWeaponDamage()
     {
         if (lastSelectedWeaponIndex >= 0 && lastSelectedWeaponIndex < meleeWeaponSOs.Length)
         {
             MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
-                return activeWeaponSO.damage;
+                return activeWeaponSO.damage + PlayerCombat.Instance.GetDamage();
             }
         }
         return 0;

@@ -15,4 +15,5 @@ MonoBehaviour:
   name: Pistol Ultimate
   weapon: 2
   damage: 10
+  cooldown: 100
   icon: {fileID: 0}

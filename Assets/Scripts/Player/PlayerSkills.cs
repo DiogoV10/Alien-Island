@@ -25,12 +25,12 @@ public class PlayerSkills : MonoBehaviour
     [SerializeField] private GameObject toxicBlastPrefab;
     [SerializeField] private GameObject illusionaryDecoyPrefab;
 
-    [SerializeField] private float damageBonus = 10.0f; // Damage per second.
-    [SerializeField] private float damageDuration = 3.0f;  // Duration of the damage effect.
+    [SerializeField] private float damageBonus = 10.0f;
+    [SerializeField] private float damageDuration = 3.0f; 
     [SerializeField] private float damageInterval = 1.0f;
 
-    [SerializeField] private float ultimateCooldownTime = 5.0f;   // Cooldown time in seconds.
-    [SerializeField] private float skillCooldownTime = 2.0f;   // Cooldown time in seconds.
+    private float ultimateCooldownTime = 5.0f;
+    private float skillCooldownTime = 2.0f;
 
 
     private enum SkillState
@@ -76,6 +76,7 @@ public class PlayerSkills : MonoBehaviour
             if (equippedSkillIndex >= 0 && equippedSkillIndex < skills.Count)
             {
                 SkillSO equippedSkill = skills[equippedSkillIndex];
+                skillCooldownTime = equippedSkill.cooldown;
                 ExecuteSkill(equippedSkill);
             }
         }
@@ -99,6 +100,7 @@ public class PlayerSkills : MonoBehaviour
 
             if (ultimateSkill != null)
             {
+                ultimateCooldownTime = ultimateSkill.cooldown;
                 ExecuteUltimate(ultimateSkill);
                 canUseUltimate = false;
                 StartCoroutine(UltimateCooldown());
@@ -124,6 +126,7 @@ public class PlayerSkills : MonoBehaviour
 
             if (ultimateSkill != null)
             {
+                ultimateCooldownTime = ultimateSkill.cooldown;
                 ExecuteUltimate(ultimateSkill);
                 canUseUltimate = false;
                 StartCoroutine(UltimateCooldown());

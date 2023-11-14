@@ -8,6 +8,7 @@ public class UltimateSkillSO : ScriptableObject
     public new string name;
     public Weapons weapon;
     public int damage;
+    public int cooldown;
     public Sprite icon;
 }
 

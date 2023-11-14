@@ -360,4 +360,14 @@ public class PlayerCombat : MonoBehaviour
     {
         return canMove;
     }
+
+    public Enemy.DamageType GetDamageType()
+    {
+        return currentCombo.combo[comboCounter].damageType;
+    }
+
+    public float GetDamage()
+    {
+        return currentCombo.combo[comboCounter].damage;
+    }
 }

@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour, IEntity
 
     private Animator animator;
     private Rigidbody rb;
+    private CapsuleCollider capsuleCollider;
 
     private float lastSightTime;
     private float timeSinceLastSight;
@@ -46,11 +47,14 @@ public class Enemy : MonoBehaviour, IEntity
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
 
-        deadState.Initialize(animator);
-
         rb.isKinematic = false;
+        capsuleCollider.isTrigger = false;
+
+        wanderState.Initialize(animator);
+        deadState.Initialize(animator);
     }
 
     private void Start()
@@ -213,8 +217,7 @@ public class Enemy : MonoBehaviour, IEntity
         if (!alreadyAttacked)
         {
             IEntity entity = player.GetComponent<IEntity>();
-            //entity.TakeDamage(enemy.damageAmount);
-            entity.TakeDamage(0);
+            entity.TakeDamage(enemy.damageAmount);
             Debug.Log("Attacked!");
             Debug.Log(playerHealthManager.playerHealth);
             alreadyAttacked = true;
@@ -261,6 +264,11 @@ public class Enemy : MonoBehaviour, IEntity
         }
     }
 
+    public bool CanSeePlayer()
+    {
+        return canSeePlayer;
+    }
+
     public void TakeDamage(float damage)
     {
         health -= damage;
@@ -275,6 +283,7 @@ public class Enemy : MonoBehaviour, IEntity
     {
         Debug.Log("Enemy Died!");
         rb.isKinematic = true;
+        capsuleCollider.isTrigger = true;
     }
 
     public void OnEntityDeath()

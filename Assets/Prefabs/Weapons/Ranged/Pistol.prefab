@@ -48,6 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   muzzle: {fileID: 4642015381088148474}
   gunDamage: 10
+  hitPrefab: {fileID: 2033189476923131160, guid: 6eafcc95d0b547c4b925b68afaf18a39,
+    type: 3}
 --- !u!1 &6629890358521550314
 GameObject:
   m_ObjectHideFlags: 0

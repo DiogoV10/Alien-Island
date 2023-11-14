@@ -32,8 +32,6 @@ public class SearchState : MonoBehaviour, IEnemyState
 
     public void UpdateState(Enemy enemy)
     {
-        Debug.Log(randomSearchPosition);
-
         bool canSeePlayer = enemy.SearchForPlayer();
         if (canSeePlayer)
         {
