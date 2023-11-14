@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+
 public class NPCDialogue : MonoBehaviour
 {
     int playerMask = 3;
     InputSystem inputSystem;
     [SerializeField] PlayerInput playerInput;
+    [SerializeField] Transform player;
     bool insideZone = false, indialogue = false;
-    [SerializeField] private GameObject image;
+    private Transform imageT;
     [SerializeField] private Camera mainCam, dialogueCam;
-    // Start is called before the first frame update
+    [SerializeField] ChatBubble chatBubble;
+    [SerializeField] Transform buttonT;
+    Transform chatBubbleClone;
 
     void Awake()
     {
@@ -30,7 +34,7 @@ public class NPCDialogue : MonoBehaviour
 
     void Start()
     {
-        image.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+        //imageT.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
     }
 
     private void OnEnable()
@@ -47,40 +51,48 @@ public class NPCDialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (!indialogue) return;
-        //Interacted();
-        image.transform.rotation = Quaternion.Euler(0, mainCam.transform.rotation.eulerAngles.y , 0);
+        if(imageT != null)
+        {
+            imageT.rotation = Quaternion.Euler(0, mainCam.transform.rotation.eulerAngles.y, 0);
+        }
     }
 
     void ChangeState()
     {
+        if (!insideZone) return;
+
         indialogue = !indialogue;
         if (indialogue)
         {
             GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
-            image.SetActive(false);
+            Destroy(imageT.gameObject);
+            //image.SetActive(false);
             EnterDialogue();
         }
         else
         {
             GameManager.Instance.UpdateGameState(GameState.InGame);
-            image.SetActive(true);
+            InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
+            //image.SetActive(true);
             ExitDialogue();
         }
     }
 
-    //void Interacted()
-    //{
-    //    if (indialogue) EnterDialogue();
-    //    else ExitDialogue();
-    //}
+    Transform InstantiateInteractButton(Transform parent, Vector3 localPosition)
+    {
+        imageT = Instantiate(buttonT, parent);
+        imageT.localPosition = localPosition;
+
+        return imageT;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.layer == playerMask)
         {
             insideZone = true;
-            image.SetActive(true);
+            InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
+            //image.SetActive(true);
         }
     }
 
@@ -89,7 +101,8 @@ public class NPCDialogue : MonoBehaviour
         if (other.gameObject.layer == playerMask)
         {
             insideZone = false;
-            image.SetActive(false);
+            Destroy(imageT.gameObject);
+            //image.SetActive(false);
         }
     }
 
@@ -97,12 +110,15 @@ public class NPCDialogue : MonoBehaviour
     {
         dialogueCam.enabled = true;
         mainCam.enabled = false;
-        inputSystem.Movement.Disable();
+        transform.LookAt(new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z));
+        player.LookAt(new Vector3(transform.position.x, 0, transform.position.z));
+        chatBubbleClone = chatBubble.CreateChatBubble(transform, new Vector3(0, 1.3f, 0), "aijbxbaiubdijabd\nawijdiawnidoniawjd\nawijdianxiawj");
     }
 
     void ExitDialogue()
     {
         dialogueCam.enabled = false;
         mainCam.enabled = true;
+        Destroy(chatBubbleClone.gameObject);
     }
 }
