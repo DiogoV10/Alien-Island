@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  minderSO: {fileID: 0}
+  minderSO: {fileID: 11400000, guid: 6ef578e3f7b0d2f4e8d2c4d529655ac6, type: 2}
   levitateObjects: []
   timeToNextAttack: 3
   throwCountdown: 0

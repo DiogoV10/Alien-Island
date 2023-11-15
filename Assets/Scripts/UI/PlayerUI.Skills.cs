@@ -36,7 +36,7 @@ public partial class PlayerUI : MonoBehaviour //Skills
     {
         _skill_S = _skill_T.GetComponentInChildren<Slider>();
         _ultimate_S = _ultimate_T.GetComponentInChildren<Slider>();
-        _ultimate2_S = _ultimate_T.GetComponentInChildren<Slider>();
+        _ultimate2_S = _ultimate2_T.GetComponentInChildren<Slider>();
 
     }
 
