@@ -7,6 +7,7 @@ public class Pupeteer : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject player;
     [SerializeField] private float timeToNextAttack = 3f;
+    Animator animator;
 
     [Header("InvokeHumansAttack")]
     [SerializeField] private float invokeHumanPuppetsTime = 20f, timeBetweenPuppets = 4f;
@@ -22,6 +23,7 @@ public class Pupeteer : MonoBehaviour
     private void Start()
     {
         melleeAttack = GetComponent<PupeteerMeleeAttack>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -34,7 +36,7 @@ public class Pupeteer : MonoBehaviour
 
     void InvokeHumanPuppets()
     {
-        if (invokeHumanPuppetsOn && listOfHumanPuppets.Count < 5)
+        if (invokeHumanPuppetsOn && listOfHumanPuppets.Count < 4)
         {
             if (invokeHumanPuppetsTime < 0f)
             {
@@ -60,6 +62,7 @@ public class Pupeteer : MonoBehaviour
         else
         {
             invokeHumanPuppetsOn = false;
+            animator.SetBool("isHumanPupetAttack", false);
             invokeHumanPuppetsTime = 20f;
             timeBetweenPuppets = 4f;
         }
@@ -72,6 +75,8 @@ public class Pupeteer : MonoBehaviour
             melleeAttack.melleeAtackTime -= Time.deltaTime;
             if (!pursuingPlayer)
             {
+                animator.SetBool("isMeleeAttack", true);
+                animator.SetBool("isAttacking", false);
                 melleeAttack.PursuitPlayer();
                 pursuingPlayer = true;
             }
@@ -81,6 +86,8 @@ public class Pupeteer : MonoBehaviour
             {
                 melleeAtackOn = false;
                 pursuingPlayer = false;
+                animator.SetBool("isMeleeAttack", false);
+                animator.SetBool("isAttacking", false);
                 melleeAttack.melleeAtackTime = 20f;
                 return;
             }     
@@ -104,13 +111,14 @@ public class Pupeteer : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = 1; //Random.Range(0, 2);
+                int random = 1; // Random.Range(0, 2);
                 Debug.Log(random);
                 switch (random)
                 {
                     case 0:
-                        if(listOfHumanPuppets.Count < 5)
+                        if(listOfHumanPuppets.Count < 4)
                         {
+                            animator.SetBool("isHumanPupetAttack", true);
                             invokeHumanPuppetsOn = true;
                         }
                         timeToNextAttack = 3f;

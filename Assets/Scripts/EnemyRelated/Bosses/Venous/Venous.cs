@@ -9,6 +9,7 @@ public class Venous : MonoBehaviour
     [SerializeField] float timeToNextAttack = 3f, projectileAttackDuration = 20f, venomSpawnRate;
     [SerializeField] GameObject venomSpit;
     [SerializeField] Transform target;
+    Animator animator;
 
     [Header("VenousSO reference")]
     [SerializeField] VenousSO venousSO;
@@ -17,6 +18,7 @@ public class Venous : MonoBehaviour
     {
         cloudAttack = GetComponent<VenomCloudAttack>();
         venomSpawnRate = 1f / venousSO.fireRate;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -25,7 +27,11 @@ public class Venous : MonoBehaviour
         ChooseAttack();
         if (cloudAttackOn || cloudAttack.venousEffectTime > .1f)
         {
-            if (cloudAttack.attackTime < .1f) cloudAttackOn = false;
+            if (cloudAttack.attackTime < .1f)
+            {
+                cloudAttackOn = false;
+                animator.SetBool("isSmokeAttack", false);
+            }
             cloudAttack.StartAttack();
         }
 
@@ -53,6 +59,7 @@ public class Venous : MonoBehaviour
         else
         {
             projectileAttackOn = false;
+            animator.SetBool("isSpitAttack", false);
             projectileAttackDuration = 20f;
             venomSpawnRate = 2f;
         }
@@ -65,17 +72,19 @@ public class Venous : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = 1; //Random.Range(0, 2);
+                int random = Random.Range(0, 2);
                 switch (random)
                 {
                     case 0:
                         cloudAttackOn = true;
+                        animator.SetBool("isSmokeAttack", true);
                         timeToNextAttack = 3f;
                         break;
 
                     case 1:
-                        timeToNextAttack = 3f;
                         projectileAttackOn = true;
+                        timeToNextAttack = 3f;
+                        animator.SetBool("isSpitAttack", true);
                         break;
                 }
             }
