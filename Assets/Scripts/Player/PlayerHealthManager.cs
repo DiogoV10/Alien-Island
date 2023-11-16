@@ -23,4 +23,9 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
         playerHealth -= damage;
         if (playerHealth <= 0f) Die();
     }
+
+    public void GetLife()
+    {
+        if(playerHealth < 100) playerHealth += 15;
+    }
 }

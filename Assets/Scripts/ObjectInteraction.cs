@@ -6,12 +6,15 @@ using UnityEngine.InputSystem;
 public class ObjectInteraction : MonoBehaviour
 {
     int playerMask = 3;
+    [SerializeField] GameObject player;
+    [SerializeField] PlayerHealthManager playerHealthManager;
     InputSystem inputSystem;
     bool insideZone = false, inObjectInteraction = false;
     [SerializeField] private GameObject image;
     [SerializeField] private Camera mainCam, dialogueCam;
     [SerializeField] Transform buttonT;
     private Transform imageT;
+    float playerHealthFillTime = 2f;
 
     void Awake()
     {
@@ -31,6 +34,7 @@ public class ObjectInteraction : MonoBehaviour
     void Start()
     {
         image.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+        player.GetComponent<PlayerHealthManager>();
     }
 
     private void OnEnable()
@@ -60,17 +64,21 @@ public class ObjectInteraction : MonoBehaviour
         inObjectInteraction = !inObjectInteraction;
         if (inObjectInteraction)
         {
-            GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
-            Destroy(imageT.gameObject);
-
-            EnterDialogue();
+            if(playerHealthManager.playerHealth < 100)
+            {
+                GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
+                StartCoroutine(FillPlayerLife());
+            }
+            else
+            {
+                GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
+                Destroy(imageT.gameObject);
+            } 
         }
         else
         {
             GameManager.Instance.UpdateGameState(GameState.InGame);
-            InstantiateInteractButton(transform, new Vector3(0, 1.3f, 0));
-
-            ExitDialogue();
+            InstantiateInteractButton(transform, new Vector3(2.5f, 0 , 0));
         }
     }
 
@@ -87,7 +95,7 @@ public class ObjectInteraction : MonoBehaviour
         if (other.gameObject.layer == playerMask)
         {
             insideZone = true;
-            InstantiateInteractButton(transform, new Vector3(0, 1.3f, 0));
+            InstantiateInteractButton(transform, new Vector3(2.5f, 0, 0));
         }
     }
 
@@ -100,15 +108,26 @@ public class ObjectInteraction : MonoBehaviour
         }
     }
 
-    void EnterDialogue()
+    IEnumerator FillPlayerLife()
     {
-        dialogueCam.enabled = true;
-        mainCam.enabled = false;
-    }
-
-    void ExitDialogue()
-    {
-        dialogueCam.enabled = false;
-        mainCam.enabled = true;
+        Destroy(imageT.gameObject);
+        while (playerHealthManager.playerHealth < 100)
+        {
+            playerHealthFillTime -= Time.deltaTime;
+            if(playerHealthFillTime < 0.1f)
+            {
+                playerHealthManager.GetLife();
+                playerHealthFillTime = 2f;
+                if (playerHealthManager.playerHealth > 100)
+                {
+                    playerHealthManager.playerHealth = 100;
+                    InstantiateInteractButton(transform, new Vector3(2.5f, 0, 0));
+                    GameManager.Instance.UpdateGameState(GameState.InGame);
+                }
+                Debug.Log(playerHealthManager.playerHealth);
+            }
+            yield return null;
+        }
+        
     }
 }

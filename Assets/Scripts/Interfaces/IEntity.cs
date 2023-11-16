@@ -7,4 +7,4 @@ public interface IEntity
     public void TakeDamage(float damage);
     public void Die();
     public void OnEntityDeath();
-}
+    }

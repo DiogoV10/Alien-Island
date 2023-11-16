@@ -112,7 +112,8 @@ public class NPCDialogue : MonoBehaviour
         mainCam.enabled = false;
         transform.LookAt(new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z));
         player.LookAt(new Vector3(transform.position.x, 0, transform.position.z));
-        chatBubbleClone = chatBubble.CreateChatBubble(transform, new Vector3(0, 1.3f, 0), "aijbxbaiubdijabd\nawijdiawnidoniawjd\nawijdianxiawj");
+        chatBubbleClone = chatBubble.CreateChatBubble(transform, new Vector3(0, 1.3f, 0), "Please help us, the one who they call MINDER\nhas taken over the island" +
+            " he went up north\n but be carefull his friends are all over the place and they\n are dangerous!!!");
     }
 
     void ExitDialogue()
