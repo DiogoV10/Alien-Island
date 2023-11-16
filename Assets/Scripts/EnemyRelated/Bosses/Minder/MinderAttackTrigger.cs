@@ -7,6 +7,8 @@ public class MinderAttackTrigger : MonoBehaviour
 
     [SerializeField] int playerMask;
     [SerializeField] Minder minder;
+    float timeUntilPhysics = 3f;
+    bool collided = false;
     Collider collider;
 
     // Start is called before the first frame update
@@ -18,15 +20,24 @@ public class MinderAttackTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (collided)
+        {
+            timeUntilPhysics -= Time.deltaTime;
+            if(timeUntilPhysics < 0.1f)
+            {
+                collider.isTrigger = false;
+            }
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == playerMask)
         {
-            minder.GetComponent<Minder>().enabled = true;
-            collider.isTrigger = false;
-
+            if (minder != null)
+            {
+                minder.GetComponent<Minder>().enabled = true;
+            }
+            else Destroy(this.gameObject);
         }
     }
 }

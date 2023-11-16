@@ -20,7 +20,7 @@ public partial class PlayerUI : MonoBehaviour // Weapons
     {
         if (meleeWeaponSO != null)
         {
-            _weapon1_Image.sprite = meleeWeaponSO.icon; 
+            //_weapon1_Image.sprite = meleeWeaponSO.icon; //ToDo: Ana
         }
     }
 
@@ -28,7 +28,7 @@ public partial class PlayerUI : MonoBehaviour // Weapons
     {
         if (rangedWeaponSO != null)
         {
-            _weapon2_Image.sprite = rangedWeaponSO.icon;
+            //_weapon2_Image.sprite = rangedWeaponSO.icon; //ToDo: Ana
         }
     }
 }

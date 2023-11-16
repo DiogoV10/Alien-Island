@@ -10,8 +10,8 @@ public class ObjectInteraction : MonoBehaviour
     [SerializeField] PlayerHealthManager playerHealthManager;
     InputSystem inputSystem;
     bool insideZone = false, inObjectInteraction = false;
-    [SerializeField] private GameObject image;
-    [SerializeField] private Camera mainCam, dialogueCam;
+    //[SerializeField] private GameObject image;
+    [SerializeField] private Camera mainCam;
     [SerializeField] Transform buttonT;
     private Transform imageT;
     float playerHealthFillTime = 2f;
@@ -33,7 +33,7 @@ public class ObjectInteraction : MonoBehaviour
 
     void Start()
     {
-        image.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+        //image.transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
         player.GetComponent<PlayerHealthManager>();
     }
 
