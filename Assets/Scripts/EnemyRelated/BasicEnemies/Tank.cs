@@ -86,17 +86,11 @@ public class Tank : BaseEnemy, IEntity
         {
             animator.SetTrigger("MediumHit");
             hitState.SetDuration(1.4f);
-
-            hitCount = 0;
-            hitTimer = 0f;
         }
         else if (hitCount >= smallHitCount)
         {
             animator.SetTrigger("SmallHit");
             hitState.SetDuration(1.3f);
-
-            hitCount = 0;
-            hitTimer = 0f;
         }
 
         if (currentState == hitState)
