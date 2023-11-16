@@ -104,7 +104,7 @@ public class PlayerSkills : MonoBehaviour
 
     private void GameInput_OnUltimateRangeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && canUseSkill && !isUsingSkill)
+        if (canUseUltimate && !isUsingSkill)
         {
             PlayerCombat.Instance.CannotAttack();
             isUsingSkill = true;
@@ -130,7 +130,7 @@ public class PlayerSkills : MonoBehaviour
 
     private void GameInput_OnUltimateMeleeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && canUseSkill && !isUsingSkill)
+        if (canUseUltimate && !isUsingSkill)
         {
             PlayerCombat.Instance.CannotAttack();
             isUsingSkill = true;
@@ -437,7 +437,6 @@ public class PlayerSkills : MonoBehaviour
         canUseUltimate = true;
         PlayerCombat.Instance.CanAttack();
         isUsingSkill = false;
-        canUseSkill = true;
     }
 
 
@@ -448,7 +447,6 @@ public class PlayerSkills : MonoBehaviour
         canUseSkill = true;
         PlayerCombat.Instance.CanAttack();
         isUsingSkill = false;
-        canUseUltimate = true;
     }
 
 
