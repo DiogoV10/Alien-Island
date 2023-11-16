@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MeleeWeaponsSelector : MonoBehaviour
@@ -16,6 +17,9 @@ public class MeleeWeaponsSelector : MonoBehaviour
     private bool isSelectorActive = true;
 
     private GameObject activeWeaponObject;
+
+    //Event
+    public event Action<MeleeWeaponSO> OnChangeWeapon;
 
 
     private void Awake()
@@ -60,6 +64,7 @@ public class MeleeWeaponsSelector : MonoBehaviour
             if (activeWeaponSO != null && activeWeaponSO.weaponPrefab != null)
             {
                 activeWeaponObject = Instantiate(activeWeaponSO.weaponPrefab, transform);
+                OnChangeWeapon?.Invoke(activeWeaponSO);
             }
         }
     }
