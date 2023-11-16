@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class RangedWeaponsSelector : MonoBehaviour
@@ -16,6 +17,9 @@ public class RangedWeaponsSelector : MonoBehaviour
     private bool isSelectorActive = true;
 
     private GameObject activeWeaponObject;
+
+    //Event
+    public event Action<RangedWeaponSO> OnChangeWeapon;
 
 
     private void Awake()
@@ -48,6 +52,7 @@ public class RangedWeaponsSelector : MonoBehaviour
             if (activeWeaponSO != null && activeWeaponSO.weaponPrefab != null)
             {
                 activeWeaponObject = Instantiate(activeWeaponSO.weaponPrefab, transform);
+                OnChangeWeapon?.Invoke(activeWeaponSO);
             }
         }
     }

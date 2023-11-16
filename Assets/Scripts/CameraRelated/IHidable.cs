@@ -11,6 +11,12 @@ public class IHidable : MonoBehaviour
 
     private bool _isHidden = false;
 
+    //Fade Properties
+    private float _timeToFade = 2f;
+    private float _fadeTimer = 0f;
+    [Range(0, 1)] private float _fadeProgression = 0;
+    private FadeState _fadeState = FadeState.Idle;
+
     private void Awake()
     {
         GetAllRenderers();
@@ -48,19 +54,63 @@ public class IHidable : MonoBehaviour
     public void Fade(float opacityValue)
     {
         _isHidden = true;
-        foreach (Material material in _materials)
-        {
-            if (material.HasProperty("_Opacity")) material.SetFloat("_Opacity", opacityValue);
-        }
+        StopCoroutine(nameof(FadeOrUnfade));
+        StartCoroutine(FadeOrUnfade(opacityValue));
+
+        //foreach (Material material in _materials)
+        //{
+        //    if (material.HasProperty("_Opacity")) material.SetFloat("_Opacity", opacityValue);
+        //}
     }
 
     public void MakeOpaque()
     {
         _isHidden = false;
+        StopCoroutine(nameof(FadeOrUnfade));
+        StartCoroutine(FadeOrUnfade(1));
+        //foreach (Material material in _materials)
+        //{
+        //    if (material.HasProperty("_Opacity")) material.SetFloat("_Opacity", 1);
+        //}
+    }
+
+    private IEnumerator FadeOrUnfade(float targetValue)
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime < _timeToFade)
+        {
+            // Calculate the interpolation value between 0 and 1 based on elapsed time and _timeToFade
+            float t = elapsedTime / _timeToFade;
+
+            foreach (Material material in _materials)
+            {
+                if (material.HasProperty("_Opacity"))
+                {
+                    // Lerp the opacity value over time
+                    material.SetFloat("_Opacity", Mathf.Lerp(material.GetFloat("_Opacity"), targetValue, t));
+                }
+            }
+
+            // Increment the elapsed time by the time passed since the last frame
+            elapsedTime += Time.deltaTime;
+
+            // Wait for the next frame
+            yield return null;
+        }
+
+        // Ensure that the final opacity value is set to the target value
         foreach (Material material in _materials)
         {
-            if (material.HasProperty("_Opacity")) material.SetFloat("_Opacity", 1);
+            if (material.HasProperty("_Opacity")) material.SetFloat("_Opacity", targetValue);
         }
     }
 
+}
+
+public enum FadeState
+{
+    Fading,
+    Unfading,
+    Idle
 }

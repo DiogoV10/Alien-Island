@@ -68,11 +68,26 @@ public class PlayerCombat : MonoBehaviour
 
     private AnimatorOverrideController animatorOverrideController;
 
+    private bool gameManagerCanCombat = false;
+
+    
+
+    private void GameManagerOnGameStateChange(GameState state)
+    {
+        gameManagerCanCombat = state == GameState.InGame;
+    }
 
     private void Awake()
     {
         Instance = this;
         animator = GetComponent<Animator>();
+
+        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
     }
 
     private void Start()
@@ -147,6 +162,8 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
+        if (!gameManagerCanCombat) return;
+
         if (nextAttack && buttonPressed)
         {
             Attack();

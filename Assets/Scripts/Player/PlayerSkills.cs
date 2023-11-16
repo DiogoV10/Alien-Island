@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,6 +33,11 @@ public class PlayerSkills : MonoBehaviour
     private float ultimateCooldownTime = 5.0f;
     private float skillCooldownTime = 2.0f;
 
+    public float UltimateCooldownTime => ultimateCooldownTime;
+    public float SkillCooldownTime => skillCooldownTime;
+
+    public event Action OnCastSkill;
+    public event Action OnCastUltimate;
 
     private enum SkillState
     {
@@ -426,6 +432,7 @@ public class PlayerSkills : MonoBehaviour
 
     IEnumerator UltimateCooldown()
     {
+        OnCastUltimate?.Invoke();
         yield return new WaitForSeconds(ultimateCooldownTime);
         canUseUltimate = true;
         PlayerCombat.Instance.CanAttack();
@@ -436,6 +443,7 @@ public class PlayerSkills : MonoBehaviour
 
     IEnumerator SkillCooldown()
     {
+        OnCastSkill?.Invoke();
         yield return new WaitForSeconds(skillCooldownTime);
         canUseSkill = true;
         PlayerCombat.Instance.CanAttack();

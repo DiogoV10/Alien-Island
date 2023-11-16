@@ -15,6 +15,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     public Grid pathToPlayer;
     float speed = 10f;
     Rigidbody rigidBody;
+    Animator animator;
 
     private bool alreadyAttacked, isPlayerInAttackRange;
     [SerializeField] public float melleeAtackTime = 20f;
@@ -26,6 +27,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     {
         //pathToPlayer = GetComponent<Grid>();
         rigidBody = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -44,7 +46,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
         while (melleeAtackTime >= 0.1f)
         {
             Debug.Log("Follow Player");
-            if(enemypath != pathToPlayer.path)
+            if(enemypath != pathToPlayer.path && !isPlayerInAttackRange)
             {
                 enemypath = pathToPlayer.path;
                 i = 0;
@@ -72,7 +74,13 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
 
     public void AttackPlayer()
     {
-        if (isPlayerInAttackRange) Attack();
+        if (isPlayerInAttackRange)
+        {
+            Attack();
+            animator.SetBool("isAttacking", true);
+            animator.SetBool("isMeleeAttack", false);
+        }
+        
     }
 
     void Attack()

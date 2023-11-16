@@ -17,4 +17,4 @@ MonoBehaviour:
     type: 3}
   damage: 5
   attackSpeed: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 4a9eaec089a0c014e88569e2e4a7791b, type: 3}

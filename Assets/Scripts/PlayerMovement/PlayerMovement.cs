@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool shouldFaceObject = false; // Initially, the player won't face the specific object 
 
+    private bool inGame = false;
+
     private Vector2 velocity;
 
     private float horizontalVelocity = 0f;
@@ -62,6 +65,18 @@ public class PlayerMovement : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         mov = playerInput.actions.FindAction("Move");
         dash = playerInput.actions.FindAction("Dash");
+
+        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
+    }
+
+    private void GameManagerOnGameStateChange(GameState state)
+    {
+        inGame = state == GameState.InGame;
     }
 
     private void OnEnable()
@@ -85,6 +100,8 @@ public class PlayerMovement : MonoBehaviour
     //Update is called once per frame
     void FixedUpdate()
     {
+        if (!inGame) return;
+
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
         if (isRunning && PlayerCombat.Instance.CanMove() && PlayerCombat.Instance.CanRun()) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
@@ -113,6 +130,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!inGame) return;
+
         Vector2 direction = mov.ReadValue<Vector2>();
 
         lockOnTarget = LockOn.Instance.GetLockedEnemy();

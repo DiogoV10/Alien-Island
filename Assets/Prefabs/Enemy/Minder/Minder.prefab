@@ -1121,8 +1121,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1534689193196670}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: f13349cc09b03d447a26b54d406aaa8e, type: 3}
-  m_Controller: {fileID: 0}
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 29417b6643eef09498a01f63c1ef9ac6, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1169,7 +1169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  minderSO: {fileID: 0}
+  minderSO: {fileID: 11400000, guid: 6ef578e3f7b0d2f4e8d2c4d529655ac6, type: 2}
   levitateObjects: []
   timeToNextAttack: 3
   throwCountdown: 0
