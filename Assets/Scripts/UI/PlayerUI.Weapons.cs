@@ -13,6 +13,9 @@ public partial class PlayerUI : MonoBehaviour // Weapons
     private Image _weapon1_Image;
     private Image _weapon2_Image;
 
+    [Header("Não é bom")]
+    public GameObject RadioText;
+
     private void SetMeleeWeapon(MeleeWeaponSO meleeWeaponSO)
     {
         if (meleeWeaponSO != null)
