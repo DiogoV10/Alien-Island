@@ -23,13 +23,21 @@ public class RangedWeapon : MonoBehaviour
 
     public void Shoot()
     {
+        if (muzzle == null)
+            return;
+
         if (PlayerMovement.Instance.ShouldFaceObject())
         {
             GameObject lockedEnemy = LockOn.Instance.GetLockedEnemy();
             if (lockedEnemy != null /*&& !IsEnemyBehindObstacle(lockedEnemy)*/)
             {
-                lockedEnemy.GetComponent<Enemy>()?.TakeHit(Enemy.DamageType.Small, gunDamage);
-                Debug.Log("Hit");
+                lockedEnemy.GetComponent<HumanSummonAttack>()?.TakeDamage(RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
+                lockedEnemy.GetComponent<Enemy>()?.TakeHit(BaseEnemy.DamageType.Small, RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
+                lockedEnemy.GetComponent<Tank>()?.TakeHit(BaseEnemy.DamageType.Small, RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
+                lockedEnemy.GetComponent<Bullseye>()?.TakeHit(BaseEnemy.DamageType.Small, RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
+                lockedEnemy.GetComponent<PupeteerMeleeAttack>()?.TakeDamage(RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
+                lockedEnemy.GetComponent<Minder>()?.TakeDamage(RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
+                lockedEnemy.GetComponent<Venous>()?.TakeDamage(RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
             }
             else
             {
@@ -37,8 +45,11 @@ public class RangedWeapon : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(muzzle.position, muzzle.forward, out hit, Mathf.Infinity, layerMask))
                 {
-                    Debug.Log("Hit something with tag: " + hit.transform.tag);
-                    InstantiateHitEffect(hit.point);
+                    if (hit.collider != null)
+                    {
+                        Debug.Log("Hit something with tag: " + hit.transform.tag);
+                        InstantiateHitEffect(hit.point);
+                    }
                 }
             }
         }
@@ -48,8 +59,11 @@ public class RangedWeapon : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(muzzle.position, muzzle.forward, out hit, Mathf.Infinity, layerMask))
             {
-                Debug.Log("Hit something with tag: " + hit.transform.tag);
-                InstantiateHitEffect(hit.point);
+                if (hit.collider != null)
+                {
+                    Debug.Log("Hit something with tag: " + hit.transform.tag);
+                    InstantiateHitEffect(hit.point);
+                }
             }
         }
     }
@@ -62,7 +76,7 @@ public class RangedWeapon : MonoBehaviour
 
             if (enemyComponent != null)
             {
-                return !enemyComponent.CanSeePlayer();
+                return !enemyComponent.CanSeeTarget();
             }
         }
 

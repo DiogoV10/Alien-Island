@@ -65,7 +65,21 @@ public class PlayerSkills : MonoBehaviour
     {
         if (skillState == SkillState.Following)
         {
-            selectedObject.transform.position = transform.position + new Vector3(4.0f, 3.0f, 0.0f);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            int layerMask = ~(1 << LayerMask.NameToLayer("Selectable"));
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+            {
+                float distanceToHitPoint = Vector3.Distance(Camera.main.transform.position, hit.point);
+
+                float distanceAboveSurface = 5.0f;
+
+                Vector3 newPosition = ray.GetPoint(distanceToHitPoint - distanceAboveSurface);
+
+                selectedObject.transform.position = newPosition;
+            }
         }
     }
 
@@ -157,43 +171,52 @@ public class PlayerSkills : MonoBehaviour
     }
 
     private void Skill1()
-    {
-        Debug.Log("yes");
+    { 
         if (skillState == SkillState.Following)
         {
             if (selectedObject != null)
             {
                 Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
+
                 if (rb != null)
                 {
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                    if (Physics.Raycast(ray, out RaycastHit hit))
-                    {
-                        // Calculate the throwDirection based on the raycast hit point.
-                        throwDirection = (hit.point - selectedObject.transform.position).normalized;
-
-                        // Apply the force using the calculated throwDirection.
-                        rb.AddForce(throwDirection * throwForce, ForceMode.Impulse);
-                    }
+                    rb.useGravity = true;
                 }
+
                 selectedObject = null;
                 canUseSkill = false;
-                StartCoroutine(SkillCooldown());
                 skillState = SkillState.Inactive;
+
+                StartCoroutine(SkillCooldown());
             }
         }
         else
         {
             skillState = SkillState.Selecting;
 
+            Debug.Log("Select");
+
             RaycastHit hit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit))
             {
+                Debug.Log("Hit point: " + hit.point);
+                Debug.Log("Hit object tag: " + hit.collider.tag);
+
                 if (hit.collider.CompareTag("Selectable"))
                 {
                     selectedObject = hit.collider.gameObject;
+
+                    Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.useGravity = false;
+                    }
+
                     skillState = SkillState.Following;
+
+                    Debug.Log("Follow");
                 }
             }
         }
@@ -227,18 +250,6 @@ public class PlayerSkills : MonoBehaviour
         Vector3 spawnPosition = transform.position - transform.forward * 2;
         GameObject decoy = Instantiate(illusionaryDecoyPrefab, spawnPosition, Quaternion.identity);
 
-        Vector3 decoySize = Vector3.zero;
-        Collider decoyCollider = decoy.GetComponent<Collider>();
-        if (decoyCollider != null)
-        {
-            decoySize = decoyCollider.bounds.size;
-        }
-
-        // Adjust the Y position to avoid spawning inside the ground.
-        Vector3 adjustedPosition = decoy.transform.position;
-        adjustedPosition.y += decoySize.y * 0.5f; // Half of the decoy's height.
-        decoy.transform.position = adjustedPosition;
-
         IllusionaryDecoy decoyScript = decoy.GetComponent<IllusionaryDecoy>();
         decoyScript.Initialize(skill);
 
@@ -253,19 +264,19 @@ public class PlayerSkills : MonoBehaviour
         switch (ultimateSkill.weapon)
         {
             case Weapons.Knife:
-                UltimateKnife();
+                UltimateKnife(ultimateSkill);
                 break;
 
             case Weapons.Katana: 
-                UltimateKatana(); 
+                UltimateKatana(ultimateSkill); 
                 break;
 
             case Weapons.Pistol:
-                UltimatePistol();
+                UltimatePistol(ultimateSkill);
                 break;
 
             case Weapons.Rifle:
-                UltimateRifle();
+                UltimateRifle(ultimateSkill);
                 break;
 
             default: 
@@ -273,7 +284,7 @@ public class PlayerSkills : MonoBehaviour
         }
     }
 
-    private void UltimateKnife()
+    private void UltimateKnife(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(0);
 
@@ -288,15 +299,14 @@ public class PlayerSkills : MonoBehaviour
 
         foreach (Collider enemy in hitEnemies)
         {
-            Health enemyHealth = enemy.GetComponent<Health>();
-            if (enemyHealth != null)
+            if (enemy != null)
             {
-                enemyHealth.TakeDamage(100);
+                StartCoroutine(DealDamageOverTime(enemy.gameObject, ultimateSkill));
             }
         }
     }
 
-    private void UltimateKatana()
+    private void UltimateKatana(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(0);
 
@@ -321,12 +331,18 @@ public class PlayerSkills : MonoBehaviour
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.GetComponent<Health>().TakeDamage(100);
+                hit.collider.GetComponent<HumanSummonAttack>()?.TakeDamage(ultimateSkill.damage);
+                hit.collider.GetComponent<Enemy>()?.TakeHit(ultimateSkill.damageType, ultimateSkill.damage);
+                hit.collider.GetComponent<Tank>()?.TakeHit(ultimateSkill.damageType, ultimateSkill.damage);
+                hit.collider.GetComponent<Bullseye>()?.TakeHit(ultimateSkill.damageType, ultimateSkill.damage);
+                hit.collider.GetComponent<PupeteerMeleeAttack>()?.TakeDamage(ultimateSkill.damage);
+                hit.collider.GetComponent<Minder>()?.TakeDamage(ultimateSkill.damage);
+                hit.collider.GetComponent<Venous>()?.TakeDamage(ultimateSkill.damage);
             }
         }
     }
 
-    private void UltimateRifle()
+    private void UltimateRifle(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(1);
 
@@ -349,13 +365,13 @@ public class PlayerSkills : MonoBehaviour
 
                 if (angleToEnemy <= coneAngle / 2)
                 {
-                    StartCoroutine(DealDamageOverTime(col.gameObject));
+                    StartCoroutine(DealDamageOverTime(col.gameObject, ultimateSkill));
                 }
             }
         }
     }
 
-    private void UltimatePistol()
+    private void UltimatePistol(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(1);
 
@@ -369,49 +385,42 @@ public class PlayerSkills : MonoBehaviour
         {
             if (col.CompareTag("Enemy"))
             {
-                StartCoroutine(DealDamageOverTime(col.gameObject));
+                StartCoroutine(DealDamageOverTime(col.gameObject, ultimateSkill));
             }
         }
     }
 
-    IEnumerator DealDamageOverTime(GameObject enemy)
+    IEnumerator DealDamageOverTime(GameObject enemy, UltimateSkillSO ultimateSkill)
     {
-        if (enemy != null && !enemy.Equals(null))
+        if (enemy != null)
         {
-            Health enemyHealth = enemy.GetComponent<Health>();
+            float startTime = Time.time;
+            float timeSinceLastDamage = 0f;
 
-            if (enemyHealth != null)
+            while (Time.time - startTime < damageDuration)
             {
-                float startTime = Time.time;
-                float timeSinceLastDamage = 0f;
-
-                while (Time.time - startTime < damageDuration)
+                if (enemy == null || enemy.Equals(null))
                 {
-                    if (enemy == null || enemy.Equals(null))
-                    {
-                        yield break; 
-                    }
-
-                    timeSinceLastDamage += Time.deltaTime;
-
-                    if (timeSinceLastDamage >= damageInterval)
-                    {
-                        animator.SetTrigger("Shoot");
-                        enemyHealth.TakeDamage(damageBonus + RangedWeapon.Instance.GunDamage());
-                        timeSinceLastDamage = 0f; 
-                    }
-
-                    yield return null;
+                    yield break; 
                 }
+
+                timeSinceLastDamage += Time.deltaTime;
+
+                if (timeSinceLastDamage >= damageInterval)
+                {
+                    animator.SetTrigger("Shoot");
+                    enemy.GetComponent<HumanSummonAttack>()?.TakeDamage(ultimateSkill.damage);
+                    enemy.GetComponent<Enemy>()?.TakeHit(ultimateSkill.damageType, ultimateSkill.damage);
+                    enemy.GetComponent<Tank>()?.TakeHit(ultimateSkill.damageType, ultimateSkill.damage);
+                    enemy.GetComponent<Bullseye>()?.TakeHit(ultimateSkill.damageType, ultimateSkill.damage);
+                    enemy.GetComponent<PupeteerMeleeAttack>()?.TakeDamage(ultimateSkill.damage);
+                    enemy.GetComponent<Minder>()?.TakeDamage(ultimateSkill.damage);
+                    enemy.GetComponent<Venous>()?.TakeDamage(ultimateSkill.damage);
+                    timeSinceLastDamage = 0f; 
+                }
+
+                yield return null;
             }
-            else
-            {
-                //Debug.LogError("The enemy does not have a Health component.");
-            }
-        }
-        else
-        {
-            //Debug.LogError("The enemy object is null.");
         }
     }
 
@@ -421,6 +430,7 @@ public class PlayerSkills : MonoBehaviour
         canUseUltimate = true;
         PlayerCombat.Instance.CanAttack();
         isUsingSkill = false;
+        canUseSkill = true;
     }
 
 
@@ -430,6 +440,7 @@ public class PlayerSkills : MonoBehaviour
         canUseSkill = true;
         PlayerCombat.Instance.CanAttack();
         isUsingSkill = false;
+        canUseUltimate = true;
     }
 
 

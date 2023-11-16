@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Knife Ultimate
   weapon: 0
-  damage: 20
+  damage: 7
+  damageType: 0
   cooldown: 100
   icon: {fileID: 0}

@@ -67,11 +67,13 @@ public class MeleeWeapon : MonoBehaviour
     private void HitEnemy(Collider enemyCollider)
     {
         Debug.Log("Hit");
-        enemyCollider.GetComponent<HumanSummonAttack>()?.Die();
+        enemyCollider.GetComponent<HumanSummonAttack>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
         enemyCollider.GetComponent<Enemy>()?.TakeHit(PlayerCombat.Instance.GetDamageType(), MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
-        enemyCollider.GetComponent<PupeteerMeleeAttack>()?.Die();
-        enemyCollider.GetComponent<Minder>()?.Die();
-        enemyCollider.GetComponent<Venous>()?.Die();
+        enemyCollider.GetComponent<Tank>()?.TakeHit(PlayerCombat.Instance.GetDamageType(), MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Bullseye>()?.TakeHit(PlayerCombat.Instance.GetDamageType(), MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<PupeteerMeleeAttack>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Minder>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Venous>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
 
         canHit = false;
     }

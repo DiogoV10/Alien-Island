@@ -41,11 +41,13 @@ public class ToxicBlast : MonoBehaviour
 
         foreach (var hitCollider in hitColliders)
         {
-            Health enemyHealth = hitCollider.GetComponent<Health>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(skill.damage);
-            }
+            hitCollider.GetComponent<HumanSummonAttack>()?.TakeDamage(skill.damage);
+            hitCollider.GetComponent<Enemy>()?.TakeHit(BaseEnemy.DamageType.Small, skill.damage);
+            hitCollider.GetComponent<Tank>()?.TakeHit(BaseEnemy.DamageType.Small, skill.damage);
+            hitCollider.GetComponent<Bullseye>()?.TakeHit(BaseEnemy.DamageType.Small, skill.damage);
+            hitCollider.GetComponent<PupeteerMeleeAttack>()?.TakeDamage(skill.damage);
+            hitCollider.GetComponent<Minder>()?.TakeDamage(skill.damage);
+            hitCollider.GetComponent<Venous>()?.TakeDamage(skill.damage);
         }
     }
 

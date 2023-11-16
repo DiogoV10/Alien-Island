@@ -8,13 +8,13 @@ public class HitState : MonoBehaviour, IEnemyState
     private float hitTimer = 0f;
     private float hitDuration = 3.0f;
 
-    public void EnterState(Enemy enemy)
+    public void EnterState(BaseEnemy enemy)
     {
         hitCount++;
         hitTimer = 0f;
     }
 
-    public void UpdateState(Enemy enemy)
+    public void UpdateState(BaseEnemy enemy)
     {
         hitTimer += Time.deltaTime;
         if (hitTimer >= hitDuration)
@@ -22,14 +22,14 @@ public class HitState : MonoBehaviour, IEnemyState
             hitCount = 0;
             hitTimer = 0;
 
-            if (enemy.IsPlayerInAttackRange())
+            if (enemy.IsTargetInAttackRange())
                 enemy.TransitionToAttack();
             else
                 enemy.TransitionToChase();
         }
     }
 
-    public void ExitState(Enemy enemy)
+    public void ExitState(BaseEnemy enemy)
     {
         
     }

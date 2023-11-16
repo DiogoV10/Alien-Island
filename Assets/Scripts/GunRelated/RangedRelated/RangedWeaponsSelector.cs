@@ -39,13 +39,11 @@ public class RangedWeaponsSelector : MonoBehaviour
     {
         if (activeWeaponObject != null)
         {
-            // Destroy the previously active weapon if one exists.
             Destroy(activeWeaponObject);
         }
 
         if (weaponIndex >= 0 && weaponIndex < rangedWeaponSOs.Length)
         {
-            // Instantiate the selected weapon GameObject from the Scriptable Object.
             RangedWeaponSO activeWeaponSO = rangedWeaponSOs[weaponIndex];
             if (activeWeaponSO != null && activeWeaponSO.weaponPrefab != null)
             {
@@ -88,6 +86,19 @@ public class RangedWeaponsSelector : MonoBehaviour
             }
         }
         return "No pending weapon selected";
+    }
+
+    public float GetActiveWeaponDamage()
+    {
+        if (lastSelectedWeaponIndex >= 0 && lastSelectedWeaponIndex < rangedWeaponSOs.Length)
+        {
+            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[lastSelectedWeaponIndex];
+            if (activeWeaponSO != null)
+            {
+                return activeWeaponSO.damage + PlayerCombat.Instance.GetDamage();
+            }
+        }
+        return 0;
     }
 
     public void SwitchToWeapon(int weaponIndex)

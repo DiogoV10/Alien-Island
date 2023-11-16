@@ -8,31 +8,49 @@ public class SearchState : MonoBehaviour, IEnemyState
     [SerializeField] private float searchRadius = 10.0f;
     [SerializeField] private float idleDuration = 3.0f;
 
+    private Animator animator;
     private Transform currentWaypoint;
     private float searchTimer;
     private float idleTimer;
+    private float nextIdleActTime;
     private bool isIdling;
 
     private Vector3 lastKnownPlayerPosition;
     private Vector3 randomSearchPosition;
 
+    public void Initialize(Animator animator)
+    {
+        this.animator = animator;
+    }
 
-    public void EnterState(Enemy enemy)
+    public void EnterState(BaseEnemy enemy)
     {
         searchTimer = 0f;
         idleTimer = 0f;
         isIdling = false;
 
-        lastKnownPlayerPosition = enemy.GetPlayerPosition();
+        lastKnownPlayerPosition = enemy.GetTargetPosition();
 
         randomSearchPosition = GetRandomSearchPosition(enemy, lastKnownPlayerPosition);
 
         SetWaypoint(enemy, randomSearchPosition);
+
+        animator.SetBool("SearchIdle", false);
+        animator.SetBool("Walk", true);
+
+        nextIdleActTime = Time.time + Random.Range(5f, 10f);
     }
 
-    public void UpdateState(Enemy enemy)
+    public void UpdateState(BaseEnemy enemy)
     {
-        bool canSeePlayer = enemy.SearchForPlayer();
+        searchTimer += Time.deltaTime;
+
+        if (searchTimer >= searchDuration)
+        {
+            enemy.TransitionToWander();
+        }
+
+        bool canSeePlayer = enemy.SearchForTarget();
         if (canSeePlayer)
         {
             enemy.TransitionToChase();
@@ -50,6 +68,23 @@ public class SearchState : MonoBehaviour, IEnemyState
                 randomSearchPosition = GetRandomSearchPosition(enemy, lastKnownPlayerPosition);
 
                 SetWaypoint(enemy, randomSearchPosition);
+
+                animator.SetBool("SearchIdle", false);
+                animator.SetBool("Walk", true);
+                animator.Play("Walk");
+            }
+            else if (Time.time >= nextIdleActTime)
+            {
+                int randomAnimation = Random.Range(0, 2);
+
+                if (randomAnimation < 1)
+                {
+                    animator.SetTrigger("SearchIdleAct");
+
+                    Debug.Log("Search Idle");
+                }
+
+                nextIdleActTime = Time.time + Random.Range(5f, 10f);
             }
         }
         else
@@ -61,31 +96,27 @@ public class SearchState : MonoBehaviour, IEnemyState
                 if (Vector3.Distance(enemy.transform.position, currentWaypoint.position) < 1f)
                 {
                     isIdling = true;
+                    animator.SetBool("Walk", false);
+                    animator.SetBool("SearchIdle", true);
+                    animator.Play("Search Idle");
                 }
             }
         }
-
-        searchTimer += Time.deltaTime;
-
-        if (searchTimer >= searchDuration)
-        {
-            enemy.TransitionToWander();
-        }
     }
 
-    public void ExitState(Enemy enemy)
+    public void ExitState(BaseEnemy enemy)
     {
-
+        animator.SetBool("SearchIdle", false);
     }
 
-    private Vector3 GetRandomSearchPosition(Enemy enemy, Vector3 center)
+    private Vector3 GetRandomSearchPosition(BaseEnemy enemy, Vector3 center)
     {
         Vector2 randomPoint = Random.insideUnitCircle * searchRadius;
         Vector3 targetPosition = new Vector3(randomPoint.x, enemy.transform.position.y, randomPoint.y) + center;
         return targetPosition;
     }
 
-    private void SetWaypoint(Enemy enemy, Vector3 position)
+    private void SetWaypoint(BaseEnemy enemy, Vector3 position)
     {
         if (currentWaypoint != null)
         {

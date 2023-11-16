@@ -363,11 +363,17 @@ public class PlayerCombat : MonoBehaviour
 
     public Enemy.DamageType GetDamageType()
     {
-        return currentCombo.combo[comboCounter].damageType;
+        if (comboCounter + 1 > currentCombo.combo.Count)
+            return currentCombo.combo[comboCounter-1].damageType;
+        else
+            return currentCombo.combo[comboCounter].damageType;
     }
 
     public float GetDamage()
     {
-        return currentCombo.combo[comboCounter].damage;
+        if (comboCounter + 1 > currentCombo.combo.Count)
+            return currentCombo.combo[comboCounter - 1].damage;
+        else
+            return currentCombo.combo[comboCounter].damage;
     }
 }

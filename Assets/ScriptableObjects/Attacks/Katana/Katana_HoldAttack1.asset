@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: HoldAttack
   animationClip: {fileID: 7400000, guid: 156595849962d75428f12a5cb4ee463c, type: 2}
-  damage: 10
+  damage: 25
   damageType: 2
