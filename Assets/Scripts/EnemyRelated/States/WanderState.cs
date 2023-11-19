@@ -110,6 +110,7 @@ public class WanderState : MonoBehaviour, IEnemyState
                     isIdling = true;
                     animator.SetBool("Idle", true);
                     animator.SetBool("Walk", false);
+                    enemy.StopNavigation();
                 }
             }
         }

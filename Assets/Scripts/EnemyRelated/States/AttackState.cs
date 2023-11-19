@@ -19,6 +19,7 @@ public class AttackState : MonoBehaviour, IEnemyState
         if (enemy.IsTargetInAttackRange())
         {
             elapsedTime = 0f;
+            enemy.StopNavigation();
             enemy.AttackTarget();
         }
         else

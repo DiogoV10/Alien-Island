@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class BaseEnemy : MonoBehaviour, IEntity
 {
@@ -32,6 +33,9 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
     protected Animator animator;
     protected GameObject player;
     protected GameObject target;
+    protected NavMeshAgent navMeshAgent;
+
+    protected Vector3 oldDestination;
 
     protected float lastSightTime;
     protected float timeSinceLastSight;
@@ -48,6 +52,7 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
         rb = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
 
         rb.isKinematic = false;
         capsuleCollider.isTrigger = false;
@@ -73,6 +78,8 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
 
         player = GameObject.FindGameObjectWithTag("Player");
         target = player;
+
+        navMeshAgent.speed = enemy.speed;
     }
 
     protected virtual void Update()
@@ -203,6 +210,16 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
     public float TimeSinceLastSight()
     {
         return timeSinceLastSight;
+    }
+
+    public void StartNavigation()
+    {
+        navMeshAgent.isStopped = false;
+    }
+
+    public void StopNavigation()
+    {
+        navMeshAgent.isStopped = true;
     }
 
     public abstract void MoveTo(Vector3 destination);

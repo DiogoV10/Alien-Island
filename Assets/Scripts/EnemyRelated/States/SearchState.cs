@@ -99,6 +99,7 @@ public class SearchState : MonoBehaviour, IEnemyState
                     animator.SetBool("Walk", false);
                     animator.SetBool("SearchIdle", true);
                     animator.Play("Search Idle");
+                    enemy.StopNavigation();
                 }
             }
         }

@@ -11,8 +11,12 @@ public class Bullseye : BaseEnemy, IEntity
 
     public override void MoveTo(Vector3 destination)
     {
-        transform.position = Vector3.MoveTowards(transform.position, destination, enemy.speed * Time.deltaTime);
-        transform.LookAt(destination);
+        if (destination != oldDestination)
+        {
+            StartNavigation();
+            navMeshAgent.SetDestination(destination);
+            oldDestination = destination;
+        }
     }
 
     public override void AttackTarget()

@@ -12,6 +12,8 @@ public class DeadState : MonoBehaviour, IEnemyState
     public void Initialize(Animator animator)
     {
         this.animator = animator;
+
+        deadTimer = 0f;
     }
 
     public void EnterState(BaseEnemy enemy)
