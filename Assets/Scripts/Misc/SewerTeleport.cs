@@ -5,6 +5,7 @@ using UnityEngine;
 public class SewerTeleport : MonoBehaviour
 {
     [SerializeField] private Transform exitWaypoint;
+    [SerializeField] private Transform reactivateBlocker;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,6 +18,8 @@ public class SewerTeleport : MonoBehaviour
             other.GetComponent<PlayerMovement>().enabled = false;
             other.GetComponent<Rigidbody>().MovePosition(exitWaypoint.position);
             StartCoroutine(EnablePlayerMovement(other.GetComponent<PlayerMovement>()));
+            if(reactivateBlocker) reactivateBlocker.gameObject.SetActive(true);
+                
         }
     }
 

@@ -4,20 +4,34 @@ using UnityEngine;
 
 public class AttackState : MonoBehaviour, IEnemyState
 {
-    public void EnterState(Enemy enemy)
+    private float transitionDelay = 0.5f;
+    private float elapsedTime = 0f;
+
+    public void EnterState(BaseEnemy enemy)
     {
 
     }
 
-    public void UpdateState(Enemy enemy)
+    public void UpdateState(BaseEnemy enemy)
     {
-        if (enemy.IsPlayerInAttackRange())
-            enemy.AttackPlayer();
+        elapsedTime += Time.deltaTime;
+
+        if (enemy.IsTargetInAttackRange())
+        {
+            elapsedTime = 0f;
+            enemy.StopNavigation();
+            enemy.AttackTarget();
+        }
         else
-            enemy.TransitionToChase();
+        {
+            if (elapsedTime >= transitionDelay)
+            {
+                enemy.TransitionToChase();
+            }
+        }
     }
 
-    public void ExitState(Enemy enemy)
+    public void ExitState(BaseEnemy enemy)
     {
 
     }

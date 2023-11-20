@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a3c32ae5dab59a428afb259a3b09b49, type: 3}
   m_Name: Tank
   m_EditorClassIdentifier: 
-  enemyName: 
-  enemyHP: 50
+  enemyName: Tank
+  enemyHP: 250
   speed: 2
-  damageAmount: 50
-  attackRange: 1
+  damageAmount: 5
+  attackRange: 4
   sightRange: 10
   fireRate: 0
-  timeBetweenAttacks: 3
+  timeBetweenAttacks: 2

@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class Minder : MonoBehaviour, IEntity
 {
@@ -24,6 +26,8 @@ public class Minder : MonoBehaviour, IEntity
     public UnityAction colliderWithGround;
     public bool ObjectBombingAttackOn => objectBombingAttackOn;
     public bool ObjectThrowAttackOn => objectThrowAttackOn;
+
+    public event Action OnDeath;
 
 
 
@@ -146,6 +150,7 @@ public class Minder : MonoBehaviour, IEntity
 
     public void OnEntityDeath()
     {
+        OnDeath?.Invoke();
         //callback(gameObject);
         Destroy(gameObject);
     }

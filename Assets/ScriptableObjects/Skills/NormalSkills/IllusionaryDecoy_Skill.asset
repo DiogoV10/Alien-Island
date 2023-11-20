@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: IllusionaryDecoy
   damage: 0
-  duration: 10
-  range: 40
+  duration: 25
+  range: 30
+  cooldown: 20
   affectedLayers:
     serializedVersion: 2
     m_Bits: 128

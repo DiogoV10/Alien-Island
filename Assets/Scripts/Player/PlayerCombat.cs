@@ -377,4 +377,20 @@ public class PlayerCombat : MonoBehaviour
     {
         return canMove;
     }
+
+    public Enemy.DamageType GetDamageType()
+    {
+        if (comboCounter + 1 > currentCombo.combo.Count)
+            return currentCombo.combo[comboCounter-1].damageType;
+        else
+            return currentCombo.combo[comboCounter].damageType;
+    }
+
+    public float GetDamage()
+    {
+        if (comboCounter + 1 > currentCombo.combo.Count)
+            return currentCombo.combo[comboCounter - 1].damage;
+        else
+            return currentCombo.combo[comboCounter].damage;
+    }
 }

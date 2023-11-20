@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Katana Ultimate
   weapon: 1
-  damage: 100
+  damage: 50
+  damageType: 0
+  cooldown: 100
   icon: {fileID: 0}

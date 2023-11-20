@@ -7,7 +7,7 @@ public class MeleeWeaponSO : ScriptableObject
 {
     public new string name;
     public GameObject weaponPrefab;
-    public int damage;
+    public float damage;
     public float attackSpeed;
     public Sprite icon;
 }

@@ -8,6 +8,7 @@ public class MeleeWeapon : MonoBehaviour
 
     public static MeleeWeapon Instance { get; private set; }
 
+    [SerializeField] private float hitRadius = 1f;
 
     private List<Collider> enemies = new List<Collider>();
     private bool canHit = false;
@@ -18,36 +19,63 @@ public class MeleeWeapon : MonoBehaviour
         Instance = this;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
         if (!canHit) return;
 
-        bool hasHit = false;
+        enemies.Clear();
 
-        if (other.CompareTag("Enemy"))
+        Vector3 hitPosition = PlayerCombat.Instance.transform.position + PlayerCombat.Instance.transform.forward * hitRadius;
+
+        Collider[] colliders = Physics.OverlapSphere(hitPosition, hitRadius);
+        foreach (Collider collider in colliders)
         {
-            if (enemies != null)
+            if (collider.CompareTag("Enemy"))
             {
-                for (int i = 0; i < enemies.Count; i++)
-                {
-                    if (other == enemies[i])
-                    {
-                        hasHit = true;
-                    }
-                }
-            }
-            
-            if (!hasHit) 
-            { 
-                enemies.Add(other);
-                Debug.Log("Hit");
-                other.GetComponent<HumanSummonAttack>()?.Die();
-                other.GetComponent<Enemy>()?.TakeHit(Enemy.DamageType.Big, MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
-                other.GetComponent<PupeteerMeleeAttack>()?.Die();
-                other.GetComponent<Minder>()?.Die();
-                other.GetComponent<Venous>()?.Die();
+                enemies.Add(collider);
+                HitEnemy(collider);
             }
         }
+    }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (!canHit) return;
+
+    //    bool hasHit = false;
+
+    //    if (other.CompareTag("Enemy"))
+    //    {
+    //        if (enemies != null)
+    //        {
+    //            for (int i = 0; i < enemies.Count; i++)
+    //            {
+    //                if (other == enemies[i])
+    //                {
+    //                    hasHit = true;
+    //                }
+    //            }
+    //        }
+            
+    //        if (!hasHit) 
+    //        { 
+    //            HitEnemy(other);
+    //        }
+    //    }
+    //}
+
+    private void HitEnemy(Collider enemyCollider)
+    {
+        Debug.Log("Hit");
+        enemyCollider.GetComponent<HumanSummonAttack>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Enemy>()?.TakeHit(PlayerCombat.Instance.GetDamageType(), MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Tank>()?.TakeHit(PlayerCombat.Instance.GetDamageType(), MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Bullseye>()?.TakeHit(PlayerCombat.Instance.GetDamageType(), MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<PupeteerMeleeAttack>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Minder>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+        enemyCollider.GetComponent<Venous>()?.TakeDamage(MeleeWeaponsSelector.Instance.GetActiveWeaponDamage());
+
+        canHit = false;
     }
 
     public void SetCanHit(bool hit)

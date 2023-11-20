@@ -30,5 +30,6 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
     public void GetLife()
     {
         if(playerHealth < 100) playerHealth += 15;
+        OnHealthChanged?.Invoke(playerHealth);
     }
 }

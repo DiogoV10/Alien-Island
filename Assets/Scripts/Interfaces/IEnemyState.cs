@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IEnemyState
 {
-    void EnterState(Enemy enemy);
-    void UpdateState(Enemy enemy);
-    void ExitState(Enemy enemy);
+    void EnterState(BaseEnemy enemy);
+    void UpdateState(BaseEnemy enemy);
+    void ExitState(BaseEnemy enemy);
 }

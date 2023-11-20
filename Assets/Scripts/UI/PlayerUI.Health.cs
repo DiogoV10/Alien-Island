@@ -13,7 +13,7 @@ public partial class PlayerUI : MonoBehaviour //Health
     private float _playerMaxHealth;
     
 
-    private void ShowHealth(float health)
+    public void ShowHealth(float health)
     {
         if (!_healthSlider) return;
 

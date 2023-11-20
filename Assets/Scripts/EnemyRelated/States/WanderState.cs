@@ -10,20 +10,43 @@ public class WanderState : MonoBehaviour, IEnemyState
     [SerializeField] private float wanderZoneRadius = 10f;
     [SerializeField] private float idleDuration = 3.0f;
 
+    private Animator animator;
     private Transform currentWaypoint;
     private float idleTimer;
+    private float nextIdleActTime;
     private bool isIdling;
+    private int currentWaypointIndex;
+    private int nextWaypointIndex;
 
-    public void EnterState(Enemy enemy)
+    public void Initialize(Animator animator)
+    {
+        this.animator = animator;
+    }
+
+    public void EnterState(BaseEnemy enemy)
     {
         Vector3 yPosition = Vector3.zero;
 
         idleTimer = 0f;
         isIdling = false;
+        animator.SetBool("Walk", true);
+        animator.SetBool("Idle", false);
+        animator.Play("Walk");
 
         if (useWaypoints && waypoints != null && waypoints.Length > 0)
         {
-            currentWaypoint = waypoints[Random.Range(0, waypoints.Length)];
+            if (waypoints.Length > 1)
+            {
+                do
+                {
+                    nextWaypointIndex = Random.Range(0, waypoints.Length);
+                } while ((nextWaypointIndex == currentWaypointIndex));
+            }
+            else { nextWaypointIndex = 0; }
+
+            currentWaypoint = waypoints[nextWaypointIndex];
+
+            currentWaypointIndex = nextWaypointIndex;
 
             yPosition = new Vector3(currentWaypoint.position.x, enemy.transform.position.y, currentWaypoint.position.z);
 
@@ -39,12 +62,19 @@ public class WanderState : MonoBehaviour, IEnemyState
         }
     }
 
-    public void UpdateState(Enemy enemy)
+    public void UpdateState(BaseEnemy enemy)
     {
-        bool canSeePlayer = enemy.SearchForPlayer();
+        bool canSeePlayer = enemy.SearchForTarget();
         if (canSeePlayer)
         {
-            enemy.TransitionToAttack();
+            if (!enemy.IsTargetInAttackRange())
+            {
+                enemy.TransitionToChase();
+            }
+            else
+            {
+                enemy.TransitionToAttack();
+            }
         }
 
         if (isIdling)
@@ -54,6 +84,19 @@ public class WanderState : MonoBehaviour, IEnemyState
             {
                 isIdling = false;
                 EnterState(enemy);
+            }
+            else if (Time.time >= nextIdleActTime) 
+            { 
+                int randomAnimation = Random.Range(0, 3);
+
+                if (randomAnimation < 2)
+                {
+                    animator.SetTrigger($"IdleAct{randomAnimation + 1}");
+
+                    Debug.Log("Idle");
+                }
+
+                nextIdleActTime = Time.time + Random.Range(10f, 15f);
             }
         }
         else
@@ -65,16 +108,19 @@ public class WanderState : MonoBehaviour, IEnemyState
                 if (Vector3.Distance(enemy.transform.position, currentWaypoint.position) < 0.1f)
                 {
                     isIdling = true;
+                    animator.SetBool("Idle", true);
+                    animator.SetBool("Walk", false);
+                    enemy.StopNavigation();
                 }
             }
         }
     }
 
-    public void ExitState(Enemy enemy)
+    public void ExitState(BaseEnemy enemy)
     {
         if (!useWaypoints && currentWaypoint != null)
         {
-            GameObject.Destroy(currentWaypoint.gameObject);
+            Destroy(currentWaypoint.gameObject);
         }
     }
 }

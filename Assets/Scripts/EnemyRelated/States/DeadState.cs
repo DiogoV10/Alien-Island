@@ -12,9 +12,11 @@ public class DeadState : MonoBehaviour, IEnemyState
     public void Initialize(Animator animator)
     {
         this.animator = animator;
+
+        deadTimer = 0f;
     }
 
-    public void EnterState(Enemy enemy)
+    public void EnterState(BaseEnemy enemy)
     {
         animator.SetTrigger("Dead");
 
@@ -23,7 +25,7 @@ public class DeadState : MonoBehaviour, IEnemyState
         enemy.Die();
     }
 
-    public void UpdateState(Enemy enemy)
+    public void UpdateState(BaseEnemy enemy)
     {
         deadTimer += Time.deltaTime;
 
@@ -33,7 +35,7 @@ public class DeadState : MonoBehaviour, IEnemyState
         }
     }
 
-    public void ExitState(Enemy enemy)
+    public void ExitState(BaseEnemy enemy)
     {
         enemy.OnEntityDeath();
     }

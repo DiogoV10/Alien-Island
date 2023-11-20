@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a3c32ae5dab59a428afb259a3b09b49, type: 3}
   m_Name: FistBump
   m_EditorClassIdentifier: 
-  enemyName: 
-  enemyHP: 20
+  enemyName: FistBump
+  enemyHP: 100
   speed: 5
-  damageAmount: 20
-  attackRange: 1.9
+  damageAmount: 1
+  attackRange: 2
   sightRange: 20
   fireRate: 0
-  timeBetweenAttacks: 1
+  timeBetweenAttacks: 0.5
