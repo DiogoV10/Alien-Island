@@ -38,6 +38,7 @@ public class Pupeteer : MonoBehaviour
     {
         if (invokeHumanPuppetsOn && listOfHumanPuppets.Count < 4)
         {
+            transform.LookAt(player.transform);
             if (invokeHumanPuppetsTime < 0f)
             {
                 invokeHumanPuppetsOn = false;
@@ -51,7 +52,8 @@ public class Pupeteer : MonoBehaviour
             
             if (timeBetweenPuppets <= 0f)
             {
-                GameObject go = Instantiate(humanPuppet, new Vector3(10, 1, 20), Quaternion.identity);
+                float humanPupetPosition = Random.Range(-5, 5);
+                GameObject go = Instantiate(humanPuppet, new Vector3(transform.position.x + humanPupetPosition, 1, transform.position.z + humanPupetPosition), Quaternion.identity);
                 go.GetComponent<HumanSummonAttack>().SetPlayer(player);
                 go.GetComponent<HumanSummonAttack>().SetCallback(RemoveFromEnemiesList);
                 listOfHumanPuppets.Add(go);
@@ -75,7 +77,7 @@ public class Pupeteer : MonoBehaviour
             melleeAttack.melleeAtackTime -= Time.deltaTime;
             if (!pursuingPlayer)
             {
-                animator.SetBool("isMeleeAttack", true);
+                animator.SetBool("isRunning", true);
                 animator.SetBool("isAttacking", false);
                 melleeAttack.PursuitPlayer();
                 pursuingPlayer = true;
@@ -86,7 +88,7 @@ public class Pupeteer : MonoBehaviour
             {
                 melleeAtackOn = false;
                 pursuingPlayer = false;
-                animator.SetBool("isMeleeAttack", false);
+                animator.SetBool("isRunning", false);
                 animator.SetBool("isAttacking", false);
                 melleeAttack.melleeAtackTime = 20f;
                 return;
@@ -108,10 +110,11 @@ public class Pupeteer : MonoBehaviour
     {
         if (!invokeHumanPuppetsOn && !melleeAtackOn)
         {
+            transform.LookAt(player.transform);
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = 1; // Random.Range(0, 2);
+                int random = Random.Range(0, 2);
                 Debug.Log(random);
                 switch (random)
                 {

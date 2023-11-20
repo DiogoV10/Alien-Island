@@ -34,27 +34,27 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     void FixedUpdate()
     {
         SearchForPlayer();
-        //AttackPlayer();
-        //Debug.Log(isPlayerInAttackRange);
-        //StartCoroutine(MoveToPlayerTwo());
     }
 
     IEnumerator MoveToPlayer()
     {
         List<Node> enemypath = pathToPlayer.path;
+        //Debug.Log("enemyPathCount: " + enemypath.Count);
         int i = 0;
         while (melleeAtackTime >= 0.1f)
         {
             Debug.Log("Follow Player");
             if(enemypath != pathToPlayer.path && !isPlayerInAttackRange)
             {
+                Debug.Log("enemy path: " + enemypath);
                 enemypath = pathToPlayer.path;
                 i = 0;
             }
             //rigidBody.MovePosition(enemypath[i].worldPos);
-            if(i <= pathToPlayer.path.Count)
+            if(i < pathToPlayer.path.Count)
             {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(enemypath[i].worldPos.x, enemypath[i].worldPos.y + 2.5f, enemypath[i].worldPos.z), speed * Time.deltaTime);
+                transform.LookAt(player.transform);
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(enemypath[i].worldPos.x, transform.position.y, enemypath[i].worldPos.z), speed * Time.deltaTime);
                 i++;
             }
             
@@ -78,7 +78,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
         {
             Attack();
             animator.SetBool("isAttacking", true);
-            animator.SetBool("isMeleeAttack", false);
+            animator.SetBool("isRunning", false);
         }
         
     }
@@ -86,7 +86,6 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     void Attack()
     {
         transform.LookAt(player.transform);
-
         if (!alreadyAttacked)
         {
             IEntity entity = player.GetComponent<IEntity>();

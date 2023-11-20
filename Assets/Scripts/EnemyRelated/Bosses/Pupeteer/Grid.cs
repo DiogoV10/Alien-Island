@@ -49,7 +49,6 @@ public class Grid : MonoBehaviour
     public List<Node> GetNeighbours(Node node)
     {
         List<Node> neighbours = new List<Node>();
-
         for(int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
@@ -71,14 +70,14 @@ public class Grid : MonoBehaviour
 
     public Node NodeFromWorldPoint(Vector3 worldPosition)
     {
-        float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
-        float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
+        Vector3 distToOrigin = Vector3.zero - transform.position;
+        float percentX = ((worldPosition.x + distToOrigin.x) + gridWorldSize.x / 2) / gridWorldSize.x;
+        float percentY = ((worldPosition.z + distToOrigin.z) + gridWorldSize.y / 2) / gridWorldSize.y;
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
-    
+
         int x = Mathf.FloorToInt(Mathf.Clamp((gridSizeX) * percentX, 0, gridSizeX - 1));
         int y = Mathf.FloorToInt(Mathf.Clamp((gridSizeY) * percentY, 0, gridSizeY - 1));
-        
 
         return grid[x, y];
     }
@@ -99,7 +98,7 @@ public class Grid : MonoBehaviour
             }
         }
 
-        else
+        if(onlyDisplayPathgizmos)
         {
             if (grid != null)
             {
