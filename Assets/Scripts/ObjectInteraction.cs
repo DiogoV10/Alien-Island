@@ -64,7 +64,8 @@ public class ObjectInteraction : MonoBehaviour
         inObjectInteraction = !inObjectInteraction;
         if (inObjectInteraction)
         {
-            if(playerHealthManager.playerHealth < 100)
+            SkillSelectionUI.Instance.Show();
+            if (playerHealthManager.playerHealth < 100)
             {
                 GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
                 StartCoroutine(FillPlayerLife());
@@ -77,6 +78,7 @@ public class ObjectInteraction : MonoBehaviour
         }
         else
         {
+            SkillSelectionUI.Instance.Hide();
             GameManager.Instance.UpdateGameState(GameState.InGame);
             InstantiateInteractButton(transform, new Vector3(2.5f, 0 , 0));
         }

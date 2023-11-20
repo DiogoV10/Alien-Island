@@ -455,5 +455,10 @@ public class PlayerSkills : MonoBehaviour
         return isUsingSkill;
     }
 
+    public void ChangeSkill(int skillIndex)
+    {
+        equippedSkillIndex = skillIndex;
+    }
+
 
 }
