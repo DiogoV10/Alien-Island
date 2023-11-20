@@ -15,6 +15,6 @@ MonoBehaviour:
   name: Pupetteer
   hp: 100
   speed: 0
-  damageAmount: 0
-  attackRange: 5
+  damageAmount: 10
+  attackRange: 3
   timeBetweenAttacks: 1.5

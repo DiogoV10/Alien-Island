@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+
 public class PathFinding : MonoBehaviour
 {
     Grid grid;
@@ -14,7 +16,10 @@ public class PathFinding : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(seeker != null) FindPath(seeker.position, target.position);
+        if (seeker != null)
+        {
+            FindPath(seeker.position, target.position);
+        }
     }
 
     void FindPath(Vector3 startPos, Vector3 targetPos)
