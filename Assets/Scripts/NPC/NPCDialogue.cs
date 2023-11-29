@@ -36,7 +36,7 @@ public class NPCDialogue : MonoBehaviour
 
     void Start()
     {
-        //imageT.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+
     }
 
     private void OnEnable()
@@ -68,14 +68,12 @@ public class NPCDialogue : MonoBehaviour
         {
             GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
             Destroy(imageT.gameObject);
-            //image.SetActive(false);
             EnterDialogue();
         }
         else
         {
             GameManager.Instance.UpdateGameState(GameState.InGame);
             InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
-            //image.SetActive(true);
             ExitDialogue();
         }
     }
@@ -94,7 +92,6 @@ public class NPCDialogue : MonoBehaviour
         {
             insideZone = true;
             InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
-            //image.SetActive(true);
         }
     }
 
@@ -104,7 +101,6 @@ public class NPCDialogue : MonoBehaviour
         {
             insideZone = false;
             Destroy(imageT.gameObject);
-            //image.SetActive(false);
         }
     }
 

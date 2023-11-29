@@ -13,7 +13,7 @@ public class Pupeteer : MonoBehaviour
     [SerializeField] private float invokeHumanPuppetsTime = 20f, timeBetweenPuppets = 4f;
     [SerializeField] GameObject humanPuppet;
     List<GameObject> listOfHumanPuppets = new List<GameObject>();
-    private bool invokeHumanPuppetsOn = false, pursuingPlayer = false;
+    private bool invokeHumanPuppetsOn = false;
 
 
     [Header("MelleeAttack")]
@@ -72,28 +72,13 @@ public class Pupeteer : MonoBehaviour
 
     void MelleeAtack()
     {
-        if (melleeAtackOn)
+        if (melleeAttack.melleeAtackTime < 0.05f)
         {
-            melleeAttack.melleeAtackTime -= Time.deltaTime;
-            if (!pursuingPlayer)
-            {
-                animator.SetBool("isRunning", true);
-                animator.SetBool("isAttacking", false);
-                melleeAttack.PursuitPlayer();
-                pursuingPlayer = true;
-            }
-            
-            melleeAttack.AttackPlayer();
-            if (melleeAttack.melleeAtackTime < 0.05f)
-            {
-                melleeAtackOn = false;
-                pursuingPlayer = false;
-                animator.SetBool("isRunning", false);
-                animator.SetBool("isAttacking", false);
-                melleeAttack.melleeAtackTime = 20f;
-                return;
-            }     
+            melleeAtackOn = false;
+            melleeAttack.melleeAtackTime = 20f;
+            return;
         }
+        if (melleeAtackOn) melleeAttack.DoAttack();  
     }
 
     void RemoveFromEnemiesList(GameObject go)
@@ -105,7 +90,6 @@ public class Pupeteer : MonoBehaviour
         Debug.Log("destroyed");
     }
 
-
     void ChooseAttack()
     {
         if (!invokeHumanPuppetsOn && !melleeAtackOn)
@@ -114,7 +98,7 @@ public class Pupeteer : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = Random.Range(0, 2);
+                int random = 1; // Random.Range(0, 2);
                 Debug.Log(random);
                 switch (random)
                 {
