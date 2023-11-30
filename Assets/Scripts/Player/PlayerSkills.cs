@@ -65,6 +65,25 @@ public class PlayerSkills : MonoBehaviour
         GameInput.Instance.OnUltimateMeleeAction += GameInput_OnUltimateMeleeAction;
         GameInput.Instance.OnUltimateRangeAction += GameInput_OnUltimateRangeAction;
         GameInput.Instance.OnSkillAction += GameInput_OnSkillAction;
+        PlayerUpgrades.Instance.OnUpgradeUnlocked += PlayerUpgrades_OnUpgradeUnlocked;
+    }
+
+    private void PlayerUpgrades_OnUpgradeUnlocked(object sender, PlayerUpgrades.OnUpgradeUnlockedEventArgs e)
+    {
+        switch(e.upgradeType)
+        {
+            case PlayerUpgrades.UpgradeType.IllusionaryDecoy_Skill:
+                UnlockSkill(2);
+                break;
+            case PlayerUpgrades.UpgradeType.ObjectControl_Skill:
+                UnlockSkill(0);
+                break;
+            case PlayerUpgrades.UpgradeType.ToxicBlast_Skill:
+                UnlockSkill(1);
+                break;
+            default:
+                break;
+        }
     }
 
     private void Update()
@@ -96,6 +115,9 @@ public class PlayerSkills : MonoBehaviour
             if (equippedSkillIndex >= 0 && equippedSkillIndex < skills.Count)
             {
                 SkillSO equippedSkill = skills[equippedSkillIndex];
+
+                if (equippedSkill == null || !equippedSkill.unlocked) return;
+
                 skillCooldownTime = equippedSkill.cooldown;
                 ExecuteSkill(equippedSkill);
             }
@@ -106,9 +128,6 @@ public class PlayerSkills : MonoBehaviour
     {
         if (canUseUltimate && !isUsingSkill)
         {
-            PlayerCombat.Instance.CannotAttack();
-            isUsingSkill = true;
-
             string currentWeapon = RangedWeaponsSelector.Instance.GetActiveWeaponName();
 
             if (currentWeapon == null)
@@ -118,8 +137,11 @@ public class PlayerSkills : MonoBehaviour
 
             UltimateSkillSO ultimateSkill = ultimateSkills.Find(skill => skill.weapon.ToString() == currentWeapon);
 
-            if (ultimateSkill != null)
+            if (ultimateSkill != null && ultimateSkill.unlocked)
             {
+                PlayerCombat.Instance.CannotAttack();
+                isUsingSkill = true;
+
                 ultimateCooldownTime = ultimateSkill.cooldown;
                 ExecuteUltimate(ultimateSkill);
                 canUseUltimate = false;
@@ -132,9 +154,6 @@ public class PlayerSkills : MonoBehaviour
     {
         if (canUseUltimate && !isUsingSkill)
         {
-            PlayerCombat.Instance.CannotAttack();
-            isUsingSkill = true;
-
             string currentWeapon = MeleeWeaponsSelector.Instance.GetActiveWeaponName();
 
             if (currentWeapon == null)
@@ -144,8 +163,11 @@ public class PlayerSkills : MonoBehaviour
 
             UltimateSkillSO ultimateSkill = ultimateSkills.Find(skill => skill.weapon.ToString() == currentWeapon);
 
-            if (ultimateSkill != null)
+            if (ultimateSkill != null && ultimateSkill.unlocked)
             {
+                PlayerCombat.Instance.CannotAttack();
+                isUsingSkill = true;
+
                 ultimateCooldownTime = ultimateSkill.cooldown;
                 ExecuteUltimate(ultimateSkill);
                 canUseUltimate = false;
@@ -457,6 +479,12 @@ public class PlayerSkills : MonoBehaviour
 
     public void ChangeSkill(int skillIndex)
     {
+        equippedSkillIndex = skillIndex;
+    }
+
+    public void UnlockSkill(int skillIndex)
+    {
+        skills[skillIndex].unlocked = true;
         equippedSkillIndex = skillIndex;
     }
 

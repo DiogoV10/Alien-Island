@@ -45,7 +45,7 @@ public class WeaponSelector : MonoBehaviour
 
     private void GameInput_OnChangeRangeWeapon(object sender, System.EventArgs e)
     {
-        if (timeSinceLastWeaponSwitchRange >= switchTime)
+        if (timeSinceLastWeaponSwitchRange >= switchTime && RangedWeaponsSelector.Instance.GetWeaponCount() > 0)
         {
             rangedWeaponIndex = (rangedWeaponIndex + 1) % RangedWeaponsSelector.Instance.GetWeaponCount();
             RangedWeaponsSelector.Instance.RequestWeaponChange(rangedWeaponIndex);
@@ -66,7 +66,7 @@ public class WeaponSelector : MonoBehaviour
 
     private void GameInput_OnChangeMeleeWeapon(object sender, System.EventArgs e)
     {
-        if (timeSinceLastWeaponSwitchMelee >= switchTime)
+        if (timeSinceLastWeaponSwitchMelee >= switchTime && MeleeWeaponsSelector.Instance.GetWeaponCount() > 0)
         {
             meleeWeaponIndex = (meleeWeaponIndex + 1) % MeleeWeaponsSelector.Instance.GetWeaponCount();
             MeleeWeaponsSelector.Instance.RequestWeaponChange(meleeWeaponIndex);

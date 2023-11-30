@@ -11,7 +11,7 @@ public partial class PlayerUI : MonoBehaviour //Base
     private void Awake()
     {
         _health = _player.GetComponent<PlayerHealthManager>();
-        _playerMaxHealth = _health.playerHealth;
+        _playerMaxHealth = _health.GetMaxHealth();
         _playerSkills = _player.GetComponent<PlayerSkills>();
         SetSliders();
     }
@@ -21,7 +21,7 @@ public partial class PlayerUI : MonoBehaviour //Base
         if (_health)
         {
             _health.OnHealthChanged += ShowHealth;
-            ShowHealth(_health.playerHealth);
+            ShowHealth(_health.GetHealth());
         }
         if (_playerSkills)
         {
@@ -45,7 +45,7 @@ public partial class PlayerUI : MonoBehaviour //Base
             _playerSkills.OnCastUltimate -= StartUltimateCooldown;
         }
 
-        MeleeWeaponsSelector.Instance.OnChangeWeapon += SetMeleeWeapon;
-        RangedWeaponsSelector.Instance.OnChangeWeapon += SetRangedWeapon;
+        MeleeWeaponsSelector.Instance.OnChangeWeapon -= SetMeleeWeapon;
+        RangedWeaponsSelector.Instance.OnChangeWeapon -= SetRangedWeapon;
     }
 }

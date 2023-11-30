@@ -17,8 +17,16 @@ public partial class PlayerUI : MonoBehaviour //Health
     {
         if (!_healthSlider) return;
 
+        SetMaxHealth(_health.GetMaxHealth());
+
         _healthSlider.DOValue(health / _playerMaxHealth, _sliderLerpTime);
-
-
     }
+
+
+    private void SetMaxHealth(float maxHealth)
+    {
+        _playerMaxHealth = maxHealth;
+    }
+
+
 }

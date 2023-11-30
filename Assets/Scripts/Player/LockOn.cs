@@ -37,10 +37,19 @@ public class LockOn : MonoBehaviour
             lockedEnemy = null;
         }
 
-        // Calculate an offset position just a bit in front of the player.
-        Vector3 offsetPosition = transform.position + transform.forward * 2.0f; // Adjust the "2.0f" for the desired distance in front of the player.;
+        Vector3 offsetPosition;
 
-        offsetPosition.y = offsetPositionY;
+        if (lockedEnemy == null)
+        {
+            offsetPosition = transform.position + transform.forward * 2.0f;
+            offsetPosition.y = PlayerMovement.Instance.transform.position.y + 1.3f;
+        }
+        else
+        {
+            // Lock onto the center of the enemy.
+            offsetPosition = lockedEnemy.transform.position;
+            offsetPosition.y = lockedEnemy.transform.position.y + 1;
+        }
 
         // Set the "target" position to the offset position.
         targetGameObject.position = offsetPosition;
@@ -50,11 +59,6 @@ public class LockOn : MonoBehaviour
         {
             // Lock onto the closest enemy if no enemy is currently locked or if a new enemy is closer.
             lockedEnemy = closestEnemy;
-        }
-
-        if (lockedEnemy != null)
-        {
-            targetGameObject.position = lockedEnemy.transform.position;
         }
     }
 

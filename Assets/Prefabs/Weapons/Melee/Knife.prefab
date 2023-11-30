@@ -29,10 +29,10 @@ Transform:
   m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 25309038535793879}
+  - {fileID: 6840531145428042736}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -171.918, y: -22.164001, z: 90.987}
---- !u!1001 &140791031814406331
+--- !u!1001 &6864515012366409628
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -93,7 +93,7 @@ PrefabInstance:
     - target: {fileID: 6456988754693356066, guid: 85595402019406846b1894770ec8f7f8,
         type: 3}
       propertyPath: m_Name
-      value: knife
+      value: knife_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -102,30 +102,30 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6456988754693356066, guid: 85595402019406846b1894770ec8f7f8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7036744236966220286}
+      addedObject: {fileID: 7002552670808651214}
   m_SourcePrefab: {fileID: 100100000, guid: 85595402019406846b1894770ec8f7f8, type: 3}
---- !u!4 &25309038535793879 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 120993408626170988, guid: 85595402019406846b1894770ec8f7f8,
-    type: 3}
-  m_PrefabInstance: {fileID: 140791031814406331}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6372564599223073433 stripped
+--- !u!1 &493281629848987070 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6456988754693356066, guid: 85595402019406846b1894770ec8f7f8,
     type: 3}
-  m_PrefabInstance: {fileID: 140791031814406331}
+  m_PrefabInstance: {fileID: 6864515012366409628}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7036744236966220286
+--- !u!114 &7002552670808651214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6372564599223073433}
+  m_GameObject: {fileID: 493281629848987070}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2eb354091663604f969b9158df3b25e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hitRadius: 0.5
+--- !u!4 &6840531145428042736 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 120993408626170988, guid: 85595402019406846b1894770ec8f7f8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6864515012366409628}
+  m_PrefabAsset: {fileID: 0}

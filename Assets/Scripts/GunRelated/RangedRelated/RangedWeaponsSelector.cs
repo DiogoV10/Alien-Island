@@ -100,7 +100,7 @@ public class RangedWeaponsSelector : MonoBehaviour
             RangedWeaponSO activeWeaponSO = rangedWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
-                return activeWeaponSO.damage + PlayerCombat.Instance.GetDamage();
+                return activeWeaponSO.damage;
             }
         }
         return 0;
@@ -121,4 +121,22 @@ public class RangedWeaponsSelector : MonoBehaviour
     {
         SwitchToWeapon(pendingWeaponIndex);
     }
+
+    public void AddWeapon(RangedWeaponSO newWeapon)
+    {
+        if (!Array.Exists(rangedWeaponSOs, weapon => weapon == newWeapon))
+        {
+            Array.Resize(ref rangedWeaponSOs, rangedWeaponSOs.Length + 1);
+
+            rangedWeaponSOs[rangedWeaponSOs.Length - 1] = newWeapon;
+
+            if (activeWeaponObject == null)
+            {
+                SwitchToWeapon(rangedWeaponSOs.Length - 1);
+            }
+        }
+    }
+
+
+
 }

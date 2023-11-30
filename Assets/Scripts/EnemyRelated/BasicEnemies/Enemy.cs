@@ -31,7 +31,7 @@ public class Enemy : BaseEnemy, IEntity
             IEntity entity = target.GetComponent<IEntity>();
             entity.TakeDamage(enemy.damageAmount);
             Debug.Log("Attacked!");
-            Debug.Log(player.GetComponent<PlayerHealthManager>().playerHealth);
+            Debug.Log(player.GetComponent<PlayerHealthManager>().GetHealth());
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), enemy.timeBetweenAttacks);
         }

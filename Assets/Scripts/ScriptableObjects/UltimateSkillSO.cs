@@ -11,6 +11,7 @@ public class UltimateSkillSO : ScriptableObject
     public Enemy.DamageType damageType;
     public int cooldown;
     public Sprite icon;
+    public bool unlocked;
 }
 
 public enum Weapons

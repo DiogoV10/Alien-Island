@@ -46,7 +46,7 @@ public class HumanSummonAttack : MonoBehaviour, IEntity
             IEntity entity = player.GetComponent<IEntity>();
             entity.TakeDamage(humanPuppet.damageAmount);
             Debug.Log("Attacked!");
-            Debug.Log(playerHealthManager.playerHealth);
+            Debug.Log(playerHealthManager.GetHealth());
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), humanPuppet.timeBetweenAttacks);
         }
