@@ -47,6 +47,8 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
 
     protected IEnemyState currentState;
 
+    public float CurrentHealth => health;
+
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody>();
