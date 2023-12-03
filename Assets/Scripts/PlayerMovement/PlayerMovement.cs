@@ -100,7 +100,11 @@ public class PlayerMovement : MonoBehaviour
     //Update is called once per frame
     void FixedUpdate()
     {
-        if (!inGame) return;
+        if (!inGame)
+        {
+            velocity = new Vector2(Mathf.SmoothDamp(velocity.x, 0, ref currentHorizontalVelocity, smoothTime), Mathf.SmoothDamp(velocity.y, 0, ref currentVerticalVelocity, smoothTime));
+            return;
+        }
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
         if (isRunning && PlayerCombat.Instance.CanMove() && PlayerCombat.Instance.CanRun()) Run();
@@ -130,7 +134,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (!inGame) return;
+        if (!inGame)
+        {
+            Debug.Log(mov.ReadValue<Vector2>());
+            velocity = new Vector2(Mathf.SmoothDamp(velocity.x, 0, ref currentHorizontalVelocity, smoothTime), Mathf.SmoothDamp(velocity.y, 0, ref currentVerticalVelocity, smoothTime));
+            return;
+        }
 
         Vector2 direction = mov.ReadValue<Vector2>();
 

@@ -9,8 +9,9 @@ public class NPCMovement : MonoBehaviour
     Vector3 targetPosition;
 
     bool inGame = false;
-    float walkZoneRadius = 10f, speed = 3f;
+    float walkZoneRadius = 5f, speed = 3f;
     int wayPointCount = 0;
+    [SerializeField] int scenarioLayer;
 
     void Awake()
     {
@@ -47,13 +48,9 @@ public class NPCMovement : MonoBehaviour
     {
         if (wayPointCount < 2)
         {
-            Debug.Log("transform.pos: " + transform.position);
             Vector2 randomPoint = Random.insideUnitCircle * walkZoneRadius;
-            Debug.Log("RandomPoint: " + randomPoint);
             targetPosition = new Vector3(randomPoint.x, 0, randomPoint.y) + transform.position;
-            Debug.Log("targetPOs: " + targetPosition);
             wayPointCount++;
-            // return;
         }
         else
         {
@@ -67,6 +64,14 @@ public class NPCMovement : MonoBehaviour
         transform.LookAt(targetPosition);
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
         if (Vector3.Distance(targetPosition, transform.position) < 0.1f)
+        {
+            ChoseWayPoint();
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Scenario")
         {
             ChoseWayPoint();
         }

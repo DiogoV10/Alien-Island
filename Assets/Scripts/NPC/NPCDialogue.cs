@@ -1,122 +1,98 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
+using TMPro;
+using System.IO;
 
 public class NPCDialogue : MonoBehaviour
 {
+
+    string[] lines;
+    private int index;
     int playerMask = 3;
+    Transform npcText;
     InputSystem inputSystem;
-    [SerializeField] PlayerInput playerInput;
-    [SerializeField] Transform player;
-    bool insideZone = false, indialogue = false;
-    private Transform imageT;
-    [SerializeField] private Camera mainCam, dialogueCam;
-    [SerializeField] ChatBubble chatBubble;
-    [SerializeField] Transform buttonT;
-    Transform chatBubbleClone;
 
-    public string speechString;
+    [SerializeField] List<GameObject> npc = new List<GameObject>();
 
-    void Awake()
-    {
-        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
-    }
-
-    private void GameManagerOnGameStateChange(GameState state)
-    {
-        indialogue = state == GameState.NpcDialogue;
-    }
-
-    void Start()
-    {
-
-    }
 
     private void OnEnable()
     {
-        if(inputSystem == null)
+        if (inputSystem == null)
         {
             inputSystem = new InputSystem();
-            inputSystem.Interactions.Interact.performed += i => ChangeState();
+            inputSystem.Interactions.NextLine.performed += i => NextLineTrigger();
         }
 
         inputSystem.Enable();
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        npcText.GetComponent<ChatBubble>();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if(imageT != null)
+
+    }
+
+    public void StartDialogue(int npc)
+    {
+        string ReadFromFilePath = Application.streamingAssetsPath + "/Recall_Chat/" + "NPC" + (npc + 1) + ".txt";
+        lines = File.ReadAllLines(ReadFromFilePath);
+        index = 0;
+        gameObject.GetComponent<NPCInteraction>().speechString = lines[index];
+    }
+
+
+    void NextLine()
+    {
+        if (index < lines.Length - 1)
         {
-            imageT.rotation = Quaternion.Euler(0, mainCam.transform.rotation.eulerAngles.y, 0);
+            index++;
+            npcText.gameObject.GetComponent<ChatBubble>().text = lines[index];
+            if(index == lines.Length - 1)
+            {
+                npcText.gameObject.GetComponent<ChatBubble>().pressButtonText = "Press T to Exit";
+            }
         }
     }
 
-    void ChangeState()
+    void NextLineTrigger()
     {
-        if (!insideZone) return;
-
-        indialogue = !indialogue;
-        if (indialogue)
+        if (npcText.gameObject.GetComponent<ChatBubble>().text == lines[index])
         {
-            GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
-            Destroy(imageT.gameObject);
-            EnterDialogue();
+            NextLine();
         }
         else
         {
-            GameManager.Instance.UpdateGameState(GameState.InGame);
-            InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
-            ExitDialogue();
+            npcText.gameObject.GetComponent<ChatBubble>().text = lines[index];
         }
-    }
-
-    Transform InstantiateInteractButton(Transform parent, Vector3 localPosition)
-    {
-        imageT = Instantiate(buttonT, parent);
-        imageT.localPosition = localPosition;
-
-        return imageT;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == playerMask)
-        {
-            insideZone = true;
-            InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
         if (other.gameObject.layer == playerMask)
         {
-            insideZone = false;
-            Destroy(imageT.gameObject);
+
+            for (int i = 0; i < npc.Count; i++)
+            {
+                if (this.gameObject == npc[i])
+                {
+                    StartDialogue(i);
+                    break;
+                }
+            }
         }
     }
 
-    void EnterDialogue()
+    public void SetNPCText(Transform _ChatBubleText)
     {
-        dialogueCam.enabled = true;
-        mainCam.enabled = false;
-        transform.LookAt(new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z));
-        player.LookAt(new Vector3(transform.position.x, 0, transform.position.z));
-        chatBubbleClone = chatBubble.CreateChatBubble(transform, new Vector3(0, 1.3f, 0), speechString);
-    }
-
-    void ExitDialogue()
-    {
-        dialogueCam.enabled = false;
-        mainCam.enabled = true;
-        Destroy(chatBubbleClone.gameObject);
+        npcText = _ChatBubleText;
     }
 }
+
+

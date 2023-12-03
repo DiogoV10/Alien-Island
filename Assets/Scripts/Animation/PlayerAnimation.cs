@@ -23,22 +23,11 @@ public class PlayerAnimation : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
-    }
-
-    private void GameManagerOnGameStateChange(GameState state)
-    {
-        inGame = state == GameState.InGame;
     }
 
     private void Update()
     {
-        if (!inGame) return;
+       
 
         animator.SetBool(IS_WALKING, PlayerMovement.Instance.IsWalking());
         animator.SetBool(IS_RUNNING, PlayerMovement.Instance.IsRunning());
