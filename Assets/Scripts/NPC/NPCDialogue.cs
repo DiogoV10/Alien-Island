@@ -8,7 +8,7 @@ public class NPCDialogue : MonoBehaviour
 {
 
     string[] lines;
-    private int index;
+    int index;
     int playerMask = 3;
     Transform npcText;
     InputSystem inputSystem;

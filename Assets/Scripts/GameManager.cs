@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameState State;
     public static event Action<GameState> OnGameStateChange;
 
+
     private void Awake()
     {
         Instance = this;
