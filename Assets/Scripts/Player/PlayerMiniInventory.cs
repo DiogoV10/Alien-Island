@@ -6,8 +6,11 @@ public class PlayerMiniInventory : MonoBehaviour
 {
     PlayerHealthManager playerHealthManager;
     InputSystem inputSystem;
+    [SerializeField] GameObject medKit;
+    [SerializeField] GameObject medKitPlace;
 
     public int healthKitCount = 0;
+
 
     private void OnEnable()
     {
