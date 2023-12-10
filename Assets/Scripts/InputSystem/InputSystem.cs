@@ -182,7 +182,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ce025e8d-011b-4dc2-ba05-c646fd97e038"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -193,7 +193,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""45e91a7e-8936-4d19-b647-28eef3bbcfc0"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -403,6 +403,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextLine"",
+                    ""type"": ""Button"",
+                    ""id"": ""66af63f9-dcd6-4fc3-aa70-b3fba7e65fbd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -414,6 +423,17 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf846575-59bb-40cd-8953-99ad399c1c11"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextLine"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -446,6 +466,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         // Interactions
         m_Interactions = asset.FindActionMap("Interactions", throwIfNotFound: true);
         m_Interactions_Interact = m_Interactions.FindAction("Interact", throwIfNotFound: true);
+        m_Interactions_NextLine = m_Interactions.FindAction("NextLine", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -742,11 +763,13 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Interactions;
     private List<IInteractionsActions> m_InteractionsActionsCallbackInterfaces = new List<IInteractionsActions>();
     private readonly InputAction m_Interactions_Interact;
+    private readonly InputAction m_Interactions_NextLine;
     public struct InteractionsActions
     {
         private @InputSystem m_Wrapper;
         public InteractionsActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @Interact => m_Wrapper.m_Interactions_Interact;
+        public InputAction @NextLine => m_Wrapper.m_Interactions_NextLine;
         public InputActionMap Get() { return m_Wrapper.m_Interactions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -759,6 +782,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @NextLine.started += instance.OnNextLine;
+            @NextLine.performed += instance.OnNextLine;
+            @NextLine.canceled += instance.OnNextLine;
         }
 
         private void UnregisterCallbacks(IInteractionsActions instance)
@@ -766,6 +792,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @NextLine.started -= instance.OnNextLine;
+            @NextLine.performed -= instance.OnNextLine;
+            @NextLine.canceled -= instance.OnNextLine;
         }
 
         public void RemoveCallbacks(IInteractionsActions instance)
@@ -810,5 +839,6 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     public interface IInteractionsActions
     {
         void OnInteract(InputAction.CallbackContext context);
+        void OnNextLine(InputAction.CallbackContext context);
     }
 }

@@ -17,7 +17,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     Rigidbody rigidBody;
     Animator animator;
 
-    private bool alreadyAttacked, isPlayerInAttackRange;
+    private bool alreadyAttacked, isPlayerInAttackRange, pursuingPlayer = true;
     [SerializeField] public float melleeAtackTime = 20f;
 
     System.Action<GameObject> callback;
@@ -41,7 +41,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
         List<Node> enemypath = pathToPlayer.path;
         //Debug.Log("enemyPathCount: " + enemypath.Count);
         int i = 0;
-        while (melleeAtackTime >= 0.1f)
+        while (pursuingPlayer)
         {
             Debug.Log("Follow Player");
             if(enemypath != pathToPlayer.path && !isPlayerInAttackRange)
@@ -62,7 +62,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
         }
     }
 
-    public void PursuitPlayer()
+    void PursuitPlayer()
     {
         StartCoroutine(MoveToPlayer());
     }
@@ -72,18 +72,23 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
         isPlayerInAttackRange = Physics.CheckSphere(transform.position, pupeteerSO.attackRange, whatIsPlayer);
     }
 
-    public void AttackPlayer()
+    void AttackPlayer()
     {
         if (isPlayerInAttackRange)
         {
-            Attack();
+            pursuingPlayer = false;
             animator.SetBool("isAttacking", true);
             animator.SetBool("isRunning", false);
+        }
+        else
+        {
+            animator.SetBool("isAttacking", false);
+            animator.SetBool("isRunning", true);
         }
         
     }
 
-    void Attack()
+    void Attack()//esta a ser chamdo em evento de animação
     {
         transform.LookAt(player.transform);
         if (!alreadyAttacked)
@@ -98,6 +103,28 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     }
 
     private void ResetAttack() => alreadyAttacked = false;
+
+    public void DoAttack()
+    {
+        melleeAtackTime -= Time.deltaTime;
+        if (!pursuingPlayer && !isPlayerInAttackRange)
+        {
+            Debug.Log("Pursuing Player");
+            animator.SetBool("isRunning", true);
+            animator.SetBool("isAttacking", false);
+            pursuingPlayer = true;
+            PursuitPlayer();
+        }
+
+        AttackPlayer();
+
+        if (melleeAtackTime < 0.05f)
+        {
+            pursuingPlayer = false;
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isAttacking", false);
+        }
+    }
 
     public void TakeDamage(float damage)
     {

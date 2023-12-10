@@ -17,6 +17,7 @@ public class PlayerAnimation : MonoBehaviour
     
 
     private Animator animator;
+    bool inGame;
 
 
     private void Awake()
@@ -26,6 +27,8 @@ public class PlayerAnimation : MonoBehaviour
 
     private void Update()
     {
+       
+
         animator.SetBool(IS_WALKING, PlayerMovement.Instance.IsWalking());
         animator.SetBool(IS_RUNNING, PlayerMovement.Instance.IsRunning());
         animator.SetBool(IS_JUMPING, PlayerMovement.Instance.IsJumping());

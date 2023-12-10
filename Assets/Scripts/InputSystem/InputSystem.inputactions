@@ -160,7 +160,7 @@
                 {
                     "name": "",
                     "id": "ce025e8d-011b-4dc2-ba05-c646fd97e038",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -171,7 +171,7 @@
                 {
                     "name": "",
                     "id": "45e91a7e-8936-4d19-b647-28eef3bbcfc0",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -381,6 +381,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "NextLine",
+                    "type": "Button",
+                    "id": "66af63f9-dcd6-4fc3-aa70-b3fba7e65fbd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -392,6 +401,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf846575-59bb-40cd-8953-99ad399c1c11",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "NextLine",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
