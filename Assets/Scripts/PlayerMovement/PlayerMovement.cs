@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isJumping = false;
     private bool isFalling = false;
-    private bool isLanding = false;
+    private bool isGround = false;
     private bool isRunning = false;
     private bool isWalking = false;
     private bool isDashing = false;
@@ -41,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private float verticalVelocity = 0f;
     private float currentHorizontalVelocity = 0f;
     private float currentVerticalVelocity = 0f;
+    private float lastGroundedTime = 0f;
 
 
     [SerializeField] private GameObject lockOnTarget;
@@ -51,10 +53,16 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jump")]
     [SerializeField] float jumpvalue = 1f;
+    [SerializeField] float jumpGracePeriod = 1f;
     [SerializeField] private bool isGrounded = false;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundRadius;
     [SerializeField] private LayerMask whatIsGround;
+
+    [Header("Slope")]
+    [SerializeField] private float maxSlopeAngle;
+    private RaycastHit slopeHit;
+    private bool exitingSlope;
 
 
     void Awake()
@@ -106,30 +114,9 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
         if (isRunning && PlayerCombat.Instance.CanMove() && PlayerCombat.Instance.CanRun()) Run();
         //else if (dash.WasPressedThisFrame()) StartCoroutine(Dashing());
         else if (PlayerCombat.Instance.CanMove()) MovePlayer();
-
-        if (isGrounded)
-        {
-            if (isFalling)
-            {
-                isLanding = true;
-            }
-            isJumping = false;
-            isFalling = false;
-        }
-        else
-        {
-            if (!isJumping)
-            {
-                isFalling = true;
-            }
-            isLanding = false;
-        }
-
-        
     }
 
     private void Update()
@@ -140,8 +127,6 @@ public class PlayerMovement : MonoBehaviour
             velocity = new Vector2(Mathf.SmoothDamp(velocity.x, 0, ref currentHorizontalVelocity, smoothTime), Mathf.SmoothDamp(velocity.y, 0, ref currentVerticalVelocity, smoothTime));
             return;
         }
-
-        Vector2 direction = mov.ReadValue<Vector2>();
 
         lockOnTarget = LockOn.Instance.GetLockedEnemy();
 
@@ -155,6 +140,8 @@ public class PlayerMovement : MonoBehaviour
             ToggleFaceObject(!shouldFaceObject);
         }
 
+        Vector2 direction = mov.ReadValue<Vector2>();
+
         if (direction == Vector2.zero)
         {
             isWalking = false;
@@ -163,8 +150,39 @@ public class PlayerMovement : MonoBehaviour
         else
             isWalking = true;
 
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, (int)whatIsGround);
 
         CalculateLocomotionAnimation();
+        SpeedControl();
+
+        if (isGrounded)
+        {
+            lastGroundedTime = Time.time;
+            rigidBody.drag = 5;
+        }
+        else
+        {
+            rigidBody.drag = 0;
+        }
+
+        if (Time.time - lastGroundedTime <= jumpGracePeriod)
+        {
+            isGround = true;
+            isJumping = false;
+            isFalling = false;
+            exitingSlope = false;
+        }
+        else
+        {
+            isGround = false;
+
+            if ((isJumping && rigidBody.velocity.y < 0) || rigidBody.velocity.y < -2)
+            {
+                isFalling = true;
+            }
+        }
+
+        rigidBody.useGravity = !OnSlope();
     }
 
     private void CalculateLocomotionAnimation()
@@ -218,29 +236,94 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 movementDirection = SyncWithCameraRotation();
 
-        Vector3 newPosition = transform.position + movementDirection * Time.deltaTime * speed;
+        if (OnSlope() && !exitingSlope)
+        {
+            rigidBody.AddForce(GetSlopeMoveDirection(movementDirection) * speed * 20f, ForceMode.Force);
 
-        rigidBody.MovePosition(newPosition);
+            if (rigidBody.velocity.y > 0)
+            {
+                rigidBody.AddForce(Vector3.down * 80f, ForceMode.Force);
+            }
+        }
 
+        rigidBody.AddForce(movementDirection * speed * 10f, ForceMode.Force);
     }
 
     void Run()
     {
         Vector3 movementDirection = SyncWithCameraRotation();
 
-        Vector3 newPosition = transform.position + movementDirection * Time.deltaTime * runValue;
+        if (OnSlope() && !exitingSlope)
+        {
+            rigidBody.AddForce(GetSlopeMoveDirection(movementDirection) * runValue * 20f, ForceMode.Force);
 
-        rigidBody.MovePosition(newPosition);
+            if (rigidBody.velocity.y > 0)
+            {
+                rigidBody.AddForce(Vector3.down * 80f, ForceMode.Force);
+            }
+        }
 
+        rigidBody.AddForce(movementDirection * runValue * 10f, ForceMode.Force);
+    }
+
+    private void SpeedControl()
+    {
+        if (OnSlope() && !exitingSlope)
+        {
+            if (rigidBody.velocity.magnitude > speed)
+                rigidBody.velocity = rigidBody.velocity.normalized * speed;
+        }
+        else
+        {
+            Vector3 flatVel = new Vector3(rigidBody.velocity.x, 0f, rigidBody.velocity.z);
+
+            if (isRunning)
+            {
+                if (flatVel.magnitude > runValue)
+                {
+                    Vector3 velocity = flatVel.normalized * runValue;
+
+                    rigidBody.velocity = new Vector3(velocity.x, rigidBody.velocity.y, velocity.z);
+                }
+            }
+            else
+            {
+                if (flatVel.magnitude > speed)
+                {
+                    Vector3 velocity = flatVel.normalized * speed;
+
+                    rigidBody.velocity = new Vector3(velocity.x, rigidBody.velocity.y, velocity.z);
+                }
+            }
+        }
     }
 
     void Jump()
     {
         if (!isGrounded || !PlayerCombat.Instance.CanJump()) return;
+
+        exitingSlope = true;
         isJumping = true;
-        isFalling = false;
-        isLanding = false;
+
+        lastGroundedTime = 0;
+
         rigidBody.AddForce(Vector3.up * jumpvalue, ForceMode.Impulse);
+    }
+
+    private bool OnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, transform.position.y - groundCheck.position.y))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection(Vector3 movementDirection)
+    {
+        return Vector3.ProjectOnPlane(movementDirection, slopeHit.normal).normalized;
     }
 
     public void AddForceOnAirAttack(float forceValue)
@@ -263,7 +346,8 @@ public class PlayerMovement : MonoBehaviour
 
         while (Time.time < startTime + dashTime)
         {
-            rigidBody.MovePosition(transform.position + movementDirection * Time.deltaTime * dashSpeed); ;
+            rigidBody.velocity = movementDirection * dashSpeed;
+            //rigidBody.MovePosition(transform.position + movementDirection * Time.deltaTime * dashSpeed);
             yield return null;
             isDashing = false;
         }
@@ -367,14 +451,14 @@ public class PlayerMovement : MonoBehaviour
         return isFalling;
     }
 
-    public bool IsLanding()
-    {
-        return isLanding;
-    }
-
     public bool IsGrounded()
     {
         return isGrounded;
+    }
+    
+    public bool IsGround()
+    {
+        return isGround;
     }
 
     public Vector2 Velocity()

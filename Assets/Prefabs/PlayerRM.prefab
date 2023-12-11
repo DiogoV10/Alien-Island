@@ -178,6 +178,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6038786172914063184}
   - component: {fileID: 4178152021638574490}
+  - component: {fileID: 4524475625618364221}
   - component: {fileID: 5623020220888646997}
   - component: {fileID: 7864778789491256192}
   - component: {fileID: 5295899729647019625}
@@ -238,6 +239,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &4524475625618364221
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508388398197950362}
+  m_Material: {fileID: 13400000, guid: 443adcc6d224c6449859b1c76b484405, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.55
+  m_Height: 1.98
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!136 &5623020220888646997
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -332,21 +356,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   follow: {fileID: 0}
-  runValue: 15
-  speed: 10
+  runValue: 200
+  speed: 100
   rotationSpeed: 10
   lockRotationSpeed: 25
   smoothTime: 0.1
   lockOnTarget: {fileID: 0}
   dashTime: 0.5
   dashSpeed: 100
-  jumpvalue: 25
+  jumpvalue: 40
+  jumpGracePeriod: 0.2
   isGrounded: 0
   groundCheck: {fileID: 5825813674483446961}
   groundRadius: 0.1
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
+  maxSlopeAngle: 90
 --- !u!114 &5108116066315328292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,7 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95d4d6865b761748b932e6f69402238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: 50
+  playerHealthMax: 100
 --- !u!114 &3346964783922387338
 MonoBehaviour:
   m_ObjectHideFlags: 0
