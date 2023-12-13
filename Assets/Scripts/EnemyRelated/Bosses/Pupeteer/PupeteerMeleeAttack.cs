@@ -96,7 +96,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
             IEntity entity = player.GetComponent<IEntity>();
             entity.TakeDamage(pupeteerSO.damageAmount);
             Debug.Log("Attacked!");
-            Debug.Log(playerHealthManager.playerHealth);
+            Debug.Log(playerHealthManager.GetHealth());
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), pupeteerSO.timeBetweenAttacks);
         }

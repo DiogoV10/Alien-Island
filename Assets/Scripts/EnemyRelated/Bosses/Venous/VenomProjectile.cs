@@ -63,7 +63,7 @@ public class VenomProjectile : MonoBehaviour
     {
         IEntity entity = target.GetComponent<IEntity>();
         entity.TakeDamage(venousSO.VenomProjectileAttack);
-        Debug.Log(playerHealthManager.playerHealth);
+        Debug.Log(playerHealthManager.GetHealth());
     }
 
     public void SetTarget(Transform _target) 

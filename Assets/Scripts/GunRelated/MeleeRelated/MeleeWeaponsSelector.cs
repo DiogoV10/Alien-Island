@@ -133,4 +133,21 @@ public class MeleeWeaponsSelector : MonoBehaviour
     {
         SwitchToWeapon(pendingWeaponIndex);
     }
+
+    public void AddWeapon(MeleeWeaponSO newWeapon)
+    {
+        if (!Array.Exists(meleeWeaponSOs, weapon => weapon == newWeapon))
+        {
+            Array.Resize(ref meleeWeaponSOs, meleeWeaponSOs.Length + 1);
+
+            meleeWeaponSOs[meleeWeaponSOs.Length - 1] = newWeapon;
+
+            if (activeWeaponObject == null)
+            {
+                SwitchToWeapon(meleeWeaponSOs.Length - 1);
+            }
+        }
+    }
+
+
 }

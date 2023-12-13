@@ -144,7 +144,7 @@ public class VenomCloudAttack : MonoBehaviour
             venousDamageTime = 1.5f;
             IEntity entity = player.GetComponent<IEntity>();
             entity.TakeDamage(venousSO.venomSmokeAttack);
-            Debug.Log(playerHealthManager.playerHealth);
+            Debug.Log(playerHealthManager.GetHealth());
         }
     }
 }

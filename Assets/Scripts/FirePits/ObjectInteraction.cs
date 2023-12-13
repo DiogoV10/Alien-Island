@@ -61,8 +61,9 @@ public class ObjectInteraction : MonoBehaviour
     void ChangeState()
     {
         if (!insideZone) return;
+        if (SkillOrUpgradeOptionUI.Instance == null) return;
 
-        inObjectInteraction = !inObjectInteraction;
+            inObjectInteraction = !inObjectInteraction;
         if (inObjectInteraction)
         {
             //SkillSelectionUI.Instance.Show();
@@ -81,7 +82,7 @@ public class ObjectInteraction : MonoBehaviour
         }
         else
         {
-            SkillSelectionUI.Instance.Hide();
+            SkillOrUpgradeOptionUI.Instance.Hide();
             GameManager.Instance.UpdateGameState(GameState.InGame);
             InstantiateInteractButton(transform, new Vector3(2.5f, 0 , 0));
         }
@@ -116,21 +117,21 @@ public class ObjectInteraction : MonoBehaviour
     IEnumerator FillPlayerLife()
     {
         Destroy(imageT.gameObject);
-        while (playerHealthManager.playerHealth < 100)
+        while (playerHealthManager.GetHealth() < 100)
         {
             playerHealthFillTime -= Time.deltaTime;
             if(playerHealthFillTime < 0.1f)
             {
-                playerHealthManager.GetLife();
+                playerHealthManager.IncrementCurrentHealth(15f);
                 playerHealthFillTime = 2f;
-                if (playerHealthManager.playerHealth > 100)
+                if (playerHealthManager.GetHealth() >= playerHealthManager.GetMaxHealth())
                 {
                     restoreLifeSystem.SetActive(false);
                     playerHealthManager.playerHealth = 100;
                     InstantiateInteractButton(transform, new Vector3(2.5f, 0, 0));
                     GameManager.Instance.UpdateGameState(GameState.InGame);
                 }
-                Debug.Log(playerHealthManager.playerHealth);
+                Debug.Log(playerHealthManager.GetHealth());
             }
             yield return null;
         }

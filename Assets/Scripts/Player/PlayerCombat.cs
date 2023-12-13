@@ -42,8 +42,9 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private List<ComboTransition> comboTransitions;
 
+    [SerializeField] private Animator animator;
 
-    private Animator animator;
+
     private ComboSO currentCombo;
 
 
@@ -68,7 +69,7 @@ public class PlayerCombat : MonoBehaviour
 
     private AnimatorOverrideController animatorOverrideController;
 
-    private bool gameManagerCanCombat = false;
+    private bool gameManagerCanCombat = true;
 
     
 
@@ -106,7 +107,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void GameInput_OnAttackRangeAction(object sender, System.EventArgs e)
     {
-        if (canAttack && canShoot)
+        if (canAttack && canShoot && RangedWeaponsSelector.Instance.GetWeaponCount() > 0)
         {
             ChangeRigWeight.Instance.SetRigWeight(1f);
 
@@ -137,7 +138,6 @@ public class PlayerCombat : MonoBehaviour
             {
                 buttonPressed = true;
                 canAttack = false;
-                isAttacking = true;
             }
         }
     }
@@ -152,10 +152,6 @@ public class PlayerCombat : MonoBehaviour
             CheckComboTransitions(ComboCondition.None);
 
             buttonPressed = true;
-            isAttacking = true;
-            canMove = false;
-            canRun = false;
-            canJump = false;
             canAttack = false;
         }
     }
@@ -180,6 +176,9 @@ public class PlayerCombat : MonoBehaviour
 
     void Attack()
     {
+        buttonPressed = false;
+        isShooting = false;
+
         if (clipNumber > 2)
             clipNumber = 1;
 
@@ -193,6 +192,11 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
+        canMove = false;
+        canRun = false;
+        canJump = false;
+        isAttacking = true;
+
         animationActive[clipNumber - 1] = !animationActive[clipNumber - 1];
 
         animatorOverrideController["Attack" + clipNumber] = currentCombo.combo[comboCounter].animationClip;
@@ -204,10 +208,8 @@ public class PlayerCombat : MonoBehaviour
             PlayerMovement.Instance.AddForceOnAirAttack(2f);
         }
 
-        nextAttack = false;
-        buttonPressed = false;
         clipNumber++;
-        isShooting = false;
+        nextAttack = false;
 
         PlayerMovement.Instance.RotatePlayerTowardsInput();
 
@@ -393,4 +395,6 @@ public class PlayerCombat : MonoBehaviour
         else
             return currentCombo.combo[comboCounter].damage;
     }
+
+
 }

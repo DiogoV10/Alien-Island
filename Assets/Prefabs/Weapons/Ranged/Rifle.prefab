@@ -61,7 +61,7 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 728209519418134446}
+  - {fileID: 4966638391485869202}
   - {fileID: 6568195068260235194}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
@@ -81,7 +81,7 @@ MonoBehaviour:
   gunDamage: 10
   hitPrefab: {fileID: 2033189476923131160, guid: 6eafcc95d0b547c4b925b68afaf18a39,
     type: 3}
---- !u!1001 &723846174272397244
+--- !u!1001 &4971283206665206912
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -138,9 +138,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b6884f9a5b21e245a1eef1c1482068f, type: 3}
---- !u!4 &728209519418134446 stripped
+--- !u!4 &4966638391485869202 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4645375280533522, guid: 6b6884f9a5b21e245a1eef1c1482068f,
     type: 3}
-  m_PrefabInstance: {fileID: 723846174272397244}
+  m_PrefabInstance: {fileID: 4971283206665206912}
   m_PrefabAsset: {fileID: 0}

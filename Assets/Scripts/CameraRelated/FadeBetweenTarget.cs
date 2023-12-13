@@ -18,64 +18,82 @@ public class FadeBetweenTarget : MonoBehaviour
     private float _timeSinceLastCheck = 0f;
     private IHidable _lastHiddenObject;
 
-    private void Update()
+
+    private void OnTriggerEnter(Collider other)
     {
-        _timeSinceLastCheck += Time.deltaTime;
-        if (_timeSinceLastCheck >= _revealCheckInterval) CheckForReveal();
+        var hideable = other.GetComponent<IHidable>();
+
+        if (hideable == null) return;
+
+        hideable.FadeCall(_fadeValue);
+    }
+       private void OnTriggerExit(Collider other)
+    {
+        var hideable = other.GetComponent<IHidable>();
+
+        if (hideable == null) return;
+
+        hideable.MakeOpaqueCall();
     }
 
-    private void FixedUpdate()
-    {
-        RaycastHit[] hit = Physics.RaycastAll(transform.position, GetDirection(), GetDistance());
-        if (hit != null)
-        {
-            foreach (RaycastHit objectToHide in hit)
-            {
-                FadeObject(objectToHide);
-            }
-        }
-    }
+    //private void Update()
+    //{
+    //    _timeSinceLastCheck += Time.deltaTime;
+    //    if (_timeSinceLastCheck >= _revealCheckInterval) CheckForReveal();
+    //}
 
-    private void FadeObject(RaycastHit objectToHide)
-    {
-        IHidable ihidable = objectToHide.transform.GetComponentInParent<IHidable>();
-        if (ihidable == null) return;
+    //private void FixedUpdate()
+    //{
+    //    RaycastHit[] hit = Physics.RaycastAll(transform.position, GetDirection(), GetDistance());
+    //    if (hit != null)
+    //    {
+    //        foreach (RaycastHit objectToHide in hit)
+    //        {
+    //            FadeObject(objectToHide);
+    //        }
+    //    }
+    //}
 
-        if (!_currentlyHidden.Contains(ihidable))
-        {
-            _currentlyHidden.Add(ihidable);
-            ihidable.Fade(_fadeValue);
-        }
-        _lastHiddenObject = ihidable;
-    }
+    //private void FadeObject(RaycastHit objectToHide)
+    //{
+    //    IHidable ihidable = objectToHide.transform.GetComponentInParent<IHidable>();
+    //    if (ihidable == null) return;
 
-    private float GetDistance()
-    {
-        return Vector3.Distance(target.transform.position, transform.position);
-    }
+    //    if (!_currentlyHidden.Contains(ihidable))
+    //    {
+    //        _currentlyHidden.Add(ihidable);
+    //        ihidable.FadeCall(_fadeValue);
+    //    }
+    //    _lastHiddenObject = ihidable;
+    //}
 
-    private Vector3 GetDirection()
-    {
-        return (target.transform.position - transform.position).normalized;
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, GetDirection() * GetDistance());
-    }
+    //private float GetDistance()
+    //{
+    //    return Vector3.Distance(target.transform.position, transform.position);
+    //}
 
-    private void CheckForReveal()
-    {
-        if (_currentlyHidden.Count == 0) return;
+    //private Vector3 GetDirection()
+    //{
+    //    return (target.transform.position - transform.position).normalized;
+    //}
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawRay(transform.position, GetDirection() * GetDistance());
+    //}
 
-        foreach (IHidable ihidable in _currentlyHidden)
-        {
-            if(ihidable != _lastHiddenObject && ihidable != null) ihidable.MakeOpaque();
-        }
+    //private void CheckForReveal()
+    //{
+    //    if (_currentlyHidden.Count == 0) return;
 
-        _currentlyHidden.Clear();
-        _currentlyHidden.Add(_lastHiddenObject);
-        _timeSinceLastCheck = 0f;
-        _lastHiddenObject = null;
-    }
+    //    foreach (IHidable ihidable in _currentlyHidden)
+    //    {
+    //        if(ihidable != _lastHiddenObject && ihidable != null) ihidable.MakeOpaqueCall();
+    //    }
+
+    //    _currentlyHidden.Clear();
+    //    _currentlyHidden.Add(_lastHiddenObject);
+    //    _timeSinceLastCheck = 0f;
+    //    _lastHiddenObject = null;
+    //}
 }
