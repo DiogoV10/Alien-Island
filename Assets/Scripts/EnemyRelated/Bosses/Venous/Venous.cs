@@ -72,7 +72,7 @@ public class Venous : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = Random.Range(0, 2);
+                int random = 1;
                 switch (random)
                 {
                     case 0:

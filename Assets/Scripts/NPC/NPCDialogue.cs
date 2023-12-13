@@ -8,8 +8,11 @@ public class NPCDialogue : MonoBehaviour
 {
 
     string[] lines;
+
     int index;
     int playerMask = 3;
+
+    bool hasInteracted = false;
     Transform npcText;
     InputSystem inputSystem;
 
@@ -39,7 +42,7 @@ public class NPCDialogue : MonoBehaviour
 
     }
 
-    public void StartDialogue(int npc)
+    void StartDialogue(int npc)
     {
         string ReadFromFilePath = Application.streamingAssetsPath + "/Recall_Chat/" + "NPC" + (npc + 1) + ".txt";
         lines = File.ReadAllLines(ReadFromFilePath);
@@ -92,6 +95,7 @@ public class NPCDialogue : MonoBehaviour
     public void SetNPCText(Transform _ChatBubleText)
     {
         npcText = _ChatBubleText;
+        hasInteracted = true;
     }
 }
 

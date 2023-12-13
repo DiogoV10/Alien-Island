@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Death:
                 break;
+            case GameState.EndGame:
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
         }
@@ -60,5 +62,6 @@ public enum GameState
     InGame,
     PauseMenu,
     InHabilitieMenu,
-    Death
+    Death, 
+    EndGame
 }

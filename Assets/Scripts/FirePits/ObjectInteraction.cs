@@ -7,6 +7,7 @@ public class ObjectInteraction : MonoBehaviour
 {
     int playerMask = 3;
     [SerializeField] GameObject player;
+    [SerializeField] GameObject restoreLifeSystem;
     [SerializeField] PlayerHealthManager playerHealthManager;
     InputSystem inputSystem;
     bool insideZone = false, inObjectInteraction = false;
@@ -64,14 +65,16 @@ public class ObjectInteraction : MonoBehaviour
         inObjectInteraction = !inObjectInteraction;
         if (inObjectInteraction)
         {
-            SkillSelectionUI.Instance.Show();
+            //SkillSelectionUI.Instance.Show();
             if (playerHealthManager.playerHealth < 100)
             {
                 GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
                 StartCoroutine(FillPlayerLife());
+                restoreLifeSystem.SetActive(true);
             }
             else
             {
+                SkillSelectionUI.Instance.Show();
                 GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
                 Destroy(imageT.gameObject);
             } 
@@ -122,6 +125,7 @@ public class ObjectInteraction : MonoBehaviour
                 playerHealthFillTime = 2f;
                 if (playerHealthManager.playerHealth > 100)
                 {
+                    restoreLifeSystem.SetActive(false);
                     playerHealthManager.playerHealth = 100;
                     InstantiateInteractButton(transform, new Vector3(2.5f, 0, 0));
                     GameManager.Instance.UpdateGameState(GameState.InGame);

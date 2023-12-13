@@ -134,13 +134,17 @@ public class Minder : MonoBehaviour, IEntity
     public void TakeDamage(float damage)
     {
         minderSO.hp -= damage;
-        Debug.Log(minderSO.hp);
-        if (minderSO.hp <= 0f) Die();
+        Debug.Log("Minder Health: " + minderSO.hp);
+        if (minderSO.hp <= 0f)
+        {
+            MainQuests.Instance.QuestEnd();
+            Die();
+        }
     }
 
     public void Die()
     {
-        Debug.Log("Enemy Died!");
+        Debug.Log("Minder died!");
         foreach (LevitateAttack obj in levitateObjects)
         {
             obj.collider.isTrigger = false;
