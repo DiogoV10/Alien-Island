@@ -92,6 +92,19 @@ public class MeleeWeaponsSelector : MonoBehaviour
         return "Nenhuma arma ativa";
     }
 
+    public MeleeWeaponSO GetActiveWeaponSO()
+    {
+        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < meleeWeaponSOs.Length)
+        {
+            MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[pendingWeaponIndex];
+            if (activeWeaponSO != null)
+            {
+                return activeWeaponSO;
+            }
+        }
+        return null;
+    }
+
     public string GetPendingWeaponName()
     {
         if (pendingWeaponIndex >= 0 && pendingWeaponIndex < meleeWeaponSOs.Length)

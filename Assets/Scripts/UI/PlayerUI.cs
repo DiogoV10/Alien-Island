@@ -14,7 +14,10 @@ public partial class PlayerUI : MonoBehaviour //Base
         _playerMaxHealth = _health.GetMaxHealth();
         _playerSkills = _player.GetComponent<PlayerSkills>();
         SetSliders();
+        SetWeaponSwapElements();
     }
+
+    //UPDATE PARA TESTES SO
 
     private void OnEnable()
     {
@@ -29,8 +32,8 @@ public partial class PlayerUI : MonoBehaviour //Base
             _playerSkills.OnCastUltimate += StartUltimateCooldown;
         }
 
-        MeleeWeaponsSelector.Instance.OnChangeWeapon += SetMeleeWeapon;
-        RangedWeaponsSelector.Instance.OnChangeWeapon += SetRangedWeapon;
+        WeaponSelector.Instance.OnMeleeEquiped += SetMeleeWeapon;
+        WeaponSelector.Instance.OnRangedEquiped += SetRangedWeapon;
     }
 
     private void OnDisable()
@@ -45,7 +48,8 @@ public partial class PlayerUI : MonoBehaviour //Base
             _playerSkills.OnCastUltimate -= StartUltimateCooldown;
         }
 
-        MeleeWeaponsSelector.Instance.OnChangeWeapon -= SetMeleeWeapon;
-        RangedWeaponsSelector.Instance.OnChangeWeapon -= SetRangedWeapon;
+        WeaponSelector.Instance.OnMeleeEquiped -= SetMeleeWeapon;
+        WeaponSelector.Instance.OnRangedEquiped -= SetRangedWeapon;
     }
+
 }

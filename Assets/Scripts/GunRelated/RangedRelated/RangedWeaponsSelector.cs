@@ -80,6 +80,19 @@ public class RangedWeaponsSelector : MonoBehaviour
         return "Nenhuma arma ativa";
     }
 
+    public RangedWeaponSO GetActiveWeaponSO()
+    {
+        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < rangedWeaponSOs.Length)
+        {
+            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[pendingWeaponIndex];
+            if (activeWeaponSO != null)
+            {
+                return activeWeaponSO;
+            }
+        }
+        return null;
+    }   
+
     public string GetPendingWeaponName()
     {
         if (pendingWeaponIndex >= 0 && pendingWeaponIndex < rangedWeaponSOs.Length)
