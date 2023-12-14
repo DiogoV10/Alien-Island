@@ -107,7 +107,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void GameInput_OnAttackRangeAction(object sender, System.EventArgs e)
     {
-        if (canAttack && canShoot && RangedWeaponsSelector.Instance.GetWeaponCount() > 0)
+        if (canAttack && canShoot && RangedWeaponsSelector.Instance.GetWeaponCount() > 0 && !PlayerSkills.Instance.IsUsingUltimate() && !PlayerSkills.Instance.IsUsingSkill())
         {
             ChangeRigWeight.Instance.SetRigWeight(1f);
 
@@ -130,7 +130,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void GameInput_OnAttackMeleeHoldAction(object sender, System.EventArgs e)
     {
-        if (canAttack)
+        if (canAttack && !PlayerSkills.Instance.IsUsingUltimate() && !PlayerSkills.Instance.IsUsingSkill())
         {
             WeaponSelector.Instance.ChangeSystem(0);
 
@@ -144,7 +144,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void GameInput_OnAttackMeleeAction(object sender, System.EventArgs e)
     {
-        if (canAttack)
+        if (canAttack && !PlayerSkills.Instance.IsUsingUltimate() && !PlayerSkills.Instance.IsUsingSkill())
         {
             WeaponSelector.Instance.ChangeSystem(0);
             ChangeRigWeight.Instance.SetRigWeight(0f);

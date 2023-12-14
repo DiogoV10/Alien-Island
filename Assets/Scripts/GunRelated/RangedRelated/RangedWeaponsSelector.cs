@@ -106,6 +106,19 @@ public class RangedWeaponsSelector : MonoBehaviour
         return 0;
     }
 
+    public RangedWeaponSO GetActiveWeaponSO()
+    {
+        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < rangedWeaponSOs.Length)
+        {
+            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[pendingWeaponIndex];
+            if (activeWeaponSO != null)
+            {
+                return activeWeaponSO;
+            }
+        }
+        return null;
+    }
+
     public void SwitchToWeapon(int weaponIndex)
     {
         lastSelectedWeaponIndex = Mathf.Clamp(weaponIndex, 0, rangedWeaponSOs.Length - 1);

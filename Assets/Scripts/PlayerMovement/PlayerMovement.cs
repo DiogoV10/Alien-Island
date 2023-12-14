@@ -168,13 +168,13 @@ public class PlayerMovement : MonoBehaviour
         if (Time.time - lastGroundedTime <= jumpGracePeriod)
         {
             isGround = true;
-            isJumping = false;
             isFalling = false;
             exitingSlope = false;
         }
         else
         {
             isGround = false;
+            isJumping = false;
 
             if ((isJumping && rigidBody.velocity.y < 0) || rigidBody.velocity.y < -2)
             {

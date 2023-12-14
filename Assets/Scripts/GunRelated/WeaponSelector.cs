@@ -50,7 +50,7 @@ public class WeaponSelector : MonoBehaviour
             rangedWeaponIndex = (rangedWeaponIndex + 1) % RangedWeaponsSelector.Instance.GetWeaponCount();
             RangedWeaponsSelector.Instance.RequestWeaponChange(rangedWeaponIndex);
 
-            if (!PlayerSkills.Instance.IsUsingSkill() && !PlayerCombat.Instance.IsShooting())
+            if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsShooting())
             {
                 RangedWeaponsSelector.Instance.ChangeWeaponRequest();
             }
@@ -71,7 +71,7 @@ public class WeaponSelector : MonoBehaviour
             meleeWeaponIndex = (meleeWeaponIndex + 1) % MeleeWeaponsSelector.Instance.GetWeaponCount();
             MeleeWeaponsSelector.Instance.RequestWeaponChange(meleeWeaponIndex);
 
-            if (!PlayerSkills.Instance.IsUsingSkill() && !PlayerCombat.Instance.IsAttacking())
+            if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsAttacking())
             {
                 MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
             }

@@ -100,12 +100,20 @@ public class Tank : BaseEnemy, IEntity
         if (currentState == hitState)
         {
             TakeDamage(damage);
-            hitState.EnterState(this);
+
+            if (currentState != deadState)
+            {
+                hitState.EnterState(this);
+            }
         }
         else
         {
             TakeDamage(damage);
-            TransitionToHit();
+
+            if (currentState != deadState)
+            {
+                TransitionToHit();
+            }
         }
     }
 

@@ -16,6 +16,12 @@ public partial class PlayerUI : MonoBehaviour //Base
         SetSliders();
     }
 
+    private void Start()
+    {
+        MeleeWeaponsSelector.Instance.OnChangeWeapon += SetMeleeWeapon;
+        RangedWeaponsSelector.Instance.OnChangeWeapon += SetRangedWeapon;
+    }
+
     private void OnEnable()
     {
         if (_health)
@@ -28,9 +34,6 @@ public partial class PlayerUI : MonoBehaviour //Base
             _playerSkills.OnCastSkill += StartSkillCooldown;
             _playerSkills.OnCastUltimate += StartUltimateCooldown;
         }
-
-        MeleeWeaponsSelector.Instance.OnChangeWeapon += SetMeleeWeapon;
-        RangedWeaponsSelector.Instance.OnChangeWeapon += SetRangedWeapon;
     }
 
     private void OnDisable()

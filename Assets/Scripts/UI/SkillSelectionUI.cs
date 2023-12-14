@@ -36,8 +36,6 @@ public class SkillSelectionUI : MonoBehaviour
         {
             PlayerSkills.Instance.ChangeSkill(1);
         });
-
-        Hide();
     }
 
     public void Show()

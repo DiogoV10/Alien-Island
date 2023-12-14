@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngine.VFX;
 using V10;
 
 public class PlayerSkills : MonoBehaviour
@@ -20,6 +22,7 @@ public class PlayerSkills : MonoBehaviour
 
     private bool canUseSkill = true;
     private bool canUseUltimate = true;
+    private bool isUsingUltimate = false;
     private bool isUsingSkill = false;
 
 
@@ -49,9 +52,9 @@ public class PlayerSkills : MonoBehaviour
 
     private SkillState skillState = SkillState.Inactive;
     private GameObject selectedObject = null;
-    private Vector3 throwDirection;
+    //private Vector3 throwDirection;
 
-    [SerializeField] private float throwForce = 10.0f;
+    [SerializeField] private float forceMagnitude = 30.0f;
 
 
     private void Awake()
@@ -65,7 +68,43 @@ public class PlayerSkills : MonoBehaviour
         GameInput.Instance.OnUltimateMeleeAction += GameInput_OnUltimateMeleeAction;
         GameInput.Instance.OnUltimateRangeAction += GameInput_OnUltimateRangeAction;
         GameInput.Instance.OnSkillAction += GameInput_OnSkillAction;
+        GameInput.Instance.OnAttackMeleeAction += GameInput_OnAttackMeleeAction;
         PlayerUpgrades.Instance.OnUpgradeUnlocked += PlayerUpgrades_OnUpgradeUnlocked;
+    }
+
+    private void GameInput_OnAttackMeleeAction(object sender, EventArgs e)
+    {
+        if (skillState == SkillState.Following)
+        {
+            if (selectedObject != null)
+            {
+                Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.useGravity = true;
+
+                    forceMagnitude = 30.0f;
+                    rb.AddForce(Vector3.down * forceMagnitude, ForceMode.Impulse);
+
+                    SkillSO equippedSkill = skills[equippedSkillIndex];
+
+                    ObjectControl objectControlScript = selectedObject.GetComponent<ObjectControl>();
+                    if (objectControlScript != null)
+                    {
+                        objectControlScript.Initialize(equippedSkill);
+                    }
+                }
+
+                VisualEffect selectedObjectVisualEffect = selectedObject.GetComponentInChildren<VisualEffect>();
+                selectedObjectVisualEffect.Stop();
+
+                selectedObject = null;
+                canUseSkill = false;
+                skillState = SkillState.Inactive;
+
+                StartCoroutine(SkillCooldown());
+            }
+        }
     }
 
     private void PlayerUpgrades_OnUpgradeUnlocked(object sender, PlayerUpgrades.OnUpgradeUnlockedEventArgs e)
@@ -103,20 +142,28 @@ public class PlayerSkills : MonoBehaviour
 
                 Vector3 newPosition = ray.GetPoint(distanceToHitPoint - distanceAboveSurface);
 
-                selectedObject.transform.position = newPosition;
+                float smoothness = 10.0f;
+
+                selectedObject.transform.position = Vector3.Lerp(selectedObject.transform.position, newPosition, Time.deltaTime * smoothness);
+
+                float rotationSmoothness = 15.0f;
+                Quaternion targetRotation = Quaternion.identity; // zero rotation
+                selectedObject.transform.rotation = Quaternion.Lerp(selectedObject.transform.rotation, targetRotation, Time.deltaTime * rotationSmoothness);
             }
         }
     }
 
     private void GameInput_OnSkillAction(object sender, System.EventArgs e)
     {
-        if (canUseSkill & !isUsingSkill)
+        if (canUseSkill & !isUsingUltimate)
         {
             if (equippedSkillIndex >= 0 && equippedSkillIndex < skills.Count)
             {
                 SkillSO equippedSkill = skills[equippedSkillIndex];
 
                 if (equippedSkill == null || !equippedSkill.unlocked) return;
+
+                isUsingSkill = true;
 
                 skillCooldownTime = equippedSkill.cooldown;
                 ExecuteSkill(equippedSkill);
@@ -126,7 +173,7 @@ public class PlayerSkills : MonoBehaviour
 
     private void GameInput_OnUltimateRangeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && !isUsingSkill)
+        if (canUseUltimate && !isUsingUltimate && !isUsingSkill)
         {
             string currentWeapon = RangedWeaponsSelector.Instance.GetActiveWeaponName();
 
@@ -139,8 +186,7 @@ public class PlayerSkills : MonoBehaviour
 
             if (ultimateSkill != null && ultimateSkill.unlocked)
             {
-                PlayerCombat.Instance.CannotAttack();
-                isUsingSkill = true;
+                isUsingUltimate = true;
 
                 ultimateCooldownTime = ultimateSkill.cooldown;
                 ExecuteUltimate(ultimateSkill);
@@ -152,7 +198,7 @@ public class PlayerSkills : MonoBehaviour
 
     private void GameInput_OnUltimateMeleeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && !isUsingSkill)
+        if (canUseUltimate && !isUsingUltimate && !isUsingSkill)
         {
             string currentWeapon = MeleeWeaponsSelector.Instance.GetActiveWeaponName();
 
@@ -165,8 +211,7 @@ public class PlayerSkills : MonoBehaviour
 
             if (ultimateSkill != null && ultimateSkill.unlocked)
             {
-                PlayerCombat.Instance.CannotAttack();
-                isUsingSkill = true;
+                isUsingUltimate = true;
 
                 ultimateCooldownTime = ultimateSkill.cooldown;
                 ExecuteUltimate(ultimateSkill);
@@ -211,6 +256,9 @@ public class PlayerSkills : MonoBehaviour
                     rb.useGravity = true;
                 }
 
+                VisualEffect selectedObjectVisualEffect = selectedObject.GetComponentInChildren<VisualEffect>();
+                selectedObjectVisualEffect.Stop();
+
                 selectedObject = null;
                 canUseSkill = false;
                 skillState = SkillState.Inactive;
@@ -235,6 +283,12 @@ public class PlayerSkills : MonoBehaviour
                 if (hit.collider.CompareTag("Selectable"))
                 {
                     selectedObject = hit.collider.gameObject;
+
+                    ParticleSystem selectedObjectParticleSystem = selectedObject.GetComponentInChildren<ParticleSystem>();
+                    selectedObjectParticleSystem.Play();
+
+                    VisualEffect selectedObjectVisualEffect = selectedObject.GetComponentInChildren<VisualEffect>();
+                    selectedObjectVisualEffect.Play();
 
                     Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
                     if (rb != null)
@@ -316,8 +370,6 @@ public class PlayerSkills : MonoBehaviour
     {
         WeaponSelector.Instance.ChangeSystem(0);
 
-        PlayerCombat.Instance.CannotAttack();
-
         animator.SetTrigger("Shoot");
 
         float eviscerateRange = 5.0f; 
@@ -337,8 +389,6 @@ public class PlayerSkills : MonoBehaviour
     private void UltimateKatana(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(0);
-
-        PlayerCombat.Instance.CannotAttack();
 
         animator.SetTrigger("Shoot");
 
@@ -374,8 +424,6 @@ public class PlayerSkills : MonoBehaviour
     {
         WeaponSelector.Instance.ChangeSystem(1);
 
-        PlayerCombat.Instance.CannotAttack();
-
         float coneAngle = 45f;
         float detectionRadius = 20f;
 
@@ -402,8 +450,6 @@ public class PlayerSkills : MonoBehaviour
     private void UltimatePistol(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(1);
-
-        PlayerCombat.Instance.CannotAttack();
 
         float detectionRadius = 20f;
 
@@ -455,22 +501,27 @@ public class PlayerSkills : MonoBehaviour
     IEnumerator UltimateCooldown()
     {
         OnCastUltimate?.Invoke();
+        isUsingUltimate = false;
+        isUsingSkill = false;
         yield return new WaitForSeconds(ultimateCooldownTime);
         canUseUltimate = true;
-        PlayerCombat.Instance.CanAttack();
-        isUsingSkill = false;
     }
 
 
     IEnumerator SkillCooldown()
     {
         OnCastSkill?.Invoke();
+        isUsingUltimate = false;
+        isUsingSkill = false;
         yield return new WaitForSeconds(skillCooldownTime);
         canUseSkill = true;
-        PlayerCombat.Instance.CanAttack();
-        isUsingSkill = false;
     }
 
+
+    public bool IsUsingUltimate()
+    {
+        return isUsingUltimate;
+    }
 
     public bool IsUsingSkill()
     {

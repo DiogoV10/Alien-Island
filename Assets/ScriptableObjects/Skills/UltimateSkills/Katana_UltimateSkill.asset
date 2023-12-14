@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Katana Ultimate
   weapon: 1
   damage: 50
-  damageType: 0
+  damageType: 2
   cooldown: 100
   icon: {fileID: 0}
+  unlocked: 0
