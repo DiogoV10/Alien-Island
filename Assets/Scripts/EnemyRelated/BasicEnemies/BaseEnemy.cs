@@ -224,6 +224,11 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
         navMeshAgent.isStopped = true;
     }
 
+    public float GetHealth() 
+    {
+        return health;
+    }
+
     public abstract void MoveTo(Vector3 destination);
 
     public abstract void AttackTarget();

@@ -34,16 +34,21 @@ public class PlayerMiniInventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(playerHealthManager.playerHealth);
+        Debug.Log(playerHealthManager.GetHealth());
     }
 
     private void ConsumeHealthKit()
     {
         if(healthKitCount > 0)
         {
-            playerHealthManager.playerHealth += 20;
-            healthKitCount -= 1;
-            if (playerHealthManager.playerHealth > 100) playerHealthManager.playerHealth = 100;
+            if (playerHealthManager.GetHealth() < playerHealthManager.GetMaxHealth())
+            {
+                playerHealthManager.IncrementCurrentHealth(15f);
+                healthKitCount -= 1;
+                if (playerHealthManager.GetHealth() > playerHealthManager.GetMaxHealth()) playerHealthManager.IncrementCurrentHealth(0f);
+            }
+            
+            
         }
     }
 }

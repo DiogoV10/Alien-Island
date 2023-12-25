@@ -67,6 +67,7 @@ public class NPCInteraction : MonoBehaviour
         if (indialogue)
         {
             GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
+            //gameObject.GetComponent<NPCDialogue>().enabled = true;
             Destroy(imageT.gameObject);
             EnterDialogue();
         }
@@ -92,6 +93,7 @@ public class NPCInteraction : MonoBehaviour
         {
             insideZone = true;
             InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
+            gameObject.GetComponent<NPCDialogue>().enabled = true;
         }
     }
 
@@ -101,6 +103,7 @@ public class NPCInteraction : MonoBehaviour
         {
             insideZone = false;
             Destroy(imageT.gameObject);
+            gameObject.GetComponent<NPCDialogue>().enabled = false;
         }
     }
 
@@ -108,9 +111,12 @@ public class NPCInteraction : MonoBehaviour
     {
         dialogueCam.enabled = true;
         mainCam.enabled = false;
+
         transform.LookAt(new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z));
         player.LookAt(new Vector3(transform.position.x, 0, transform.position.z));
+
         chatBubbleClone = chatBubble.CreateChatBubble(transform, new Vector3(0, 1.3f, 0), speechString);
+        
         gameObject.GetComponent<NPCDialogue>().SetNPCText(chatBubbleClone);
     }
 
@@ -118,6 +124,7 @@ public class NPCInteraction : MonoBehaviour
     {
         dialogueCam.enabled = false;
         mainCam.enabled = true;
+
         Destroy(chatBubbleClone.gameObject);
     }
 }

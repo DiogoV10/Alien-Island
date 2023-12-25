@@ -68,7 +68,7 @@ public class MainQuests : MonoBehaviour, IQuestSystem
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("current quest:" + currentQuest);
-        //Debug.Log("quest status:" + status);
+        Debug.Log("current quest:" + currentQuest);
+        Debug.Log("quest status:" + status);
     }
 }

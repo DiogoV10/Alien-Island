@@ -66,8 +66,7 @@ public class ObjectInteraction : MonoBehaviour
             inObjectInteraction = !inObjectInteraction;
         if (inObjectInteraction)
         {
-            //SkillSelectionUI.Instance.Show();
-            if (playerHealthManager.playerHealth < 100)
+            if (playerHealthManager.GetHealth() < playerHealthManager.GetMaxHealth())
             {
                 GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
                 StartCoroutine(FillPlayerLife());
@@ -75,7 +74,7 @@ public class ObjectInteraction : MonoBehaviour
             }
             else
             {
-                SkillSelectionUI.Instance.Show();
+                SkillOrUpgradeOptionUI.Instance.Show();
                 GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
                 Destroy(imageT.gameObject);
             } 
@@ -127,7 +126,7 @@ public class ObjectInteraction : MonoBehaviour
                 if (playerHealthManager.GetHealth() >= playerHealthManager.GetMaxHealth())
                 {
                     restoreLifeSystem.SetActive(false);
-                    playerHealthManager.playerHealth = 100;
+                    //playerHealthManager.playerHealth = 100;
                     InstantiateInteractButton(transform, new Vector3(2.5f, 0, 0));
                     GameManager.Instance.UpdateGameState(GameState.InGame);
                 }

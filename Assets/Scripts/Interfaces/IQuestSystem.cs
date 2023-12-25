@@ -7,5 +7,7 @@ public interface IQuestSystem
     public void QuestStart();
     public void QuestStatus();
     public void QuestEnd();
+    public bool GetQuestStatusCompleted();
+    public bool GetQuestStatusActivated();
 
 }
