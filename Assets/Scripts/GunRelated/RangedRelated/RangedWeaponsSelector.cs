@@ -12,7 +12,7 @@ public class RangedWeaponsSelector : MonoBehaviour
     [SerializeField] private RangedWeaponSO[] rangedWeaponSOs;
 
     private int lastSelectedWeaponIndex;
-    private int pendingWeaponIndex = 0; // Index of the weapon to switch to.
+    private int pendingWeaponIndex = 0;
 
     private bool isSelectorActive = true;
 
@@ -145,7 +145,9 @@ public class RangedWeaponsSelector : MonoBehaviour
 
             if (activeWeaponObject == null)
             {
-                SwitchToWeapon(rangedWeaponSOs.Length - 1);
+                WeaponSelector.Instance.ChangeRangeWeapon();
+                ChangeWeaponRequest();
+                WeaponSelector.Instance.ChangeSystem(1);
             }
         }
     }

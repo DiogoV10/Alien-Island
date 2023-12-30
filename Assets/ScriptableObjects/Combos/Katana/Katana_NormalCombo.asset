@@ -15,3 +15,4 @@ MonoBehaviour:
   combo:
   - {fileID: 11400000, guid: 977f1add71c894547950dc8c455a085e, type: 2}
   - {fileID: 11400000, guid: 654edf637af536345aeb9ad47f6d043a, type: 2}
+  weapon: 1

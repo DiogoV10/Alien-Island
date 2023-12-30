@@ -178,7 +178,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6038786172914063184}
   - component: {fileID: 4178152021638574490}
-  - component: {fileID: 4524475625618364221}
   - component: {fileID: 5623020220888646997}
   - component: {fileID: 7864778789491256192}
   - component: {fileID: 5295899729647019625}
@@ -240,29 +239,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!136 &4524475625618364221
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6508388398197950362}
-  m_Material: {fileID: 13400000, guid: 443adcc6d224c6449859b1c76b484405, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.55
-  m_Height: 1.98
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!136 &5623020220888646997
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -554,8 +530,6 @@ MonoBehaviour:
   damageDuration: 3
   damageInterval: 0.2
   forceMagnitude: 30
-  groundcrackPrefab: {fileID: 6174898380557816995, guid: b128ab702f6014147acee647dd0df408,
-    type: 3}
 --- !u!114 &444423757897703718
 MonoBehaviour:
   m_ObjectHideFlags: 0

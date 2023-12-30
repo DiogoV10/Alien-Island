@@ -42,11 +42,10 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private List<ComboTransition> comboTransitions;
 
-    [SerializeField] private Animator animator;
-
-
+    private Animator animator;
     private ComboSO currentCombo;
 
+    private ComboCondition comboCondition;
 
     private int comboCounter;
     private int clipNumber = 1;
@@ -134,11 +133,10 @@ public class PlayerCombat : MonoBehaviour
         {
             WeaponSelector.Instance.ChangeSystem(0);
 
-            if (CheckComboTransitions(ComboCondition.Hold))
-            {
-                buttonPressed = true;
-                canAttack = false;
-            }
+            comboCondition = ComboCondition.Hold;
+
+            buttonPressed = true;
+            canAttack = false;
         }
     }
 
@@ -148,8 +146,6 @@ public class PlayerCombat : MonoBehaviour
         {
             WeaponSelector.Instance.ChangeSystem(0);
             ChangeRigWeight.Instance.SetRigWeight(0f);
-
-            CheckComboTransitions(ComboCondition.None);
 
             buttonPressed = true;
             canAttack = false;
@@ -170,12 +166,29 @@ public class PlayerCombat : MonoBehaviour
             InterruptCombo();
         }
 
+        if (canMove && !isAttacking)
+        {
+            InterruptCombo();
+        }
+
         currentWeapon = WeaponSelector.Instance.GetCurrentWeaponInHand();
         pendingWeapon = WeaponSelector.Instance.GetPendingWeaponInHand();
+
+        if (!CheckCombo())
+        {
+            MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
+        }
     }
 
-    void Attack()
+    private void Attack()
     {
+        CheckComboTransitions();
+
+        if (!CheckCombo())
+        {
+            MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
+        }
+
         buttonPressed = false;
         isShooting = false;
 
@@ -216,7 +229,7 @@ public class PlayerCombat : MonoBehaviour
         MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
     }
 
-    public bool CheckComboTransitions(ComboCondition condition)
+    public bool CheckComboTransitions()
     {
         foreach (ComboTransition transition in comboTransitions)
         {
@@ -224,7 +237,7 @@ public class PlayerCombat : MonoBehaviour
                 transition.sourceWeapon.ToString() == currentWeapon &&
                 transition.targetWeapon.ToString() == pendingWeapon &&
                 comboCounter - 1 == transition.attackIndex &&
-                transition.transitionCondition == condition)
+                transition.transitionCondition == comboCondition)
             {
                 currentCombo = transition.targetCombo;
                 comboCounter = 0;
@@ -232,10 +245,15 @@ public class PlayerCombat : MonoBehaviour
             }
         }
 
-        //if (!IsAttacking() && !canMove)
-        //{
-        //    ResetCombo();
-        //}
+        return false;
+    }
+
+    public bool CheckCombo()
+    {
+        if (currentCombo != null && currentCombo.weapon.ToString() == currentWeapon)
+        {
+            return true;
+        }
 
         return false;
     }
@@ -253,7 +271,7 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        CheckComboTransitions(ComboCondition.Wait);
+        comboCondition = ComboCondition.Wait;
     }
 
     public void ResetCombo ()
@@ -339,7 +357,7 @@ public class PlayerCombat : MonoBehaviour
         animationActive[1] = true;
 
         ResetCombo();
-        CheckComboTransitions(ComboCondition.None);
+        comboCondition = ComboCondition.None;
 
         MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
         RangedWeaponsSelector.Instance.ChangeWeaponRequest();
