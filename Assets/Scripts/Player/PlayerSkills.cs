@@ -78,6 +78,8 @@ public class PlayerSkills : MonoBehaviour
         {
             if (selectedObject != null)
             {
+                selectedObject.GetComponent<ObjectControl>().ChangeMaterialToOriginal();
+
                 Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
                 if (rb != null)
                 {
@@ -249,6 +251,8 @@ public class PlayerSkills : MonoBehaviour
         {
             if (selectedObject != null)
             {
+                selectedObject.GetComponent<ObjectControl>().ChangeMaterialToOriginal();
+
                 Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
 
                 if (rb != null)
@@ -283,6 +287,8 @@ public class PlayerSkills : MonoBehaviour
                 if (hit.collider.CompareTag("Selectable"))
                 {
                     selectedObject = hit.collider.gameObject;
+
+                    selectedObject.GetComponent<ObjectControl>().ChangeMaterialToSelected();
 
                     ParticleSystem selectedObjectParticleSystem = selectedObject.GetComponentInChildren<ParticleSystem>();
                     selectedObjectParticleSystem.Play();

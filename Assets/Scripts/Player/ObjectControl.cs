@@ -10,6 +10,10 @@ public class ObjectControl : MonoBehaviour
 
     [SerializeField] private GameObject groundcrackPrefab;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Material selectedMaterial;
+
+
+    private Material originalMaterial;
 
 
     private bool hasHitGround = true;
@@ -22,6 +26,10 @@ public class ObjectControl : MonoBehaviour
         hasHitGround = false;
     }
 
+    private void Start()
+    {
+        originalMaterial = GetComponent<Renderer>().material;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -66,6 +74,16 @@ public class ObjectControl : MonoBehaviour
         float bonusDamage = 20.0f;
 
         return skill.damage + (bonusDamage * (1.0f - normalizedDistance));
+    }
+
+    public void ChangeMaterialToSelected()
+    {
+        GetComponent<Renderer>().material = selectedMaterial;
+    }
+
+    public void ChangeMaterialToOriginal()
+    {
+        GetComponent<Renderer>().material = originalMaterial;
     }
 
 
