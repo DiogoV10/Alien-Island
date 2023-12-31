@@ -216,9 +216,10 @@ public class PlayerCombat : MonoBehaviour
 
         animator.SetTrigger("Attack" + clipNumber);
 
-        if (PlayerMovement.Instance.IsFalling())
+        if (!PlayerMovement.Instance.IsGrounded())
         {
-            PlayerMovement.Instance.AddForceOnAirAttack(2f);
+            PlayerGravity.Instance.AddForceOnAirAttack(1f);
+            //PlayerGravity.Instance.DisableCanUseGravity();
         }
 
         clipNumber++;

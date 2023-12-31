@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isWalking = false;
     private bool isDashing = false;
 
-    private bool shouldFaceObject = false; // Initially, the player won't face the specific object 
+    private bool shouldFaceObject = false; 
 
     private bool inGame = false;
 
@@ -105,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
         inputSystem.Disable();
     }
 
-    //Update is called once per frame
+    
     void FixedUpdate()
     {
         if (!inGame)
@@ -182,7 +182,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        rigidBody.useGravity = !OnSlope();
+        PlayerGravity.Instance.SetGravityOnOff(!OnSlope());
     }
 
     private void CalculateLocomotionAnimation()
@@ -326,18 +326,6 @@ public class PlayerMovement : MonoBehaviour
         return Vector3.ProjectOnPlane(movementDirection, slopeHit.normal).normalized;
     }
 
-    public void AddForceOnAirAttack(float forceValue)
-    {
-        //rigidBody.useGravity = false;
-        rigidBody.AddForce(Vector3.up * forceValue, ForceMode.Impulse);
-        //Invoke("EnableGravity", 0.5f);
-    }
-
-    private void EnableGravity()
-    {
-        rigidBody.useGravity = true;
-    }
-
     IEnumerator Dashing()
     {
         isDashing = true;
@@ -361,22 +349,18 @@ public class PlayerMovement : MonoBehaviour
 
         if (shouldFaceObject && lockOnTarget != null)
         {
-             // Calculate the direction from the player to the specific object
             Vector3 objectDirection = lockOnTarget.transform.position - transform.position;
-            objectDirection.y = 0f; // Ignore the vertical component
+            objectDirection.y = 0f;
             objectDirection.Normalize();
 
-            // Set the rotation to face the specific object
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(objectDirection, Vector3.up), lockRotationSpeed * Time.deltaTime);
 
-            // Continue moving in the direction of the input
             movementInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
 
             movementDirection = movementInput.normalized;
         }
         else
         {
-            // Calculate direction relative to the camera
             movementInput = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(direction.x, 0, direction.y);
 
             movementDirection = movementInput.normalized;
@@ -398,20 +382,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (direction != Vector2.zero && !shouldFaceObject)
         {
-            if (shouldFaceObject)
-            {
-                //Vector3 objectDirection = lockOnTarget.transform.position - transform.position;
-                ////objectDirection.y = 0f;
-                ////objectDirection.Normalize();
-                //Vector3 objectDir = Quaternion.Euler(0, follow.transform.eulerAngles.y, 0) * new Vector3(objectDirection.x, 0, objectDirection.y);
-
-                //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(objectDir, Vector3.up), 500 * Time.deltaTime);
-            }
-            else
+            if (!shouldFaceObject)
             {
                 Quaternion desiredRotation = Quaternion.LookRotation(directionInput, Vector3.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, 500 * Time.deltaTime);
-            }
+            } 
         }
     }
 
