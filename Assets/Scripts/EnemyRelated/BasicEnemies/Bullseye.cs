@@ -100,7 +100,10 @@ public class Bullseye : BaseEnemy, IEntity
         Debug.Log(health);
 
         if (health <= 0f)
+        {
+            SkillPoints.Instance.IncreaseEnemyKilledPoints(200);
             TransitionToDead();
+        }    
     }
 
     public override void Die()

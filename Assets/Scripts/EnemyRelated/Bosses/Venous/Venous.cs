@@ -95,7 +95,12 @@ public class Venous : MonoBehaviour
     {
         venousSO.hp -= damage;
         Debug.Log(venousSO.hp);
-        if (venousSO.hp <= 0f) Die();
+        if (venousSO.hp <= 0f)
+        {
+            MainQuests.Instance.QuestEnd();
+            SkillPoints.Instance.IncreaseSkillPoints();
+            Die();
+        }
     }
 
     public void Die()

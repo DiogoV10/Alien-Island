@@ -14,6 +14,8 @@ public class MainQuests : MonoBehaviour, IQuestSystem
     int newQuest = 0;
 
     bool endGame = false;
+    [SerializeField] bool questActivated = false;
+    [SerializeField] bool questCompleted = false;
 
 
     void Awake()
@@ -33,7 +35,8 @@ public class MainQuests : MonoBehaviour, IQuestSystem
     }
     public void QuestEnd()
     {
-        Debug.Log("End Quest");
+        //Debug.Log("End Quest");
+        questCompleted = true;
         newQuest += 1;
         QuestStatus();
     }
@@ -46,13 +49,18 @@ public class MainQuests : MonoBehaviour, IQuestSystem
 
     public void QuestStatus()
     {
-        if (currentQuest == mainQuests[newQuest])
-            status = "Active";
+        if (mainQuests[newQuest] == "EndGame") return;//ToDo: EndGame
+
+        else if (currentQuest == mainQuests[newQuest])
+        {
+            questActivated = true;
+            questCompleted = false;
+        }
+
         else
         {
-            status = "Completed";
             //TODO: if not game end
-            if(!endGame) QuestStart();
+            if (!endGame) QuestStart();
         }
     }
 
@@ -68,7 +76,17 @@ public class MainQuests : MonoBehaviour, IQuestSystem
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("current quest:" + currentQuest);
-        Debug.Log("quest status:" + status);
+        //Debug.Log("current quest:" + currentQuest);
+        //Debug.Log("quest status:" + status);
+    }
+
+    public bool GetQuestStatusCompleted()
+    {
+        return questCompleted;
+    }
+
+    public bool GetQuestStatusActivated()
+    {
+        return questActivated;
     }
 }

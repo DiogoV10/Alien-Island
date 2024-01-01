@@ -28,9 +28,9 @@ public class MedKitInteraction : MonoBehaviour
     {
         if (other.gameObject.layer == playerMask)
         {
-            if (healthKit.healthKitCount < 1)
+            if (healthKit.GetHealthKitCount() < 1)
             {
-                healthKit.healthKitCount += 1;
+                healthKit.HealthKitIncrease();
                 Destroy(this.gameObject);
             }
         }

@@ -15,7 +15,8 @@ public class KillEnemiesQuest : MonoBehaviour, IQuestSystem
     public void QuestEnd()
     {
         questCompleted = true;
-        //questActivated = false;
+        questActivated = false;
+        SkillPoints.Instance.IncreaseSkillPoints();//Gained 1 skillPoint
     }
 
     public void QuestStart()

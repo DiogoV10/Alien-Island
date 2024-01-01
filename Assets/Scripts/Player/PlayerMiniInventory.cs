@@ -19,7 +19,6 @@ public class PlayerMiniInventory : MonoBehaviour
             inputSystem = new InputSystem();
             inputSystem.Interactions.ConsumeHealthKit.performed += i => ConsumeHealthKit();
         }
-
         inputSystem.Enable();
     }
 
@@ -50,5 +49,15 @@ public class PlayerMiniInventory : MonoBehaviour
             
             
         }
+    }
+
+    public void HealthKitIncrease()
+    {
+        healthKitCount += 1;
+    }
+
+    public int GetHealthKitCount()
+    {
+        return healthKitCount;
     }
 }

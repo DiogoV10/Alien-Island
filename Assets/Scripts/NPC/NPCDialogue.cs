@@ -114,6 +114,7 @@ public class NPCDialogue : MonoBehaviour
     {
         for (int i = 0; i < npc.Count; i++)
         {
+            Debug.Log("i: " + i);
             if (gameObject == npc[i])
             {
                 ReadFromFile(i);
@@ -121,48 +122,23 @@ public class NPCDialogue : MonoBehaviour
                 {
                     case 4:
                         KillEnemiesQuest killEnemiesQuest = gameObject.GetComponent<KillEnemiesQuest>();
-                        if (killEnemiesQuest.GetQuestStatusCompleted() == false)
-                        {
-                            if (!hasInteracted && indialogue)
-                            {
-                                if (killEnemiesQuest.GetQuestStatusActivated() == false) killEnemiesQuest.QuestStart();
-                                hasInteracted = true;
-                            }
-                            StartDialogue(0);
-                        }
-
-                        else if (killEnemiesQuest.GetQuestStatusCompleted() == true)
-                        {
-                            StartDialogue(linesQuestCheckCount + 1);
-                        }
+                        if (!killEnemiesQuest.enabled) killEnemiesQuest.enabled = true;
+                        QuestsLogicCode(killEnemiesQuest);
                         
                         break;
 
                     case 5:
                         GetObjectQuest getObjectQuest = gameObject.GetComponent<GetObjectQuest>();
+                        if (!getObjectQuest.enabled) getObjectQuest.enabled = true;
+                        QuestsLogicCode(getObjectQuest);
 
-                        
+                        break;
 
-                        if (!getObjectQuest.GetQuestStatusCompleted() && !getObjectQuest.GettingObjectStatus() )
-                        {
-                            if (!hasInteracted && indialogue)
-                            {
-                                if (getObjectQuest.GetQuestStatusActivated() == false) getObjectQuest.QuestStart();
-                                hasInteracted = true;
-                            }
-                            StartDialogue(0);
-                        }
+                    case 6:
+                        DeliveryQuest deliveryQuest = gameObject.GetComponent<DeliveryQuest>();
+                        if (!deliveryQuest.enabled) deliveryQuest.enabled = true;
+                        QuestsLogicCode(deliveryQuest);
 
-                        else if (getObjectQuest.GetQuestStatusCompleted())
-                        {
-                            StartDialogue(linesQuestCheckCount + 1);
-                        }
-
-                        else if (getObjectQuest.GettingObjectStatus())
-                        {
-                            getObjectQuest.QuestEnd();
-                            StartDialogue(linesQuestCheckCount + 1);
-                        } 
                         break;
 
                     default:
@@ -173,10 +149,32 @@ public class NPCDialogue : MonoBehaviour
         }
     }
 
-    public void SetNPCText(Transform _ChatBubleText)
+    private void QuestsLogicCode(IQuestSystem quest)
     {
-        npcText = _ChatBubleText;
+        if (!quest.GetQuestStatusCompleted())
+        {
+            if (!hasInteracted && indialogue)
+            {
+                if (quest.GetQuestStatusActivated() == false) quest.QuestStart();
+                hasInteracted = true;
+            }
+            StartDialogue(0);
+        }
+
+        else if (quest.GetQuestStatusCompleted())
+        {
+            StartDialogue(linesQuestCheckCount + 1);
+        }
     }
+
+    public void SetNPCText(Transform _chatBubleText)
+    {
+        npcText = _chatBubleText;
+    }
+
+    
+
+
 }
 
 

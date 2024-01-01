@@ -15,6 +15,8 @@ public class GetObjectQuest : MonoBehaviour, IQuestSystem
     public void QuestEnd()
     {
         questCompleted = true;
+        questActivated = false;
+        SkillPoints.Instance.IncreaseSkillPoints();//Gained 1 skillPoint
     }
 
     public void QuestStart()

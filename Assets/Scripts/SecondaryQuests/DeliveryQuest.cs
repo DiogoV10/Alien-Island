@@ -4,24 +4,39 @@ using UnityEngine;
 
 public class DeliveryQuest : MonoBehaviour, IQuestSystem
 {
+
+    [SerializeField] GameObject target;
+    [SerializeField] GameObject objectivePoint;
+
+    [SerializeField] bool questActivated = false;
+    [SerializeField] bool questCompleted = false;
+    [SerializeField] bool gotObject = false;
+    [SerializeField] bool objDelivered = false;
+
     public bool GetQuestStatusActivated()
     {
-        throw new System.NotImplementedException();
+        return questActivated;
     }
 
     public bool GetQuestStatusCompleted()
     {
-        throw new System.NotImplementedException();
+        return questCompleted;
     }
 
     public void QuestEnd()
     {
-        throw new System.NotImplementedException();
+        questActivated = false;
+        objDelivered = true;
+        questCompleted = true;
+        SkillPoints.Instance.IncreaseSkillPoints();//Gained 1 skillPoint
     }
 
     public void QuestStart()
     {
-        throw new System.NotImplementedException();
+        questActivated = true;
+        gotObject = true;
+        GameObject go = Instantiate(objectivePoint, target.transform.position, objectivePoint.transform.rotation);
+        go.GetComponent<ObjectiveEffect>().GetDeliveryQuest(this);
     }
 
     public void QuestStatus()
@@ -29,15 +44,15 @@ public class DeliveryQuest : MonoBehaviour, IQuestSystem
         throw new System.NotImplementedException();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public bool GettingObjectStatus()
     {
-        
+        return gotObject;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //if (!questActivated) return;
+        //else if (!questCompleted) QuestStatus();
     }
 }

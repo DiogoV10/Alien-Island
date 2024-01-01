@@ -7,18 +7,6 @@ public class Notebook : MonoBehaviour
 
     [SerializeField] GetObjectQuest quest;
 
-    // Start is called before the first frame update
-    void Start()
-    {
- 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetQuest(GetObjectQuest _quest)
     {
         quest = _quest;
@@ -29,6 +17,7 @@ public class Notebook : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             quest.GettingObject();
+            quest.QuestEnd();
             Destroy(this.gameObject);
         }
     }

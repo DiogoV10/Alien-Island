@@ -138,6 +138,7 @@ public class Minder : MonoBehaviour, IEntity
         if (minderSO.hp <= 0f)
         {
             MainQuests.Instance.QuestEnd();
+            SkillPoints.Instance.IncreaseSkillPoints();
             Die();
         }
     }
