@@ -124,6 +124,12 @@ public class PlayerCombat : MonoBehaviour
             canRun = false;
             isShooting = true;
 
+            //var weapon = RangedWeaponsSelector.Instance.GetActiveWeaponSO();
+            //if (weapon != null)
+            //{
+            //    AudioManager.Instance.PlaySoundAt(weapon.attackSounds, transform.position);
+            //}
+
             RangedWeaponsSelector.Instance.ChangeWeaponRequest();
         }
     }
@@ -153,6 +159,12 @@ public class PlayerCombat : MonoBehaviour
 
             buttonPressed = true;
             canAttack = false;
+
+            var weapon = MeleeWeaponsSelector.Instance.GetActiveWeaponSO();
+            if (weapon != null)
+            {
+                AudioManager.Instance.PlaySoundAt(weapon.attackSounds, transform.position);
+            }
         }
     }
 

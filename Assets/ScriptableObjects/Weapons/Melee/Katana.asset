@@ -18,3 +18,9 @@ MonoBehaviour:
   damage: 5
   attackSpeed: 1
   icon: {fileID: 21300000, guid: 4a9eaec089a0c014e88569e2e4a7791b, type: 3}
+  attackSounds:
+  - {fileID: 8300000, guid: 867c8ab003093ce49aaea6b739abd537, type: 3}
+  - {fileID: 8300000, guid: 03625564529161d4aa6a0d84fdbe5f99, type: 3}
+  - {fileID: 8300000, guid: 97e3993071a979044b965c19bc10f4d1, type: 3}
+  - {fileID: 8300000, guid: f2add4b5f7b60d64bb51260f7f723bea, type: 3}
+  attackSoundsVolume: []

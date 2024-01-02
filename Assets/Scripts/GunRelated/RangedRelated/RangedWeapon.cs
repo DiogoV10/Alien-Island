@@ -26,6 +26,8 @@ public class RangedWeapon : MonoBehaviour
         if (muzzle == null)
             return;
 
+        AudioManager.Instance.PlaySoundAt(RangedWeaponsSelector.Instance.GetActiveWeaponSO().attackSounds, muzzle.position);
+
         if (PlayerMovement.Instance.ShouldFaceObject())
         {
             GameObject lockedEnemy = LockOn.Instance.GetLockedEnemy();
