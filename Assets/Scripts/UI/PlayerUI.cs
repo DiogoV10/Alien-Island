@@ -17,7 +17,6 @@ public partial class PlayerUI : MonoBehaviour //Base
         SetWeaponSwapElements();
     }
 
-    //UPDATE PARA TESTES SO
 
     private void OnEnable()
     {
@@ -32,8 +31,20 @@ public partial class PlayerUI : MonoBehaviour //Base
             _playerSkills.OnCastUltimate += StartUltimateCooldown;
         }
 
-        WeaponSelector.Instance.OnMeleeEquiped += SetMeleeWeapon;
-        WeaponSelector.Instance.OnRangedEquiped += SetRangedWeapon;
+        WeaponSelector.Instance.OnMeleeEquiped += WeaponSelector_OnMeleeEquiped;
+        WeaponSelector.Instance.OnRangedEquiped += WeaponSelector_OnRangedEquiped;
+        
+
+    }
+
+    private void WeaponSelector_OnRangedEquiped(RangedWeaponSO rangedWeaponSO)
+    {
+        SetRangedWeapon(rangedWeaponSO);
+    }
+
+    private void WeaponSelector_OnMeleeEquiped(MeleeWeaponSO meleeWeaponSO)
+    {
+        SetMeleeWeapon(meleeWeaponSO);
     }
 
     private void OnDisable()

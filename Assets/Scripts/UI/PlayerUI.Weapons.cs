@@ -31,8 +31,10 @@ public partial class PlayerUI : MonoBehaviour // Weapons
 
     private void SetMeleeWeapon(MeleeWeaponSO meleeWeaponSO)
     {
+        Debug.Log("OUT ");
         if (meleeWeaponSO != null)
         {
+            Debug.Log("in ");
             _weapon1_Image.sprite = meleeWeaponSO.icon;
             SwapWeapons();
         }

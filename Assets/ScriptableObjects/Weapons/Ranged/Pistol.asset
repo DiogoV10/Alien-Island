@@ -18,4 +18,4 @@ MonoBehaviour:
   damage: 2
   attackSpeed: 1
   range: 1
-  icon: {fileID: 21300000, guid: c3875ef91b7597e47a2907366d83ea96, type: 3}
+  icon: {fileID: 21300000, guid: d47ece3294499b34c9962dfb558aeba8, type: 3}

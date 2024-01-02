@@ -28,6 +28,7 @@ public class WorldHP : MonoBehaviour
         if (_currentHp <= 0)
         {
             _hpSlider.gameObject.SetActive(false);
+            
             DOVirtual.DelayedCall(1.5f, () => Destroy(gameObject));
         }
     }
