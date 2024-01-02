@@ -14,7 +14,7 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
     [SerializeField] private float playerHealthMax;
 
 
-    private float playerHealth;
+    [SerializeField] private float playerHealth;
 
 
     private void Awake()

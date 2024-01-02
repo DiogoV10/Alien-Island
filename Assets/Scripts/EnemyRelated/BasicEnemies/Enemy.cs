@@ -96,7 +96,10 @@ public class Enemy : BaseEnemy, IEntity
         Debug.Log(health);
 
         if (health <= 0f)
+        {
+            SkillPoints.Instance.IncreaseEnemyKilledPoints(50);
             TransitionToDead();
+        }    
     }
 
     public override void Die()

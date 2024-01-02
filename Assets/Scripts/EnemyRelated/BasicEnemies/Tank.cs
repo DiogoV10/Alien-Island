@@ -131,7 +131,11 @@ public class Tank : BaseEnemy, IEntity
         Debug.Log(health);
 
         if (health <= 0f)
+        {
+            SkillPoints.Instance.IncreaseEnemyKilledPoints(100);
             TransitionToDead();
+        }
+            
     }
 
     public override void Die()

@@ -72,7 +72,7 @@ public class Venous : MonoBehaviour
             timeToNextAttack -= Time.deltaTime;
             if (timeToNextAttack < 0f)
             {
-                int random = Random.Range(0, 2);
+                int random = 1;
                 switch (random)
                 {
                     case 0:
@@ -95,7 +95,12 @@ public class Venous : MonoBehaviour
     {
         venousSO.hp -= damage;
         Debug.Log(venousSO.hp);
-        if (venousSO.hp <= 0f) Die();
+        if (venousSO.hp <= 0f)
+        {
+            MainQuests.Instance.QuestEnd();
+            SkillPoints.Instance.IncreaseSkillPoints();
+            Die();
+        }
     }
 
     public void Die()

@@ -390,6 +390,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ConsumeHealthKit",
+                    "type": "Button",
+                    "id": "0a0514b0-e105-42ce-bc03-1f0e5d2675d0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -412,6 +421,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "NextLine",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "54824e79-57a6-43a1-aa97-da226e229fec",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ConsumeHealthKit",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
