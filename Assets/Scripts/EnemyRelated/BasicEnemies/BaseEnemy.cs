@@ -46,6 +46,7 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
     protected bool canSeeTarget;
 
     protected IEnemyState currentState;
+    protected EnemyAudio _enemyAudio;
 
     public float CurrentHealth => health;
 
@@ -63,6 +64,8 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
         deadState.Initialize(animator);
         searchState.Initialize(animator);
         chaseState.Initialize(animator);
+
+        _enemyAudio = GetComponent<EnemyAudio>();
     }
 
     protected virtual void Start()

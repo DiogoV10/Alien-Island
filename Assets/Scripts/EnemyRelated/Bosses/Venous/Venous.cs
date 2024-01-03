@@ -13,9 +13,13 @@ public class Venous : MonoBehaviour
 
     [Header("VenousSO reference")]
     [SerializeField] VenousSO venousSO;
+
+    private EnemyAudio enemyAudio;
+
     // Start is called before the first frame update
     void Start()
     {
+        enemyAudio = GetComponent<EnemyAudio>();
         cloudAttack = GetComponent<VenomCloudAttack>();
         venomSpawnRate = 1f / venousSO.fireRate;
         animator = GetComponent<Animator>();
@@ -94,6 +98,7 @@ public class Venous : MonoBehaviour
     public void TakeDamage(float damage)
     {
         venousSO.hp -= damage;
+        if(enemyAudio) enemyAudio.PlayHurtSound();
         Debug.Log(venousSO.hp);
         if (venousSO.hp <= 0f)
         {

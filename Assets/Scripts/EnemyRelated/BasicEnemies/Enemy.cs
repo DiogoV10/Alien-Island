@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Enemy : BaseEnemy, IEntity
 {
-    
 
     public override void MoveTo(Vector3 destination)
     {
@@ -92,6 +91,7 @@ public class Enemy : BaseEnemy, IEntity
     public override void TakeDamage(float damage)
     {
         health -= damage;
+        if (_enemyAudio != null) _enemyAudio.PlayHurtSound();
 
         Debug.Log(health);
 

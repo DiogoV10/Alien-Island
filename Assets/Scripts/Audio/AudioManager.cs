@@ -41,6 +41,7 @@ public class AudioManager : MonoBehaviour
     {
         if (audioClips.Length == 0) return;
         int randomIndex = Random.Range(0, audioClips.Length);
+
         PlaySoundAt(audioClips[randomIndex], position, volume);
     }
 }

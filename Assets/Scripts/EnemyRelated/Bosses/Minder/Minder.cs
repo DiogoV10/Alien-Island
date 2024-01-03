@@ -28,7 +28,7 @@ public class Minder : MonoBehaviour, IEntity
     public bool ObjectThrowAttackOn => objectThrowAttackOn;
 
     public event Action OnDeath;
-
+    private EnemyAudio enemyAudio;
 
 
     // Start is called before the first frame update
@@ -36,6 +36,7 @@ public class Minder : MonoBehaviour, IEntity
     {
         colliderWithGround += ObjectOnFloor;
         animator = GetComponent<Animator>();
+        enemyAudio = GetComponent<EnemyAudio>();
     }
 
     // Update is called once per frame
@@ -134,6 +135,7 @@ public class Minder : MonoBehaviour, IEntity
     public void TakeDamage(float damage)
     {
         minderSO.hp -= damage;
+        if(enemyAudio != null) enemyAudio.PlayHurtSound();
         Debug.Log("Minder Health: " + minderSO.hp);
         if (minderSO.hp <= 0f)
         {
