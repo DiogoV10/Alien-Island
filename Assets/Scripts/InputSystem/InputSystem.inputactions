@@ -154,6 +154,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MouseScrollY",
+                    "type": "PassThrough",
+                    "id": "4ccc6dd0-7efa-42eb-9cd4-b3e434597169",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -176,6 +185,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "CamRotRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "abdba058-5277-4e80-a512-8c8a1a7d8bd3",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseScrollY",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -204,12 +224,21 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "AttackRange",
+                    "name": "AttackRangeStart",
                     "type": "Button",
                     "id": "eff7c75d-c4c1-4b2d-bf21-df88952fb42b",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "SlowTap",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AttackRangeFinish",
+                    "type": "Button",
+                    "id": "19f5660b-7e86-450e-83cf-97a686272236",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=1)",
                     "initialStateCheck": false
                 },
                 {
@@ -297,7 +326,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "AttackRange",
+                    "action": "AttackRangeStart",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -364,6 +393,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ChangeRangeWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fbbb7964-1b4e-426e-81fe-57c4dce482e2",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AttackRangeFinish",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,3 +1,5 @@
+// Ignore Spelling: Melee
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -108,6 +110,21 @@ public class WeaponSelector : MonoBehaviour
     public void ChangeSystem(int systemIndex)
     {
         SelectSystem(systemIndex);
+    }
+
+    public string GetCurrentMeleeWeapon()
+    {
+        return MeleeWeaponsSelector.Instance.GetActiveWeaponName();
+    }
+
+    public string GetPendingMeleeWeapon()
+    {
+        return MeleeWeaponsSelector.Instance.GetPendingWeaponName();
+    }
+
+    public string GetCurrentRangeWeapon()
+    {
+        return RangedWeaponsSelector.Instance.GetActiveWeaponName();
     }
 
     public string GetCurrentWeaponInHand()

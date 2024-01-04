@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using V10;
 
 public class CameraRotation : MonoBehaviour
 {
@@ -13,7 +14,12 @@ public class CameraRotation : MonoBehaviour
     private bool inGame = false;
     private InputSystem inputSystem;
     [SerializeField] private Transform target;
-    [SerializeField] private float distanceFromTarget = 36f;
+    [SerializeField] private float minZoomDistance = 10f;
+    [SerializeField] private float maxZoomDistance = 40f;
+    [SerializeField] private float zoomSpeed;
+
+    private float distanceFromTarget = 20f;
+    private float mouseScrollY;
  
     void Start()
     {
@@ -54,16 +60,38 @@ public class CameraRotation : MonoBehaviour
         inputSystem.Disable();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (!inGame) return;
         RotateCameraLeft();
         RotateCameraRight();
+        ScrollCamera();
         transform.position = target.position - transform.forward * distanceFromTarget;
     }
 
-    void RotateCameraLeft()
+    private void ScrollCamera()
+    {
+        mouseScrollY = GameInput.Instance.GetMouseWheelScrollY();
+
+        if (mouseScrollY > 0)
+        {
+            ZoomCamera(-1);
+        }
+
+        if (mouseScrollY < 0)
+        {
+            ZoomCamera(1);
+        }
+    }
+
+    private void ZoomCamera(int direction)
+    {
+        distanceFromTarget += direction * zoomSpeed;
+
+        distanceFromTarget = Mathf.Clamp(distanceFromTarget, minZoomDistance, maxZoomDistance);
+    }
+
+    private void RotateCameraLeft()
     {
         if (rotLeft)
         {
@@ -74,7 +102,7 @@ public class CameraRotation : MonoBehaviour
         
     }
 
-    void RotateCameraRight()
+    private void RotateCameraRight()
     {
         if (rotRight)
         {

@@ -39,8 +39,20 @@ public class PlayerCombat : MonoBehaviour
         Katana,
     }
 
+    public enum RangeWeapons
+    {
+        Pistol,
+        Rifle,
+    }
+
 
     [SerializeField] private List<ComboTransition> comboTransitions;
+
+
+    [Header("Range Weapon Settings")]
+    [SerializeField] private float shootInterval = 0.5f;
+    private float shootTimer = 1f;
+
 
     private Animator animator;
     private ComboSO currentCombo;
@@ -60,6 +72,7 @@ public class PlayerCombat : MonoBehaviour
     private bool buttonPressed = false;
     private bool isAttacking = false;
     private bool isShooting = false;
+    private bool isHoldingShootingButton = false;
 
     private bool[] animationActive = new bool[2];
 
@@ -94,7 +107,8 @@ public class PlayerCombat : MonoBehaviour
     {
         GameInput.Instance.OnAttackMeleeAction += GameInput_OnAttackMeleeAction;
         GameInput.Instance.OnAttackMeleeHoldAction += GameInput_OnAttackMeleeHoldAction;
-        GameInput.Instance.OnAttackRangeAction += GameInput_OnAttackRangeAction;
+        GameInput.Instance.OnAttackRangeStartAction += GameInput_OnAttackRangeStartAction;
+        GameInput.Instance.OnAttackRangeFinishAction += GameInput_OnAttackRangeFinishAction;
 
         animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         animator.runtimeAnimatorController = animatorOverrideController;
@@ -104,26 +118,70 @@ public class PlayerCombat : MonoBehaviour
         ResetCombo();
     }
 
-    private void GameInput_OnAttackRangeAction(object sender, System.EventArgs e)
+    private void GameInput_OnAttackRangeFinishAction(object sender, EventArgs e)
     {
         if (canAttack && canShoot && RangedWeaponsSelector.Instance.GetWeaponCount() > 0 && !PlayerSkills.Instance.IsUsingUltimate() && !PlayerSkills.Instance.IsUsingSkill())
         {
-            ChangeRigWeight.Instance.SetRigWeight(1f);
+            if (WeaponSelector.Instance.GetCurrentRangeWeapon() == RangeWeapons.Pistol.ToString())
+            {
+                ChangeRigWeight.Instance.SetRigWeight(1f);
 
-            animator.SetTrigger("Shoot");
-            WeaponSelector.Instance.ChangeSystem(1);
+                animator.SetTrigger("Shoot");
+                WeaponSelector.Instance.ChangeSystem(1);
 
-            PlayerMovement.Instance.ToggleFaceObject(true);
+                PlayerMovement.Instance.ToggleFaceObject(true);
 
-            buttonPressed = false;
+                buttonPressed = false;
 
+                InterruptCombo();
+
+                canShoot = false;
+                canRun = false;
+                isShooting = true;
+
+                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
+            }
+        }
+
+        if (WeaponSelector.Instance.GetCurrentRangeWeapon() == RangeWeapons.Rifle.ToString())
+        {
+            UntoggleLockOn();
             InterruptCombo();
+            CanShoot();
+        }
 
-            canShoot = false;
-            canRun = false;
-            isShooting = true;
+        isHoldingShootingButton = false;
+    }
 
-            RangedWeaponsSelector.Instance.ChangeWeaponRequest();
+    private void GameInput_OnAttackRangeStartAction(object sender, System.EventArgs e)
+    {
+        if (canAttack && canShoot && RangedWeaponsSelector.Instance.GetWeaponCount() > 0 && !PlayerSkills.Instance.IsUsingUltimate() && !PlayerSkills.Instance.IsUsingSkill())
+        {
+            if (WeaponSelector.Instance.GetCurrentRangeWeapon() == RangeWeapons.Rifle.ToString())
+            {
+                isHoldingShootingButton = true;
+
+                ChangeRigWeight.Instance.SetRigWeight(1f);
+
+                WeaponSelector.Instance.ChangeSystem(1);
+
+                PlayerMovement.Instance.ToggleFaceObject(true);
+
+                buttonPressed = false;
+
+                InterruptCombo();
+
+                canShoot = false;
+                canRun = false;
+                isShooting = true;
+
+                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
+            }
+        }
+
+        if (WeaponSelector.Instance.GetCurrentRangeWeapon() == RangeWeapons.Pistol.ToString()) 
+        {
+            isHoldingShootingButton = false;
         }
     }
 
@@ -171,23 +229,40 @@ public class PlayerCombat : MonoBehaviour
             InterruptCombo();
         }
 
-        currentWeapon = WeaponSelector.Instance.GetCurrentWeaponInHand();
-        pendingWeapon = WeaponSelector.Instance.GetPendingWeaponInHand();
+        currentWeapon = WeaponSelector.Instance.GetCurrentMeleeWeapon();
+        pendingWeapon = WeaponSelector.Instance.GetPendingMeleeWeapon();
 
-        if (!CheckCombo())
+        if (!CheckComboWeapon())
         {
             MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
+        }
+
+        HandleHoldShooting();
+        Debug.Log(isHoldingShootingButton);
+    }
+
+    private void HandleHoldShooting()
+    {
+        if (isHoldingShootingButton)
+        {
+            shootTimer += Time.deltaTime;
+
+            if (shootTimer >= shootInterval)
+            {
+                animator.SetTrigger("ShootRifle");
+                shootTimer = 0f;
+            }
+        }
+        else
+        {
+            shootTimer = 1f;
         }
     }
 
     private void Attack()
     {
         CheckComboTransitions();
-
-        if (!CheckCombo())
-        {
-            MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
-        }
+        CheckComboWeapon();
 
         buttonPressed = false;
         isShooting = false;
@@ -218,7 +293,7 @@ public class PlayerCombat : MonoBehaviour
 
         if (!PlayerMovement.Instance.IsGrounded())
         {
-            PlayerGravity.Instance.AddForceOnAirAttack(1f);
+            PlayerGravity.Instance.AddForceOnAirAttack(2f);
             //PlayerGravity.Instance.DisableCanUseGravity();
         }
 
@@ -226,8 +301,6 @@ public class PlayerCombat : MonoBehaviour
         nextAttack = false;
 
         PlayerMovement.Instance.RotatePlayerTowardsInput();
-
-        MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
     }
 
     public bool CheckComboTransitions()
@@ -249,12 +322,14 @@ public class PlayerCombat : MonoBehaviour
         return false;
     }
 
-    public bool CheckCombo()
+    public bool CheckComboWeapon()
     {
         if (currentCombo != null && currentCombo.weapon.ToString() == currentWeapon)
         {
             return true;
         }
+
+        MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
 
         return false;
     }

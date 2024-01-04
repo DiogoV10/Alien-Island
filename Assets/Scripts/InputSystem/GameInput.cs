@@ -20,7 +20,8 @@ namespace V10
 
         public event EventHandler OnAttackMeleeAction;
         public event EventHandler OnAttackMeleeHoldAction;
-        public event EventHandler OnAttackRangeAction;
+        public event EventHandler OnAttackRangeStartAction;
+        public event EventHandler OnAttackRangeFinishAction;
         public event EventHandler OnUltimateMeleeAction;
         public event EventHandler OnUltimateRangeAction;
         public event EventHandler OnChangeMeleeWeapon;
@@ -64,7 +65,8 @@ namespace V10
 
             playerInputActions.Combat.AttackMelee.canceled += AttackMelee_canceled;
             playerInputActions.Combat.AttackMeleeHold.performed += AttackMeleeHold_performed;
-            playerInputActions.Combat.AttackRange.canceled += AttackRange_canceled;
+            playerInputActions.Combat.AttackRangeStart.performed += AttackRangeStart_performed;
+            playerInputActions.Combat.AttackRangeFinish.performed += AttackRangeFinish_performed;
             playerInputActions.Combat.UltimateMelee.performed += UltimateMelee_performed;
             playerInputActions.Combat.UltimateRange.performed += UltimateRange_performed;
             playerInputActions.Combat.Skill.performed += Skill_performed;
@@ -73,6 +75,11 @@ namespace V10
             playerInputActions.Combat.LockOn.performed += LockOn_performed;
 
             playerInputActions.Movement.Jump.performed += Jump_performed;
+        }
+
+        private void AttackRangeFinish_performed(InputAction.CallbackContext obj)
+        {
+            OnAttackRangeFinishAction?.Invoke(this, EventArgs.Empty);
         }
 
         private void LockOn_performed(InputAction.CallbackContext obj)
@@ -105,9 +112,9 @@ namespace V10
             OnUltimateMeleeAction?.Invoke(this, EventArgs.Empty);
         }
 
-        private void AttackRange_canceled(InputAction.CallbackContext obj)
+        private void AttackRangeStart_performed(InputAction.CallbackContext obj)
         {
-            OnAttackRangeAction?.Invoke(this, EventArgs.Empty);
+            OnAttackRangeStartAction?.Invoke(this, EventArgs.Empty);
         }
 
         private void AttackMeleeHold_performed(InputAction.CallbackContext obj)
@@ -135,6 +142,13 @@ namespace V10
             Vector2 inputVector = playerInputActions.Movement.Move.ReadValue<Vector2>();
 
             inputVector = inputVector.normalized;
+
+            return inputVector;
+        }
+
+        public float GetMouseWheelScrollY()
+        {
+            float inputVector = playerInputActions.Camera.MouseScrollY.ReadValue<float>();
 
             return inputVector;
         }

@@ -176,6 +176,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseScrollY"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""4ccc6dd0-7efa-42eb-9cd4-b3e434597169"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -198,6 +207,17 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""CamRotRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""abdba058-5277-4e80-a512-8c8a1a7d8bd3"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseScrollY"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -226,12 +246,21 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""AttackRange"",
+                    ""name"": ""AttackRangeStart"",
                     ""type"": ""Button"",
                     ""id"": ""eff7c75d-c4c1-4b2d-bf21-df88952fb42b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""SlowTap"",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AttackRangeFinish"",
+                    ""type"": ""Button"",
+                    ""id"": ""19f5660b-7e86-450e-83cf-97a686272236"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -319,7 +348,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""AttackRange"",
+                    ""action"": ""AttackRangeStart"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -388,6 +417,17 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""action"": ""ChangeRangeWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fbbb7964-1b4e-426e-81fe-57c4dce482e2"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AttackRangeFinish"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -452,11 +492,13 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_CamRotLeft = m_Camera.FindAction("CamRotLeft", throwIfNotFound: true);
         m_Camera_CamRotRight = m_Camera.FindAction("CamRotRight", throwIfNotFound: true);
+        m_Camera_MouseScrollY = m_Camera.FindAction("MouseScrollY", throwIfNotFound: true);
         // Combat
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_AttackMelee = m_Combat.FindAction("AttackMelee", throwIfNotFound: true);
         m_Combat_AttackMeleeHold = m_Combat.FindAction("AttackMeleeHold", throwIfNotFound: true);
-        m_Combat_AttackRange = m_Combat.FindAction("AttackRange", throwIfNotFound: true);
+        m_Combat_AttackRangeStart = m_Combat.FindAction("AttackRangeStart", throwIfNotFound: true);
+        m_Combat_AttackRangeFinish = m_Combat.FindAction("AttackRangeFinish", throwIfNotFound: true);
         m_Combat_UltimateMelee = m_Combat.FindAction("UltimateMelee", throwIfNotFound: true);
         m_Combat_UltimateRange = m_Combat.FindAction("UltimateRange", throwIfNotFound: true);
         m_Combat_Skill = m_Combat.FindAction("Skill", throwIfNotFound: true);
@@ -600,12 +642,14 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private List<ICameraActions> m_CameraActionsCallbackInterfaces = new List<ICameraActions>();
     private readonly InputAction m_Camera_CamRotLeft;
     private readonly InputAction m_Camera_CamRotRight;
+    private readonly InputAction m_Camera_MouseScrollY;
     public struct CameraActions
     {
         private @InputSystem m_Wrapper;
         public CameraActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @CamRotLeft => m_Wrapper.m_Camera_CamRotLeft;
         public InputAction @CamRotRight => m_Wrapper.m_Camera_CamRotRight;
+        public InputAction @MouseScrollY => m_Wrapper.m_Camera_MouseScrollY;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -621,6 +665,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @CamRotRight.started += instance.OnCamRotRight;
             @CamRotRight.performed += instance.OnCamRotRight;
             @CamRotRight.canceled += instance.OnCamRotRight;
+            @MouseScrollY.started += instance.OnMouseScrollY;
+            @MouseScrollY.performed += instance.OnMouseScrollY;
+            @MouseScrollY.canceled += instance.OnMouseScrollY;
         }
 
         private void UnregisterCallbacks(ICameraActions instance)
@@ -631,6 +678,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @CamRotRight.started -= instance.OnCamRotRight;
             @CamRotRight.performed -= instance.OnCamRotRight;
             @CamRotRight.canceled -= instance.OnCamRotRight;
+            @MouseScrollY.started -= instance.OnMouseScrollY;
+            @MouseScrollY.performed -= instance.OnMouseScrollY;
+            @MouseScrollY.canceled -= instance.OnMouseScrollY;
         }
 
         public void RemoveCallbacks(ICameraActions instance)
@@ -654,7 +704,8 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
     private readonly InputAction m_Combat_AttackMelee;
     private readonly InputAction m_Combat_AttackMeleeHold;
-    private readonly InputAction m_Combat_AttackRange;
+    private readonly InputAction m_Combat_AttackRangeStart;
+    private readonly InputAction m_Combat_AttackRangeFinish;
     private readonly InputAction m_Combat_UltimateMelee;
     private readonly InputAction m_Combat_UltimateRange;
     private readonly InputAction m_Combat_Skill;
@@ -667,7 +718,8 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         public CombatActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @AttackMelee => m_Wrapper.m_Combat_AttackMelee;
         public InputAction @AttackMeleeHold => m_Wrapper.m_Combat_AttackMeleeHold;
-        public InputAction @AttackRange => m_Wrapper.m_Combat_AttackRange;
+        public InputAction @AttackRangeStart => m_Wrapper.m_Combat_AttackRangeStart;
+        public InputAction @AttackRangeFinish => m_Wrapper.m_Combat_AttackRangeFinish;
         public InputAction @UltimateMelee => m_Wrapper.m_Combat_UltimateMelee;
         public InputAction @UltimateRange => m_Wrapper.m_Combat_UltimateRange;
         public InputAction @Skill => m_Wrapper.m_Combat_Skill;
@@ -689,9 +741,12 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackMeleeHold.started += instance.OnAttackMeleeHold;
             @AttackMeleeHold.performed += instance.OnAttackMeleeHold;
             @AttackMeleeHold.canceled += instance.OnAttackMeleeHold;
-            @AttackRange.started += instance.OnAttackRange;
-            @AttackRange.performed += instance.OnAttackRange;
-            @AttackRange.canceled += instance.OnAttackRange;
+            @AttackRangeStart.started += instance.OnAttackRangeStart;
+            @AttackRangeStart.performed += instance.OnAttackRangeStart;
+            @AttackRangeStart.canceled += instance.OnAttackRangeStart;
+            @AttackRangeFinish.started += instance.OnAttackRangeFinish;
+            @AttackRangeFinish.performed += instance.OnAttackRangeFinish;
+            @AttackRangeFinish.canceled += instance.OnAttackRangeFinish;
             @UltimateMelee.started += instance.OnUltimateMelee;
             @UltimateMelee.performed += instance.OnUltimateMelee;
             @UltimateMelee.canceled += instance.OnUltimateMelee;
@@ -720,9 +775,12 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @AttackMeleeHold.started -= instance.OnAttackMeleeHold;
             @AttackMeleeHold.performed -= instance.OnAttackMeleeHold;
             @AttackMeleeHold.canceled -= instance.OnAttackMeleeHold;
-            @AttackRange.started -= instance.OnAttackRange;
-            @AttackRange.performed -= instance.OnAttackRange;
-            @AttackRange.canceled -= instance.OnAttackRange;
+            @AttackRangeStart.started -= instance.OnAttackRangeStart;
+            @AttackRangeStart.performed -= instance.OnAttackRangeStart;
+            @AttackRangeStart.canceled -= instance.OnAttackRangeStart;
+            @AttackRangeFinish.started -= instance.OnAttackRangeFinish;
+            @AttackRangeFinish.performed -= instance.OnAttackRangeFinish;
+            @AttackRangeFinish.canceled -= instance.OnAttackRangeFinish;
             @UltimateMelee.started -= instance.OnUltimateMelee;
             @UltimateMelee.performed -= instance.OnUltimateMelee;
             @UltimateMelee.canceled -= instance.OnUltimateMelee;
@@ -823,12 +881,14 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     {
         void OnCamRotLeft(InputAction.CallbackContext context);
         void OnCamRotRight(InputAction.CallbackContext context);
+        void OnMouseScrollY(InputAction.CallbackContext context);
     }
     public interface ICombatActions
     {
         void OnAttackMelee(InputAction.CallbackContext context);
         void OnAttackMeleeHold(InputAction.CallbackContext context);
-        void OnAttackRange(InputAction.CallbackContext context);
+        void OnAttackRangeStart(InputAction.CallbackContext context);
+        void OnAttackRangeFinish(InputAction.CallbackContext context);
         void OnUltimateMelee(InputAction.CallbackContext context);
         void OnUltimateRange(InputAction.CallbackContext context);
         void OnSkill(InputAction.CallbackContext context);
