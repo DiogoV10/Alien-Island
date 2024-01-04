@@ -7,8 +7,9 @@ public class FollowTargetAndDetach : MonoBehaviour
     private Transform _target;
     private Vector3 _startOffset;
 
-    private void Awake()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.1f);
         _target = transform.parent;
         _startOffset = transform.localPosition;
         transform.parent = null;

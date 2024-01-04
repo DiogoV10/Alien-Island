@@ -9,6 +9,14 @@ public class Bullseye : BaseEnemy, IEntity
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileSpawnPoint;
 
+    private EnemyAudio enemyAudio;
+
+    override protected void Awake()
+    {
+        base.Awake();
+        enemyAudio = GetComponent<EnemyAudio>();
+    }
+
     public override void MoveTo(Vector3 destination)
     {
         if (destination != oldDestination)
@@ -34,6 +42,8 @@ public class Bullseye : BaseEnemy, IEntity
 
             animator.SetTrigger("Punch");
             animator.CrossFade("Shoot",0.1f);
+
+            enemyAudio?.PlayAttackSound();
 
             alreadyAttacked = true;
 
@@ -96,6 +106,7 @@ public class Bullseye : BaseEnemy, IEntity
     public override void TakeDamage(float damage)
     {
         health -= damage;
+        if (enemyAudio != null) enemyAudio.PlayHurtSound();
 
         Debug.Log(health);
 
