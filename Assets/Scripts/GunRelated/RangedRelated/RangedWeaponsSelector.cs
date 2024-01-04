@@ -82,9 +82,9 @@ public class RangedWeaponsSelector : MonoBehaviour
 
     public RangedWeaponSO GetActiveWeaponSO()
     {
-        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < rangedWeaponSOs.Length)
+        if (lastSelectedWeaponIndex >= 0 && lastSelectedWeaponIndex < rangedWeaponSOs.Length)
         {
-            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[pendingWeaponIndex];
+            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
                 return activeWeaponSO;
@@ -119,14 +119,14 @@ public class RangedWeaponsSelector : MonoBehaviour
         return 0;
     }
 
-    public RangedWeaponSO GetActiveWeaponSO()
+    public RangedWeaponSO GetPendingWeaponSO()
     {
         if (pendingWeaponIndex >= 0 && pendingWeaponIndex < rangedWeaponSOs.Length)
         {
-            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[pendingWeaponIndex];
-            if (activeWeaponSO != null)
+            RangedWeaponSO pendingWeaponSO = rangedWeaponSOs[pendingWeaponIndex];
+            if (pendingWeaponSO != null)
             {
-                return activeWeaponSO;
+                return pendingWeaponSO;
             }
         }
         return null;

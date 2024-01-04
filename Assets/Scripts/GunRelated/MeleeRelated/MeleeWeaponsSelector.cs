@@ -82,9 +82,9 @@ public class MeleeWeaponsSelector : MonoBehaviour
 
     public MeleeWeaponSO GetActiveWeaponSO()
     {
-        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < meleeWeaponSOs.Length)
+        if (lastSelectedWeaponIndex >= 0 && lastSelectedWeaponIndex < meleeWeaponSOs.Length)
         {
-            MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[pendingWeaponIndex];
+            MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
                 return activeWeaponSO;
@@ -119,14 +119,14 @@ public class MeleeWeaponsSelector : MonoBehaviour
         return 0;
     }
 
-    public MeleeWeaponSO GetActiveWeaponSO()
+    public MeleeWeaponSO GetPendingWeaponSO()
     {
         if (pendingWeaponIndex >= 0 && pendingWeaponIndex < meleeWeaponSOs.Length)
         {
-            MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[pendingWeaponIndex];
-            if (activeWeaponSO != null)
+            MeleeWeaponSO pendingWeaponSO = meleeWeaponSOs[pendingWeaponIndex];
+            if (pendingWeaponSO != null)
             {
-                return activeWeaponSO;
+                return pendingWeaponSO;
             }
         }
         return null;
