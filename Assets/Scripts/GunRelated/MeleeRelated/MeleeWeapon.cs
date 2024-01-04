@@ -14,7 +14,7 @@ public class MeleeWeapon : MonoBehaviour
 
     private List<Collider> enemies = new List<Collider>();
     private bool canHit = false;
-
+    bool playSound = true;
 
     public static event EventHandler OnHitEnemy;
 
@@ -29,7 +29,6 @@ public class MeleeWeapon : MonoBehaviour
         if (!canHit) return;
 
         enemies.Clear();
-
         Vector3 hitPosition = PlayerCombat.Instance.transform.position + PlayerCombat.Instance.transform.forward * hitRadius;
 
         Collider[] colliders = Physics.OverlapSphere(hitPosition, hitRadius);

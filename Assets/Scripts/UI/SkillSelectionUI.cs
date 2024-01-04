@@ -5,14 +5,18 @@ using UnityEngine.UI;
 
 public class SkillSelectionUI : MonoBehaviour
 {
-    
-
     public static SkillSelectionUI Instance { get; private set; }
 
 
     [SerializeField] private Button pickUpObject;
     [SerializeField] private Button decoy;
     [SerializeField] private Button gas;
+
+    [SerializeField] private Slider _SkillON;
+    [SerializeField] private Image currentSkillIcon;
+    public Sprite newPickUpObjectIcon;
+    public Sprite newDecoyIcon;
+    public Sprite newGasIcon;
 
 
     private void Awake()
@@ -48,5 +52,22 @@ public class SkillSelectionUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-
+    public void ChangeCurrentSkillIcon(int skillIndex)
+    {
+        switch (skillIndex)
+        {
+            case 0:
+                currentSkillIcon.sprite = newPickUpObjectIcon;
+                break;
+            case 1:
+                currentSkillIcon.sprite = newGasIcon;
+                break;
+            case 2:
+                currentSkillIcon.sprite = newDecoyIcon;
+                break;
+            default:
+                break;
+        }
+        _SkillON.gameObject.SetActive(true);
+    }
 }

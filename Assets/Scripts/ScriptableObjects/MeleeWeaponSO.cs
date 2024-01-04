@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,4 +11,7 @@ public class MeleeWeaponSO : ScriptableObject
     public float damage;
     public float attackSpeed;
     public Sprite icon;
+    public AudioClip[] attackSounds;
+    [Range(0f, 1f)]
+    public float[] attackSoundsVolume;
 }

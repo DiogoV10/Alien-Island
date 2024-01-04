@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,6 +55,7 @@ public class PickupWeapon : MonoBehaviour
         if (meleeWeapon != null)
         {
             MeleeWeaponsSelector.Instance.AddWeapon(meleeWeapon);
+            //WeaponSelector.Instance.
         }
         else if (rangedWeapon != null)
         {

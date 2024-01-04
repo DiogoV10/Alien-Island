@@ -130,7 +130,12 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     {
         pupeteerSO.hp -= damage;
         Debug.Log(pupeteerSO.hp);
-        if (pupeteerSO.hp <= 0f) Die();
+        if (pupeteerSO.hp <= 0f)
+        {
+            MainQuests.Instance.QuestEnd();
+            SkillPoints.Instance.IncreaseSkillPoints();
+            Die();
+        }
     }
 
     public void Die()

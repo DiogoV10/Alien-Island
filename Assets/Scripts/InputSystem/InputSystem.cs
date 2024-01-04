@@ -452,6 +452,15 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ConsumeHealthKit"",
+                    ""type"": ""Button"",
+                    ""id"": ""0a0514b0-e105-42ce-bc03-1f0e5d2675d0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -474,6 +483,17 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""NextLine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54824e79-57a6-43a1-aa97-da226e229fec"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ConsumeHealthKit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -509,6 +529,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Interactions = asset.FindActionMap("Interactions", throwIfNotFound: true);
         m_Interactions_Interact = m_Interactions.FindAction("Interact", throwIfNotFound: true);
         m_Interactions_NextLine = m_Interactions.FindAction("NextLine", throwIfNotFound: true);
+        m_Interactions_ConsumeHealthKit = m_Interactions.FindAction("ConsumeHealthKit", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -822,12 +843,14 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private List<IInteractionsActions> m_InteractionsActionsCallbackInterfaces = new List<IInteractionsActions>();
     private readonly InputAction m_Interactions_Interact;
     private readonly InputAction m_Interactions_NextLine;
+    private readonly InputAction m_Interactions_ConsumeHealthKit;
     public struct InteractionsActions
     {
         private @InputSystem m_Wrapper;
         public InteractionsActions(@InputSystem wrapper) { m_Wrapper = wrapper; }
         public InputAction @Interact => m_Wrapper.m_Interactions_Interact;
         public InputAction @NextLine => m_Wrapper.m_Interactions_NextLine;
+        public InputAction @ConsumeHealthKit => m_Wrapper.m_Interactions_ConsumeHealthKit;
         public InputActionMap Get() { return m_Wrapper.m_Interactions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -843,6 +866,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @NextLine.started += instance.OnNextLine;
             @NextLine.performed += instance.OnNextLine;
             @NextLine.canceled += instance.OnNextLine;
+            @ConsumeHealthKit.started += instance.OnConsumeHealthKit;
+            @ConsumeHealthKit.performed += instance.OnConsumeHealthKit;
+            @ConsumeHealthKit.canceled += instance.OnConsumeHealthKit;
         }
 
         private void UnregisterCallbacks(IInteractionsActions instance)
@@ -853,6 +879,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @NextLine.started -= instance.OnNextLine;
             @NextLine.performed -= instance.OnNextLine;
             @NextLine.canceled -= instance.OnNextLine;
+            @ConsumeHealthKit.started -= instance.OnConsumeHealthKit;
+            @ConsumeHealthKit.performed -= instance.OnConsumeHealthKit;
+            @ConsumeHealthKit.canceled -= instance.OnConsumeHealthKit;
         }
 
         public void RemoveCallbacks(IInteractionsActions instance)
@@ -900,5 +929,6 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     {
         void OnInteract(InputAction.CallbackContext context);
         void OnNextLine(InputAction.CallbackContext context);
+        void OnConsumeHealthKit(InputAction.CallbackContext context);
     }
 }

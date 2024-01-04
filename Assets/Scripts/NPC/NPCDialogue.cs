@@ -8,16 +8,36 @@ public class NPCDialogue : MonoBehaviour
 {
 
     string[] lines;
-    private int index;
+
+    int index;
     int playerMask = 3;
+    int linesQuestCheckCount = 0;
+
+    [SerializeField] bool hasInteracted = false, indialogue = false, dialogueStarted = false;
     Transform npcText;
     InputSystem inputSystem;
 
     [SerializeField] List<GameObject> npc = new List<GameObject>();
 
+    void Awake()
+    {
+        GameManager.OnGameStateChange += GameManagerOnGameStateChange;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChange -= GameManagerOnGameStateChange;
+    }
+
+    private void GameManagerOnGameStateChange(GameState state)
+    {
+        indialogue = state == GameState.NpcDialogue;
+    }
 
     private void OnEnable()
     {
+        Dialogue();
+
         if (inputSystem == null)
         {
             inputSystem = new InputSystem();
@@ -36,15 +56,32 @@ public class NPCDialogue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (!indialogue)
+        {
+            dialogueStarted = false;
+            linesQuestCheckCount = 0;
+            return;
+        }
+        else if(!dialogueStarted) Dialogue();
+        
     }
 
-    public void StartDialogue(int npc)
+    void ReadFromFile(int npc)
     {
         string ReadFromFilePath = Application.streamingAssetsPath + "/Recall_Chat/" + "NPC" + (npc + 1) + ".txt";
         lines = File.ReadAllLines(ReadFromFilePath);
-        index = 0;
+        foreach(string line in lines)
+        {
+            if (line == "Quest Completed Speech") break;
+            linesQuestCheckCount += 1;
+            if (linesQuestCheckCount > lines.Length) linesQuestCheckCount = lines.Length;
+        }
+    }
+    void StartDialogue(int _index)
+    {
+        index = _index;
         gameObject.GetComponent<NPCInteraction>().speechString = lines[index];
+        if(indialogue) dialogueStarted = true;
     }
 
 
@@ -53,8 +90,8 @@ public class NPCDialogue : MonoBehaviour
         if (index < lines.Length - 1)
         {
             index++;
-            npcText.gameObject.GetComponent<ChatBubble>().text = lines[index];
-            if(index == lines.Length - 1)
+            if(index != linesQuestCheckCount) npcText.gameObject.GetComponent<ChatBubble>().text = lines[index];
+            if (index == lines.Length - 1 || index == linesQuestCheckCount - 1)
             {
                 npcText.gameObject.GetComponent<ChatBubble>().pressButtonText = "Press T to Exit";
             }
@@ -63,36 +100,81 @@ public class NPCDialogue : MonoBehaviour
 
     void NextLineTrigger()
     {
-        if (npcText.gameObject.GetComponent<ChatBubble>().text == lines[index])
+        if (npcText.gameObject.GetComponent<ChatBubble>().text == lines[index] && index != linesQuestCheckCount)
         {
             NextLine();
         }
-        else
+        else if(index != linesQuestCheckCount)
         {
             npcText.gameObject.GetComponent<ChatBubble>().text = lines[index];
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Dialogue()
     {
-        if (other.gameObject.layer == playerMask)
+        for (int i = 0; i < npc.Count; i++)
         {
-
-            for (int i = 0; i < npc.Count; i++)
+            Debug.Log("i: " + i);
+            if (gameObject == npc[i])
             {
-                if (this.gameObject == npc[i])
+                ReadFromFile(i);
+                switch (i)
                 {
-                    StartDialogue(i);
-                    break;
+                    case 4:
+                        KillEnemiesQuest killEnemiesQuest = gameObject.GetComponent<KillEnemiesQuest>();
+                        if (!killEnemiesQuest.enabled) killEnemiesQuest.enabled = true;
+                        QuestsLogicCode(killEnemiesQuest);
+                        
+                        break;
+
+                    case 5:
+                        GetObjectQuest getObjectQuest = gameObject.GetComponent<GetObjectQuest>();
+                        if (!getObjectQuest.enabled) getObjectQuest.enabled = true;
+                        QuestsLogicCode(getObjectQuest);
+
+                        break;
+
+                    case 6:
+                        DeliveryQuest deliveryQuest = gameObject.GetComponent<DeliveryQuest>();
+                        if (!deliveryQuest.enabled) deliveryQuest.enabled = true;
+                        QuestsLogicCode(deliveryQuest);
+
+                        break;
+
+                    default:
+                        StartDialogue(0);
+                        break;
                 }
             }
         }
     }
 
-    public void SetNPCText(Transform _ChatBubleText)
+    private void QuestsLogicCode(IQuestSystem quest)
     {
-        npcText = _ChatBubleText;
+        if (!quest.GetQuestStatusCompleted())
+        {
+            if (!hasInteracted && indialogue)
+            {
+                if (quest.GetQuestStatusActivated() == false) quest.QuestStart();
+                hasInteracted = true;
+            }
+            StartDialogue(0);
+        }
+
+        else if (quest.GetQuestStatusCompleted())
+        {
+            StartDialogue(linesQuestCheckCount + 1);
+        }
     }
+
+    public void SetNPCText(Transform _chatBubleText)
+    {
+        npcText = _chatBubleText;
+    }
+
+    
+
+
 }
 
 

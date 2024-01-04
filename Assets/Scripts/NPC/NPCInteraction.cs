@@ -6,16 +6,22 @@ using UnityEngine.InputSystem;
 
 public class NPCInteraction : MonoBehaviour
 {
-    int playerMask = 3;
+
     InputSystem inputSystem;
+    Animator animator;
+
     [SerializeField] PlayerInput playerInput;
-    [SerializeField] Transform player;
-    bool insideZone = false, indialogue = false;
-    private Transform imageT;
-    [SerializeField] private Camera mainCam, dialogueCam;
+    [SerializeField] Camera mainCam, dialogueCam;
     [SerializeField] ChatBubble chatBubble;
+
+    [SerializeField] Transform player;
     [SerializeField] Transform buttonT;
+    Transform imageT;
     Transform chatBubbleClone;
+
+    int playerMask = 3;
+
+    bool insideZone = false, indialogue = false;
 
     public string speechString;
 
@@ -36,7 +42,7 @@ public class NPCInteraction : MonoBehaviour
 
     void Start()
     {
-
+        animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -67,6 +73,7 @@ public class NPCInteraction : MonoBehaviour
         if (indialogue)
         {
             GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
+            //gameObject.GetComponent<NPCDialogue>().enabled = true;
             Destroy(imageT.gameObject);
             EnterDialogue();
         }
@@ -92,6 +99,7 @@ public class NPCInteraction : MonoBehaviour
         {
             insideZone = true;
             InstantiateInteractButton(transform, new Vector3(0, 2f, 0));
+            gameObject.GetComponent<NPCDialogue>().enabled = true;
         }
     }
 
@@ -101,23 +109,34 @@ public class NPCInteraction : MonoBehaviour
         {
             insideZone = false;
             Destroy(imageT.gameObject);
+            gameObject.GetComponent<NPCDialogue>().enabled = false;
         }
     }
 
     void EnterDialogue()
     {
+
         dialogueCam.enabled = true;
         mainCam.enabled = false;
+
         transform.LookAt(new Vector3(player.transform.position.x, player.transform.position.y + 1f, player.transform.position.z));
         player.LookAt(new Vector3(transform.position.x, 0, transform.position.z));
+
+        animator.SetBool("InDialogue", true);
+
         chatBubbleClone = chatBubble.CreateChatBubble(transform, new Vector3(0, 1.3f, 0), speechString);
+        
         gameObject.GetComponent<NPCDialogue>().SetNPCText(chatBubbleClone);
     }
 
     void ExitDialogue()
     {
+
         dialogueCam.enabled = false;
         mainCam.enabled = true;
+
+        animator.SetBool("InDialogue", false);
+
         Destroy(chatBubbleClone.gameObject);
     }
 }

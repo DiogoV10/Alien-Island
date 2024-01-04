@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Minder SO
   m_EditorClassIdentifier: 
   name: Minder
-  hp: 200
+  hp: 100
   fireRate: 0.5
   LevitateAttackDamage: 15
   BombingAttackDamage: 7

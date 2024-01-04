@@ -11,4 +11,7 @@ public class RangedWeaponSO : ScriptableObject
     public float attackSpeed;
     public float range;
     public Sprite icon;
+    public AudioClip[] attackSounds;
+    [Range(0f,1f)]
+    public float[] attackSoundsVolume;
 }

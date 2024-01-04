@@ -7,8 +7,6 @@ using V10;
 
 public class WeaponSelector : MonoBehaviour
 {
-
-
     public static WeaponSelector Instance { get; private set; }
 
 
@@ -22,6 +20,8 @@ public class WeaponSelector : MonoBehaviour
     private int meleeWeaponIndex = 0;
     private int rangedWeaponIndex = 0;
 
+    public event Action<MeleeWeaponSO> OnMeleeEquiped;
+    public event Action<RangedWeaponSO> OnRangedEquiped;
 
     private void Awake()
     {
@@ -72,6 +72,8 @@ public class WeaponSelector : MonoBehaviour
         meleeWeaponIndex = (meleeWeaponIndex + 1) % MeleeWeaponsSelector.Instance.GetWeaponCount();
         MeleeWeaponsSelector.Instance.RequestWeaponChange(meleeWeaponIndex);
 
+        OnMeleeEquiped?.Invoke(MeleeWeaponsSelector.Instance.GetActiveWeaponSO());
+
         if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsAttacking())
         {
             MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
@@ -89,6 +91,8 @@ public class WeaponSelector : MonoBehaviour
 
         rangedWeaponIndex = (rangedWeaponIndex + 1) % RangedWeaponsSelector.Instance.GetWeaponCount();
         RangedWeaponsSelector.Instance.RequestWeaponChange(rangedWeaponIndex);
+
+        OnRangedEquiped?.Invoke(RangedWeaponsSelector.Instance.GetActiveWeaponSO());
 
         if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsShooting())
         {

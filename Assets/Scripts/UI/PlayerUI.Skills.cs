@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public partial class PlayerUI : MonoBehaviour //Skills
 {
     [Header("Skill references")]
-    [SerializeField] private Transform _skill_T;
+    [SerializeField] private RectTransform _skill_T;
     [SerializeField] private Transform _ultimate_T;
     [SerializeField] private Transform _ultimate2_T;
 
@@ -44,8 +44,9 @@ public partial class PlayerUI : MonoBehaviour //Skills
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
-            StartUltimateCooldown();
-            StartSkillCooldown();
+            SwapWeapons();
         }
+
+
     }
 }

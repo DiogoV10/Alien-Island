@@ -221,6 +221,12 @@ public class PlayerCombat : MonoBehaviour
 
             buttonPressed = true;
             canAttack = false;
+
+            var weapon = MeleeWeaponsSelector.Instance.GetActiveWeaponSO();
+            if (weapon != null)
+            {
+                AudioManager.Instance.PlaySoundAt(weapon.attackSounds, transform.position);
+            }
         }
     }
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FistBump
   m_EditorClassIdentifier: 
   enemyName: FistBump
-  enemyHP: 100
+  enemyHP: 10
   speed: 5
   damageAmount: 1
   attackRange: 2

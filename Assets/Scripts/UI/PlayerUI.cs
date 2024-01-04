@@ -14,12 +14,7 @@ public partial class PlayerUI : MonoBehaviour //Base
         _playerMaxHealth = _health.GetMaxHealth();
         _playerSkills = _player.GetComponent<PlayerSkills>();
         SetSliders();
-    }
-
-    private void Start()
-    {
-        MeleeWeaponsSelector.Instance.OnChangeWeapon += SetMeleeWeapon;
-        RangedWeaponsSelector.Instance.OnChangeWeapon += SetRangedWeapon;
+        SetWeaponSwapElements();
     }
 
     private void OnEnable()
@@ -34,6 +29,21 @@ public partial class PlayerUI : MonoBehaviour //Base
             _playerSkills.OnCastSkill += StartSkillCooldown;
             _playerSkills.OnCastUltimate += StartUltimateCooldown;
         }
+
+        WeaponSelector.Instance.OnMeleeEquiped += WeaponSelector_OnMeleeEquiped;
+        WeaponSelector.Instance.OnRangedEquiped += WeaponSelector_OnRangedEquiped;
+        
+
+    }
+
+    private void WeaponSelector_OnRangedEquiped(RangedWeaponSO rangedWeaponSO)
+    {
+        SetRangedWeapon(rangedWeaponSO);
+    }
+
+    private void WeaponSelector_OnMeleeEquiped(MeleeWeaponSO meleeWeaponSO)
+    {
+        SetMeleeWeapon(meleeWeaponSO);
     }
 
     private void OnDisable()
@@ -48,7 +58,8 @@ public partial class PlayerUI : MonoBehaviour //Base
             _playerSkills.OnCastUltimate -= StartUltimateCooldown;
         }
 
-        MeleeWeaponsSelector.Instance.OnChangeWeapon -= SetMeleeWeapon;
-        RangedWeaponsSelector.Instance.OnChangeWeapon -= SetRangedWeapon;
+        WeaponSelector.Instance.OnMeleeEquiped -= SetMeleeWeapon;
+        WeaponSelector.Instance.OnRangedEquiped -= SetRangedWeapon;
     }
+
 }

@@ -16,7 +16,9 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
     [SerializeField] private float playerHealthMax;
 
 
-    private float playerHealth;
+    [SerializeField] private float playerHealth;
+    [SerializeField] private AudioClip[] hurtSounds;
+    [SerializeField] private AudioClip[] deathSounds;
 
 
     private void Awake()
@@ -56,6 +58,7 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
     public void Die()
     {
         Debug.Log("PlayerHasDied");
+        AudioManager.Instance.PlaySoundAt(deathSounds, transform.position,0.1f);
         OnEntityDeath();
     }
 
@@ -68,6 +71,7 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
     {
         playerHealth -= damage;
         OnHealthChanged?.Invoke(playerHealth);
+        AudioManager.Instance.PlaySoundAt(hurtSounds, transform.position, 0.1f);
         if (playerHealth <= 0f) Die();
     }
 
