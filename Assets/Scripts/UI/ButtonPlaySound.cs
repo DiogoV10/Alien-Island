@@ -17,12 +17,12 @@ public class ButtonPlaySound : MonoBehaviour, IPointerEnterHandler, IPointerClic
 
     public void OnHover()
     {
-        audioSource.PlayOneShot(_onHoverSound);
+        audioSource.PlayOneShot(_onHoverSound, AudioManager.Instance.soundMultiplier);
     }
 
     public void OnClick()
     {
-        audioSource.PlayOneShot(_onClickSound);
+        audioSource.PlayOneShot(_onClickSound, AudioManager.Instance.soundMultiplier);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

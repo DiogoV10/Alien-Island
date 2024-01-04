@@ -51,7 +51,7 @@ public class EnemyAudio : MonoBehaviour
         int randomIndex = UnityEngine.Random.Range(0, audioClip.Length);
 
         _audioSource.pitch = UnityEngine.Random.Range(1f - _pitchVariation, 1f + _pitchVariation);
-        _audioSource.PlayOneShot(audioClip[randomIndex]);
+        _audioSource.PlayOneShot(audioClip[randomIndex],_volume * AudioManager.Instance.soundMultiplier);
     }
 
     public void PlayAttackSound()
