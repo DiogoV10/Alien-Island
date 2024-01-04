@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerHealthManager : MonoBehaviour, IEntity
 {
 
+    public static PlayerHealthManager Instance { get; private set; }
+
 
     public event Action<float> OnHealthChanged;
 
@@ -19,6 +21,8 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
 
     private void Awake()
     {
+        Instance = this;
+
         IncrementCurrentHealth(playerHealthMax);
 
         PlayerUpgrades.Instance.OnUpgradeUnlocked += PlayerUpgrades_OnUpgradeUnlocked;
@@ -86,6 +90,13 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
     public float GetMaxHealth()
     {
         return playerHealthMax;
+    }
+
+    public void LoadData(float healthData)
+    {
+        playerHealth = healthData;
+
+        OnHealthChanged?.Invoke(playerHealth);
     }
 
     

@@ -100,7 +100,7 @@ public class RangedWeaponsSelector : MonoBehaviour
             RangedWeaponSO activeWeaponSO = rangedWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
-                return activeWeaponSO.damage;
+                return activeWeaponSO.damage * PlayerCombat.Instance.GetDamageMultiplier();
             }
         }
         return 0;

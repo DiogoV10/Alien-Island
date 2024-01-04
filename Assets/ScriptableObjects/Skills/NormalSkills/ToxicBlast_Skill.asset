@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4189ab7ec2eab5c41b62ef7b9a04f36c, type: 3}
   m_Name: ToxicBlast_Skill
   m_EditorClassIdentifier: 
-  name: ToxicBlast
+  name: ToxicBlast_Skill
   damage: 20
   duration: 5
   range: 5

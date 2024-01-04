@@ -127,6 +127,11 @@ public class WeaponSelector : MonoBehaviour
         return RangedWeaponsSelector.Instance.GetActiveWeaponName();
     }
 
+    public string GetPendingRangeWeapon()
+    {
+        return RangedWeaponsSelector.Instance.GetPendingWeaponName();
+    }
+
     public string GetCurrentWeaponInHand()
     {
         if (MeleeWeaponsSelector.Instance.IsActive())

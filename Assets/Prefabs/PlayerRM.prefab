@@ -191,6 +191,8 @@ GameObject:
   - component: {fileID: 444423757897703718}
   - component: {fileID: -7503995701084580605}
   - component: {fileID: 478667038645604988}
+  - component: {fileID: 1269625330057332154}
+  - component: {fileID: 5629209279669797121}
   m_Layer: 3
   m_Name: PlayerRM
   m_TagString: Player
@@ -284,7 +286,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -341,7 +343,7 @@ MonoBehaviour:
   lockOnTarget: {fileID: 0}
   dashTime: 0.5
   dashSpeed: 100
-  jumpvalue: 40
+  jumpvalue: 25
   jumpGracePeriod: 0.2
   isGrounded: 0
   groundCheck: {fileID: 5825813674483446961}
@@ -441,7 +443,7 @@ MonoBehaviour:
     attackIndex: 2
     sourceWeapon: 1
     targetWeapon: 0
-  animator: {fileID: 0}
+  shootInterval: 0.2
 --- !u!114 &2306734552937671685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,7 +523,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ec064143701063b4cbd53338db3b3c0d, type: 2}
   - {fileID: 11400000, guid: 887bda398d0a6244fa3694d4b1d67c95, type: 2}
   - {fileID: 11400000, guid: deacfb253b487cd4a8bece54ed858aa0, type: 2}
-  equippedSkillIndex: 0
   toxicBlastPrefab: {fileID: 4873331344441937726, guid: 7eff189f682bc6741b0182f6ce2bd9ab,
     type: 3}
   illusionaryDecoyPrefab: {fileID: 989947294678405693, guid: 8bb6b634a9eec874284264d0e252cc15,
@@ -565,6 +566,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 799c9899c7ec5aa4c8d3ceeff0d0bb6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1269625330057332154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508388398197950362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aabf524ef5a8a1740a2e0fa2b867fdfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5629209279669797121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6508388398197950362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71b3a7fd85c9aec49b5ef4f9c8e7f608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6593446471853751904
@@ -666,7 +691,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraRotationSpeed: 100
   target: {fileID: 0}
-  distanceFromTarget: 36
+  minZoomDistance: 10
+  maxZoomDistance: 40
+  zoomSpeed: 0
 --- !u!114 &1244653988003468469
 MonoBehaviour:
   m_ObjectHideFlags: 0

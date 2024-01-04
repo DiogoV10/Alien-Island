@@ -63,6 +63,10 @@ public class PlayerCombat : MonoBehaviour
     private int clipNumber = 1;
 
 
+    private float damageMultiplier = 1f;
+    private float baseDamageMultiplier = 1f;
+
+
     private bool canShoot = true;
     private bool canMove = true;
     private bool canRun = true;
@@ -109,6 +113,7 @@ public class PlayerCombat : MonoBehaviour
         GameInput.Instance.OnAttackMeleeHoldAction += GameInput_OnAttackMeleeHoldAction;
         GameInput.Instance.OnAttackRangeStartAction += GameInput_OnAttackRangeStartAction;
         GameInput.Instance.OnAttackRangeFinishAction += GameInput_OnAttackRangeFinishAction;
+        PlayerUpgrades.Instance.OnUpgradeUnlocked += PlayerUpgrades_OnUpgradeUnlocked;
 
         animatorOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
         animator.runtimeAnimatorController = animatorOverrideController;
@@ -116,6 +121,24 @@ public class PlayerCombat : MonoBehaviour
         ChangeRigWeight.Instance.SetRigWeight(0f);
 
         ResetCombo();
+    }
+
+    private void PlayerUpgrades_OnUpgradeUnlocked(object sender, PlayerUpgrades.OnUpgradeUnlockedEventArgs e)
+    {
+        switch (e.upgradeType)
+        {
+            case PlayerUpgrades.UpgradeType.Damage_1:
+                IncreaseDamageMultiplierPermanent(0.5f);
+                break;
+            case PlayerUpgrades.UpgradeType.Damage_2:
+                IncreaseDamageMultiplierPermanent(1f);
+                break;
+            case PlayerUpgrades.UpgradeType.Damage_3:
+                IncreaseDamageMultiplierPermanent(2.5f);
+                break;
+            default:
+                break;
+        }
     }
 
     private void GameInput_OnAttackRangeFinishAction(object sender, EventArgs e)
@@ -138,19 +161,16 @@ public class PlayerCombat : MonoBehaviour
                 canShoot = false;
                 canRun = false;
                 isShooting = true;
-
-                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
             }
         }
 
         if (WeaponSelector.Instance.GetCurrentRangeWeapon() == RangeWeapons.Rifle.ToString())
         {
+            isHoldingShootingButton = false;
             UntoggleLockOn();
             InterruptCombo();
             CanShoot();
         }
-
-        isHoldingShootingButton = false;
     }
 
     private void GameInput_OnAttackRangeStartAction(object sender, System.EventArgs e)
@@ -174,14 +194,7 @@ public class PlayerCombat : MonoBehaviour
                 canShoot = false;
                 canRun = false;
                 isShooting = true;
-
-                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
             }
-        }
-
-        if (WeaponSelector.Instance.GetCurrentRangeWeapon() == RangeWeapons.Pistol.ToString()) 
-        {
-            isHoldingShootingButton = false;
         }
     }
 
@@ -190,6 +203,7 @@ public class PlayerCombat : MonoBehaviour
         if (canAttack && !PlayerSkills.Instance.IsUsingUltimate() && !PlayerSkills.Instance.IsUsingSkill())
         {
             WeaponSelector.Instance.ChangeSystem(0);
+            ChangeRigWeight.Instance.SetRigWeight(0f);
 
             comboCondition = ComboCondition.Hold;
 
@@ -219,12 +233,12 @@ public class PlayerCombat : MonoBehaviour
             Attack();
         }
 
-        if ((PlayerMovement.Instance.IsRunning() || PlayerMovement.Instance.IsWalking()) && canMove)
+        if ((PlayerMovement.Instance.IsRunning() || PlayerMovement.Instance.IsWalking()) && canMove && !isShooting)
         {
             InterruptCombo();
         }
 
-        if (canMove && !isAttacking)
+        if (canMove && !isAttacking && !isShooting)
         {
             InterruptCombo();
         }
@@ -238,13 +252,25 @@ public class PlayerCombat : MonoBehaviour
         }
 
         HandleHoldShooting();
-        Debug.Log(isHoldingShootingButton);
     }
 
     private void HandleHoldShooting()
     {
+        if (!isHoldingShootingButton) return;
+
+        if (WeaponSelector.Instance.GetCurrentRangeWeapon() == RangeWeapons.Pistol.ToString() || WeaponSelector.Instance.GetPendingRangeWeapon() == RangeWeapons.Pistol.ToString())
+        {
+            isHoldingShootingButton = false;
+            UntoggleLockOn();
+            InterruptCombo();
+            CanShoot();
+            return;
+        }
+
         if (isHoldingShootingButton)
         {
+            PlayerMovement.Instance.ToggleFaceObject(true);
+
             shootTimer += Time.deltaTime;
 
             if (shootTimer >= shootInterval)
@@ -409,6 +435,7 @@ public class PlayerCombat : MonoBehaviour
         PlayerMovement.Instance.ToggleFaceObject(false);
         canRun = true;
         ChangeRigWeight.Instance.SetRigWeight(0f);
+        RangedWeaponsSelector.Instance.ChangeWeaponRequest();
     }
 
     public void InterruptCombo()
@@ -485,9 +512,30 @@ public class PlayerCombat : MonoBehaviour
     public float GetDamage()
     {
         if (comboCounter + 1 > currentCombo.combo.Count)
-            return currentCombo.combo[comboCounter - 1].damage;
+            return currentCombo.combo[comboCounter - 1].damage * damageMultiplier;
         else
-            return currentCombo.combo[comboCounter].damage;
+            return currentCombo.combo[comboCounter].damage * damageMultiplier;
+    }
+
+    public void IncreaseDamageMultiplierTemporarily(float amount)
+    {
+        damageMultiplier += amount;
+    }
+
+    public void IncreaseDamageMultiplierPermanent(float amount)
+    {
+        baseDamageMultiplier += amount;
+        damageMultiplier = baseDamageMultiplier;
+    }
+
+    public void ResetDamageMultiplier()
+    {
+        damageMultiplier = baseDamageMultiplier;
+    }
+
+    public float GetDamageMultiplier()
+    {
+        return damageMultiplier;
     }
 
 

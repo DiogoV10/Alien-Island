@@ -12,7 +12,6 @@ public class SkillSO : ScriptableObject
     public float cooldown;
     public LayerMask affectedLayers;
     public Sprite icon;
-    public bool unlocked;
 }
 
 
