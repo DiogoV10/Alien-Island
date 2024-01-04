@@ -11,11 +11,17 @@ public class HumanSummonAttack : MonoBehaviour, IEntity
 
     [Header("HumanPuppetSO reference")]
     [SerializeField] HumanPuppetSO humanPuppet;
+    Animator animator;
 
     private bool isPlayerInSightRange, isPlayerInAttackRange, alreadyAttacked;
    
 
     System.Action<GameObject> callback;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     void FixedUpdate()
     {
@@ -33,6 +39,7 @@ public class HumanSummonAttack : MonoBehaviour, IEntity
         if (!isPlayerInAttackRange)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.transform.position, humanPuppet.speed * Time.deltaTime);
+            animator.SetBool("isAttacking", false);
         }
         if (isPlayerInAttackRange) AttackPlayer();
     }
@@ -40,7 +47,7 @@ public class HumanSummonAttack : MonoBehaviour, IEntity
     void AttackPlayer()
     {
         transform.LookAt(player.transform);
-
+        animator.SetBool("isAttacking", true);
         if (!alreadyAttacked)
         {
             IEntity entity = player.GetComponent<IEntity>();

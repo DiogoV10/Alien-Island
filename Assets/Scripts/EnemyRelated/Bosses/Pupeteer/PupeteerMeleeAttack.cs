@@ -17,7 +17,7 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     Rigidbody rigidBody;
     Animator animator;
 
-    private bool alreadyAttacked, isPlayerInAttackRange, pursuingPlayer = true;
+    private bool alreadyAttacked, isPlayerInAttackRange, pursuingPlayer = false;
     [SerializeField] public float melleeAtackTime = 20f;
 
     System.Action<GameObject> callback;
@@ -39,7 +39,6 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
     IEnumerator MoveToPlayer()
     {
         List<Node> enemypath = pathToPlayer.path;
-        //Debug.Log("enemyPathCount: " + enemypath.Count);
         int i = 0;
         while (pursuingPlayer)
         {
@@ -50,7 +49,6 @@ public class PupeteerMeleeAttack : MonoBehaviour, IEntity
                 enemypath = pathToPlayer.path;
                 i = 0;
             }
-            //rigidBody.MovePosition(enemypath[i].worldPos);
             if(i < pathToPlayer.path.Count)
             {
                 transform.LookAt(player.transform);

@@ -1,2 +1,8 @@
-Find the Minder and Eliminate him
-Go to the next Island up North
+Minder has taken over the Island, find and eliminate him(talk to people for clues)
+Minder Eliminated
+You unlocked the nothern Island
+Go to the nothern island
+The Boss is controlling the nothern island, find and eliminate him(talk to people for clues)
+Boss Eliminated
+You unlocked the western Island
+Go to the Western Island

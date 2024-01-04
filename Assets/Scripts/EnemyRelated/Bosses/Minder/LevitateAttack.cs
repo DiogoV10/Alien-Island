@@ -65,7 +65,8 @@ public class LevitateAttack : MonoBehaviour
 
     public void Throw()
     {
-        if (isLevitated && rigidbody.velocity.magnitude == 0 && attackDuration > 0)
+        Debug.Log("velocity Magnitude: " + rigidbody.velocity.magnitude);
+        if (isLevitated && rigidbody.velocity.magnitude < 0.5f && attackDuration > 0)
         {
             Vector3 throwVector = new Vector3((pos.x - transform.position.x), 0, (pos.z - transform.position.z)).normalized * speed;
             rigidbody.AddForce(throwVector, ForceMode.Impulse);
