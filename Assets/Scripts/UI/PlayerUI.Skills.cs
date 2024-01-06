@@ -9,11 +9,11 @@ public partial class PlayerUI : MonoBehaviour //Skills
     [Header("Skill references")]
     [SerializeField] private RectTransform _skill_T;
     [SerializeField] private Transform _ultimate_T;
-    [SerializeField] private Transform _ultimate2_T;
+    //[SerializeField] private Transform _ultimate2_T;
 
     private Slider _skill_S;
     private Slider _ultimate_S;
-    private Slider _ultimate2_S;
+    //private Slider _ultimate2_S;
     private PlayerSkills _playerSkills;
 
     private void StartSkillCooldown()
@@ -27,8 +27,8 @@ public partial class PlayerUI : MonoBehaviour //Skills
         DOVirtual.DelayedCall(_playerSkills.UltimateCooldownTime, () => _ultimate_S.value = 0);
 
         
-        _ultimate2_S.DOValue(1, _playerSkills.UltimateCooldownTime);
-        DOVirtual.DelayedCall(_playerSkills.UltimateCooldownTime, () => _ultimate2_S.value = 0);
+        //_ultimate2_S.DOValue(1, _playerSkills.UltimateCooldownTime);
+        //DOVirtual.DelayedCall(_playerSkills.UltimateCooldownTime, () => _ultimate2_S.value = 0);
 
     }
 
@@ -36,7 +36,7 @@ public partial class PlayerUI : MonoBehaviour //Skills
     {
         _skill_S = _skill_T.GetComponentInChildren<Slider>();
         _ultimate_S = _ultimate_T.GetComponentInChildren<Slider>();
-        _ultimate2_S = _ultimate2_T.GetComponentInChildren<Slider>();
+        //_ultimate2_S = _ultimate2_T.GetComponentInChildren<Slider>();
 
     }
 
