@@ -12,6 +12,8 @@ public class HitState : MonoBehaviour, IEnemyState
     {
         hitCount++;
         hitTimer = 0f;
+
+        enemy.StopNavigation();
     }
 
     public void UpdateState(BaseEnemy enemy)

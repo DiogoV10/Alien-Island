@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,9 @@ public class RangedWeapon : MonoBehaviour
     [SerializeField] private float gunDamage;
 
     [SerializeField] private GameObject hitPrefab;
+
+
+    public static event EventHandler OnHitEnemy;
 
     private void Awake()
     {
@@ -40,6 +44,8 @@ public class RangedWeapon : MonoBehaviour
                 lockedEnemy.GetComponent<PupeteerMeleeAttack>()?.TakeDamage(RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
                 lockedEnemy.GetComponent<Minder>()?.TakeDamage(RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
                 lockedEnemy.GetComponent<Venous>()?.TakeDamage(RangedWeaponsSelector.Instance.GetActiveWeaponDamage());
+
+                OnHitEnemy?.Invoke(this, EventArgs.Empty);
             }
             else
             {

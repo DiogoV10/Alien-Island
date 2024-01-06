@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngine.VFX;
 using V10;
 
 public class PlayerSkills : MonoBehaviour
@@ -11,15 +13,27 @@ public class PlayerSkills : MonoBehaviour
     public static PlayerSkills Instance { get; private set; }
 
 
+    public class SkillData
+    {
+        public bool unlocked;
+    }
+
     [SerializeField] private List<UltimateSkillSO> ultimateSkills;
     [SerializeField] private List<SkillSO> skills;
 
-    [SerializeField] private int equippedSkillIndex = 0;
+    private List<SkillData> serializedUltimateSkills;
+    private List<SkillData> serializedSkills;
+
+    private Dictionary<SkillSO, SkillData> skillUnlockData;
+    private Dictionary<UltimateSkillSO, SkillData> ultimateSkillUnlockData;
+
+    private int equippedSkillIndex = 0;
 
     private Animator animator;
 
     private bool canUseSkill = true;
     private bool canUseUltimate = true;
+    private bool isUsingUltimate = false;
     private bool isUsingSkill = false;
 
 
@@ -31,7 +45,11 @@ public class PlayerSkills : MonoBehaviour
     [SerializeField] private float damageInterval = 1.0f;
 
     private float ultimateCooldownTime = 5.0f;
+    private float baseUltimateCooldownMultiplier = 1.0f;
+    private float ultimateCooldownMultiplier = 1.0f;
     private float skillCooldownTime = 2.0f;
+    private float baseSkillCooldownMultiplier = 1.0f;
+    private float skillCooldownMultiplier = 1.0f;
 
     public float UltimateCooldownTime => ultimateCooldownTime;
     public float SkillCooldownTime => skillCooldownTime;
@@ -49,9 +67,8 @@ public class PlayerSkills : MonoBehaviour
 
     private SkillState skillState = SkillState.Inactive;
     private GameObject selectedObject = null;
-    private Vector3 throwDirection;
 
-    [SerializeField] private float throwForce = 10.0f;
+    [SerializeField] private float forceMagnitude = 30.0f;
 
 
     private void Awake()
@@ -65,7 +82,80 @@ public class PlayerSkills : MonoBehaviour
         GameInput.Instance.OnUltimateMeleeAction += GameInput_OnUltimateMeleeAction;
         GameInput.Instance.OnUltimateRangeAction += GameInput_OnUltimateRangeAction;
         GameInput.Instance.OnSkillAction += GameInput_OnSkillAction;
+        GameInput.Instance.OnAttackMeleeAction += GameInput_OnAttackMeleeAction;
         PlayerUpgrades.Instance.OnUpgradeUnlocked += PlayerUpgrades_OnUpgradeUnlocked;
+
+        InitializeSerializedSkillDataLists();
+        InitializeSkillUnlockData();
+    }
+
+    private void InitializeSerializedSkillDataLists()
+    {
+        serializedSkills = new List<SkillData>(skills.Count);
+        serializedUltimateSkills = new List<SkillData>(ultimateSkills.Count);
+
+        for (int i = 0; i < skills.Count; i++)
+        {
+            serializedSkills.Add(new SkillData());
+        }
+
+        for (int i = 0; i < ultimateSkills.Count; i++)
+        {
+            serializedUltimateSkills.Add(new SkillData());
+        }
+    }
+
+    private void InitializeSkillUnlockData()
+    {
+        skillUnlockData = new Dictionary<SkillSO, SkillData>();
+        ultimateSkillUnlockData = new Dictionary<UltimateSkillSO, SkillData>();
+
+        foreach (var skill in skills)
+        {
+            skillUnlockData.Add(skill, new SkillData());
+        }
+
+        foreach (var ultimateSkill in ultimateSkills)
+        {
+            ultimateSkillUnlockData.Add(ultimateSkill, new SkillData());
+        }
+    }
+
+    private void GameInput_OnAttackMeleeAction(object sender, EventArgs e)
+    {
+        if (skillState == SkillState.Following)
+        {
+            if (selectedObject != null)
+            {
+                selectedObject.GetComponent<ObjectControl>().ChangeMaterialToOriginal();
+
+                Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.useGravity = true;
+
+                    forceMagnitude = 30.0f;
+                    rb.AddForce(Vector3.down * forceMagnitude, ForceMode.Impulse);
+
+                    SkillSO equippedSkill = skills[equippedSkillIndex];
+
+                    ObjectControl objectControlScript = selectedObject.GetComponent<ObjectControl>();
+                    if (objectControlScript != null)
+                    {
+                        objectControlScript.Initialize(equippedSkill);
+                    }
+                }
+
+                VisualEffect selectedObjectVisualEffect = selectedObject.GetComponentInChildren<VisualEffect>();
+                selectedObjectVisualEffect.Stop();
+
+                selectedObject = null;
+                canUseSkill = false;
+                skillState = SkillState.Inactive;
+
+                StartCoroutine(SkillCooldown());
+            }
+        }
     }
 
     private void PlayerUpgrades_OnUpgradeUnlocked(object sender, PlayerUpgrades.OnUpgradeUnlockedEventArgs e)
@@ -80,6 +170,18 @@ public class PlayerSkills : MonoBehaviour
                 break;
             case PlayerUpgrades.UpgradeType.ToxicBlast_Skill:
                 UnlockSkill(1);
+                break;
+            case PlayerUpgrades.UpgradeType.Cooldown_1:
+                DecreaseSkillCooldownMultiplierPermanent(0.05f);
+                DecreaseUltimateCooldownMultiplierPermanent(0.05f);
+                break;
+            case PlayerUpgrades.UpgradeType.Cooldown_2:
+                DecreaseSkillCooldownMultiplierPermanent(0.1f);
+                DecreaseUltimateCooldownMultiplierPermanent(0.1f);
+                break;
+            case PlayerUpgrades.UpgradeType.Cooldown_3:
+                DecreaseSkillCooldownMultiplierPermanent(0.3f);
+                DecreaseUltimateCooldownMultiplierPermanent(0.3f);
                 break;
             default:
                 break;
@@ -103,22 +205,30 @@ public class PlayerSkills : MonoBehaviour
 
                 Vector3 newPosition = ray.GetPoint(distanceToHitPoint - distanceAboveSurface);
 
-                selectedObject.transform.position = newPosition;
+                float smoothness = 10.0f;
+
+                selectedObject.transform.position = Vector3.Lerp(selectedObject.transform.position, newPosition, Time.deltaTime * smoothness);
+
+                float rotationSmoothness = 15.0f;
+                Quaternion targetRotation = Quaternion.identity; // zero rotation
+                selectedObject.transform.rotation = Quaternion.Lerp(selectedObject.transform.rotation, targetRotation, Time.deltaTime * rotationSmoothness);
             }
         }
     }
 
     private void GameInput_OnSkillAction(object sender, System.EventArgs e)
     {
-        if (canUseSkill & !isUsingSkill)
+        if (canUseSkill & !isUsingUltimate)
         {
             if (equippedSkillIndex >= 0 && equippedSkillIndex < skills.Count)
             {
                 SkillSO equippedSkill = skills[equippedSkillIndex];
 
-                if (equippedSkill == null || !equippedSkill.unlocked) return;
+                if (equippedSkill == null || !skillUnlockData[equippedSkill].unlocked) return;
 
-                skillCooldownTime = equippedSkill.cooldown;
+                isUsingSkill = true;
+
+                skillCooldownTime = equippedSkill.cooldown * skillCooldownMultiplier;
                 ExecuteSkill(equippedSkill);
             }
         }
@@ -126,7 +236,7 @@ public class PlayerSkills : MonoBehaviour
 
     private void GameInput_OnUltimateRangeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && !isUsingSkill)
+        if (canUseUltimate && !isUsingUltimate && !isUsingSkill)
         {
             string currentWeapon = RangedWeaponsSelector.Instance.GetActiveWeaponName();
 
@@ -137,12 +247,11 @@ public class PlayerSkills : MonoBehaviour
 
             UltimateSkillSO ultimateSkill = ultimateSkills.Find(skill => skill.weapon.ToString() == currentWeapon);
 
-            if (ultimateSkill != null && ultimateSkill.unlocked)
+            if (ultimateSkill != null && ultimateSkillUnlockData[ultimateSkill].unlocked)
             {
-                PlayerCombat.Instance.CannotAttack();
-                isUsingSkill = true;
+                isUsingUltimate = true;
 
-                ultimateCooldownTime = ultimateSkill.cooldown;
+                ultimateCooldownTime = ultimateSkill.cooldown * ultimateCooldownMultiplier;
                 ExecuteUltimate(ultimateSkill);
                 canUseUltimate = false;
                 StartCoroutine(UltimateCooldown());
@@ -152,7 +261,7 @@ public class PlayerSkills : MonoBehaviour
 
     private void GameInput_OnUltimateMeleeAction(object sender, System.EventArgs e)
     {
-        if (canUseUltimate && !isUsingSkill)
+        if (canUseUltimate && !isUsingUltimate && !isUsingSkill)
         {
             string currentWeapon = MeleeWeaponsSelector.Instance.GetActiveWeaponName();
 
@@ -163,12 +272,11 @@ public class PlayerSkills : MonoBehaviour
 
             UltimateSkillSO ultimateSkill = ultimateSkills.Find(skill => skill.weapon.ToString() == currentWeapon);
 
-            if (ultimateSkill != null && ultimateSkill.unlocked)
+            if (ultimateSkill != null && ultimateSkillUnlockData[ultimateSkill].unlocked)
             {
-                PlayerCombat.Instance.CannotAttack();
-                isUsingSkill = true;
+                isUsingUltimate = true;
 
-                ultimateCooldownTime = ultimateSkill.cooldown;
+                ultimateCooldownTime = ultimateSkill.cooldown * ultimateCooldownMultiplier;
                 ExecuteUltimate(ultimateSkill);
                 canUseUltimate = false;
                 StartCoroutine(UltimateCooldown());
@@ -181,15 +289,15 @@ public class PlayerSkills : MonoBehaviour
     {
         switch (skill.name)
         {
-            case "ObjectControl":
+            case "ObjectControl_Skill":
                 Skill1();
                 break;
 
-            case "ToxicBlast":
+            case "ToxicBlast_Skill":
                 Skill2(skill);
                 break;
 
-            case "IllusionaryDecoy":
+            case "IllusionaryDecoy_Skill":
                 Skill3(skill);
                 break;
 
@@ -204,12 +312,17 @@ public class PlayerSkills : MonoBehaviour
         {
             if (selectedObject != null)
             {
+                selectedObject.GetComponent<ObjectControl>().ChangeMaterialToOriginal();
+
                 Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
 
                 if (rb != null)
                 {
                     rb.useGravity = true;
                 }
+
+                VisualEffect selectedObjectVisualEffect = selectedObject.GetComponentInChildren<VisualEffect>();
+                selectedObjectVisualEffect.Stop();
 
                 selectedObject = null;
                 canUseSkill = false;
@@ -235,6 +348,14 @@ public class PlayerSkills : MonoBehaviour
                 if (hit.collider.CompareTag("Selectable"))
                 {
                     selectedObject = hit.collider.gameObject;
+
+                    selectedObject.GetComponent<ObjectControl>().ChangeMaterialToSelected();
+
+                    ParticleSystem selectedObjectParticleSystem = selectedObject.GetComponentInChildren<ParticleSystem>();
+                    selectedObjectParticleSystem.Play();
+
+                    VisualEffect selectedObjectVisualEffect = selectedObject.GetComponentInChildren<VisualEffect>();
+                    selectedObjectVisualEffect.Play();
 
                     Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
                     if (rb != null)
@@ -316,8 +437,6 @@ public class PlayerSkills : MonoBehaviour
     {
         WeaponSelector.Instance.ChangeSystem(0);
 
-        PlayerCombat.Instance.CannotAttack();
-
         animator.SetTrigger("Shoot");
 
         float eviscerateRange = 5.0f; 
@@ -337,8 +456,6 @@ public class PlayerSkills : MonoBehaviour
     private void UltimateKatana(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(0);
-
-        PlayerCombat.Instance.CannotAttack();
 
         animator.SetTrigger("Shoot");
 
@@ -374,8 +491,6 @@ public class PlayerSkills : MonoBehaviour
     {
         WeaponSelector.Instance.ChangeSystem(1);
 
-        PlayerCombat.Instance.CannotAttack();
-
         float coneAngle = 45f;
         float detectionRadius = 20f;
 
@@ -402,8 +517,6 @@ public class PlayerSkills : MonoBehaviour
     private void UltimatePistol(UltimateSkillSO ultimateSkill)
     {
         WeaponSelector.Instance.ChangeSystem(1);
-
-        PlayerCombat.Instance.CannotAttack();
 
         float detectionRadius = 20f;
 
@@ -455,22 +568,27 @@ public class PlayerSkills : MonoBehaviour
     IEnumerator UltimateCooldown()
     {
         OnCastUltimate?.Invoke();
+        isUsingUltimate = false;
+        isUsingSkill = false;
         yield return new WaitForSeconds(ultimateCooldownTime);
         canUseUltimate = true;
-        PlayerCombat.Instance.CanAttack();
-        isUsingSkill = false;
     }
 
 
     IEnumerator SkillCooldown()
     {
         OnCastSkill?.Invoke();
+        isUsingUltimate = false;
+        isUsingSkill = false;
         yield return new WaitForSeconds(skillCooldownTime);
         canUseSkill = true;
-        PlayerCombat.Instance.CanAttack();
-        isUsingSkill = false;
     }
 
+
+    public bool IsUsingUltimate()
+    {
+        return isUsingUltimate;
+    }
 
     public bool IsUsingSkill()
     {
@@ -484,8 +602,47 @@ public class PlayerSkills : MonoBehaviour
 
     public void UnlockSkill(int skillIndex)
     {
-        skills[skillIndex].unlocked = true;
+        SkillSO equippedSkill = skills[skillIndex];
+        skillUnlockData[equippedSkill].unlocked = true;
         equippedSkillIndex = skillIndex;
+    }
+
+    private void UnlockUltimateSkill(int ultimateSkillIndex)
+    {
+        UltimateSkillSO equippedUltimateSkill = ultimateSkills[ultimateSkillIndex];
+        ultimateSkillUnlockData[equippedUltimateSkill].unlocked = true;
+    }
+
+    public void DecreaseUltimateCooldownMultiplierTemporarily(float amount)
+    {
+        ultimateCooldownMultiplier -= amount;
+    }
+
+    public void DecreaseUltimateCooldownMultiplierPermanent(float amount)
+    {
+        baseUltimateCooldownMultiplier -= amount;
+        ultimateCooldownMultiplier = baseUltimateCooldownMultiplier;
+    }
+
+    public void ResetUltimateCooldownMultiplier()
+    {
+        ultimateCooldownMultiplier = baseUltimateCooldownMultiplier;
+    }
+
+    public void DecreaseSkillCooldownMultiplierTemporarily(float amount)
+    {
+        skillCooldownMultiplier -= amount;
+    }
+
+    public void DecreaseSkillCooldownMultiplierPermanent(float amount)
+    {
+        baseSkillCooldownMultiplier -= amount;
+        skillCooldownMultiplier = baseSkillCooldownMultiplier;
+    }
+
+    public void ResetSkillCooldownMultiplier()
+    {
+        skillCooldownMultiplier = baseSkillCooldownMultiplier;
     }
 
 

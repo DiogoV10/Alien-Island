@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4189ab7ec2eab5c41b62ef7b9a04f36c, type: 3}
   m_Name: IllusionaryDecoy_Skill
   m_EditorClassIdentifier: 
-  name: IllusionaryDecoy
+  name: IllusionaryDecoy_Skill
   damage: 0
   duration: 25
   range: 30

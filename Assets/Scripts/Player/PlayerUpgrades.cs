@@ -123,5 +123,18 @@ public class PlayerUpgrades : MonoBehaviour
         }
     }
 
+    public bool[] GetUpgradeTypeArray()
+    {
+        int arrayLength = Enum.GetValues(typeof(UpgradeType)).Length;
+        bool[] upgradeArray = new bool[arrayLength];
+
+        foreach (UpgradeType upgradeType in Enum.GetValues(typeof(UpgradeType)))
+        {
+            upgradeArray[(int)upgradeType] = IsUpgradeUnlocked(upgradeType);
+        }
+
+        return upgradeArray;
+    }
+
 
 }

@@ -4,23 +4,67 @@ using UnityEngine;
 
 public class PlayerGravity : MonoBehaviour
 {
-    float gravity = 9.8f;
-    Rigidbody rigidbody;
-    PlayerMovement isGrouded;
-    // Start is called before the first frame update
-    void Start()
+
+
+    public static PlayerGravity Instance { get; private set; }
+
+
+    private float gravity = 9.8f;
+    private float canUseGravityTimer = 0f;
+    private bool canUseGravity = true;
+    private bool gravityOn = true;
+    private Rigidbody rigidbody;
+    
+
+    private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        isGrouded = GetComponent<PlayerMovement>();
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        if (!isGrouded.IsGrounded())
+        rigidbody = GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        if (!PlayerMovement.Instance.IsGrounded() && canUseGravity && gravityOn)
         {
-            //Debug.Log("A tentar usar Gravidade");
             rigidbody.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
         }
+
+        if (canUseGravityTimer >= 1.5f && !canUseGravity)
+        {
+            EnableCanUseGravity();
+        }
+        else
+        {
+            canUseGravityTimer += Time.deltaTime;
+        }
+    }
+
+    public void AddForceOnAirAttack(float force)
+    {
+        DisableCanUseGravity();
+        rigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
+        Invoke(nameof(EnableCanUseGravity), 1f);
+    }
+
+    private void EnableCanUseGravity()
+    {
+        canUseGravity = true;
+    }
+
+    public void DisableCanUseGravity()
+    {
+        canUseGravity = false;
+        rigidbody.velocity = Vector3.zero;
+
+        canUseGravityTimer = 0f;
+    }
+
+    public void SetGravityOnOff(bool choice)
+    {
+        gravityOn = choice;
     }
 }

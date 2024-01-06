@@ -22,6 +22,7 @@ public class DeadState : MonoBehaviour, IEnemyState
 
         deadTimer = 0f;
 
+        enemy.StopNavigation();
         enemy.Die();
     }
 

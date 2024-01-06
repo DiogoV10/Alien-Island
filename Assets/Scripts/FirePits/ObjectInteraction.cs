@@ -70,7 +70,7 @@ public class ObjectInteraction : MonoBehaviour
             {
                 GameManager.Instance.UpdateGameState(GameState.NpcDialogue);
                 StartCoroutine(FillPlayerLife());
-                restoreLifeSystem.SetActive(true);
+                //restoreLifeSystem.SetActive(true);
             }
             else
             {
@@ -125,7 +125,7 @@ public class ObjectInteraction : MonoBehaviour
                 playerHealthFillTime = 2f;
                 if (playerHealthManager.GetHealth() >= playerHealthManager.GetMaxHealth())
                 {
-                    restoreLifeSystem.SetActive(false);
+                    //restoreLifeSystem.SetActive(false);
                     //playerHealthManager.playerHealth = 100;
                     InstantiateInteractButton(transform, new Vector3(2.5f, 0, 0));
                     GameManager.Instance.UpdateGameState(GameState.InGame);

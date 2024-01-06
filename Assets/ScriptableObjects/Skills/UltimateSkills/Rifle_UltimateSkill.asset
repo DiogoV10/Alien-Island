@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6839a61b84d8e24db7b94bd1d48106d, type: 3}
   m_Name: Rifle_UltimateSkill
   m_EditorClassIdentifier: 
-  name: Rifle Ultimate
+  name: Rifle_UltimateSkill
   weapon: 3
   damage: 3
   damageType: 0

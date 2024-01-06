@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4189ab7ec2eab5c41b62ef7b9a04f36c, type: 3}
   m_Name: ObjectControl_Skill
   m_EditorClassIdentifier: 
-  name: ObjectControl
-  damage: 30
+  name: ObjectControl_Skill
+  damage: 40
+  duration: 0
+  range: 5
+  cooldown: 5
+  affectedLayers:
+    serializedVersion: 2
+    m_Bits: 0
   icon: {fileID: 0}

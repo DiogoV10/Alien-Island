@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,15 @@ public class MeleeWeapon : MonoBehaviour
 
     public static MeleeWeapon Instance { get; private set; }
 
+
     [SerializeField] private float hitRadius = 1f;
 
     private List<Collider> enemies = new List<Collider>();
     private bool canHit = false;
     bool playSound = true;
+
+    public static event EventHandler OnHitEnemy;
+
 
     private void Awake()
     {
@@ -33,6 +38,7 @@ public class MeleeWeapon : MonoBehaviour
             {
                 enemies.Add(collider);
                 HitEnemy(collider);
+                OnHitEnemy?.Invoke(this, EventArgs.Empty);
             }
         }
     }

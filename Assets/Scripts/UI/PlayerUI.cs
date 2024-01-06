@@ -17,7 +17,6 @@ public partial class PlayerUI : MonoBehaviour //Base
         SetWeaponSwapElements();
     }
 
-
     private void OnEnable()
     {
         if (_health)

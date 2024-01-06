@@ -45,8 +45,6 @@ public class UpgradeTreeUI : MonoBehaviour
         UpdateVisuals();
 
         PlayerUpgrades.Instance.OnUpgradeUnlocked += PlayerUpgrades_OnUpgradeUnlocked;
-
-        Hide();
     }
 
     private void PlayerUpgrades_OnUpgradeUnlocked(object sender, PlayerUpgrades.OnUpgradeUnlockedEventArgs e)

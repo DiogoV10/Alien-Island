@@ -12,7 +12,7 @@ public class RangedWeaponsSelector : MonoBehaviour
     [SerializeField] private RangedWeaponSO[] rangedWeaponSOs;
 
     private int lastSelectedWeaponIndex;
-    private int pendingWeaponIndex = 0; // Index of the weapon to switch to.
+    private int pendingWeaponIndex = 0;
 
     private bool isSelectorActive = true;
 
@@ -82,9 +82,9 @@ public class RangedWeaponsSelector : MonoBehaviour
 
     public RangedWeaponSO GetActiveWeaponSO()
     {
-        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < rangedWeaponSOs.Length)
+        if (lastSelectedWeaponIndex >= 0 && lastSelectedWeaponIndex < rangedWeaponSOs.Length)
         {
-            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[pendingWeaponIndex];
+            RangedWeaponSO activeWeaponSO = rangedWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
                 return activeWeaponSO;
@@ -113,10 +113,23 @@ public class RangedWeaponsSelector : MonoBehaviour
             RangedWeaponSO activeWeaponSO = rangedWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
-                return activeWeaponSO.damage;
+                return activeWeaponSO.damage * PlayerCombat.Instance.GetDamageMultiplier();
             }
         }
         return 0;
+    }
+
+    public RangedWeaponSO GetPendingWeaponSO()
+    {
+        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < rangedWeaponSOs.Length)
+        {
+            RangedWeaponSO pendingWeaponSO = rangedWeaponSOs[pendingWeaponIndex];
+            if (pendingWeaponSO != null)
+            {
+                return pendingWeaponSO;
+            }
+        }
+        return null;
     }
 
     public void SwitchToWeapon(int weaponIndex)
@@ -145,7 +158,9 @@ public class RangedWeaponsSelector : MonoBehaviour
 
             if (activeWeaponObject == null)
             {
-                SwitchToWeapon(rangedWeaponSOs.Length - 1);
+                WeaponSelector.Instance.ChangeRangeWeapon();
+                ChangeWeaponRequest();
+                WeaponSelector.Instance.ChangeSystem(1);
             }
         }
     }

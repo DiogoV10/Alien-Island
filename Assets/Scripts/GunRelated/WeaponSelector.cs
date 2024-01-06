@@ -1,3 +1,5 @@
+// Ignore Spelling: Melee
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,22 +50,9 @@ public class WeaponSelector : MonoBehaviour
     {
         if (timeSinceLastWeaponSwitchRange >= switchTime && RangedWeaponsSelector.Instance.GetWeaponCount() > 0)
         {
-            rangedWeaponIndex = (rangedWeaponIndex + 1) % RangedWeaponsSelector.Instance.GetWeaponCount();
-            RangedWeaponsSelector.Instance.RequestWeaponChange(rangedWeaponIndex);
-
-            OnRangedEquiped?.Invoke(RangedWeaponsSelector.Instance.GetActiveWeaponSO());
-
-            if (!PlayerSkills.Instance.IsUsingSkill() && !PlayerCombat.Instance.IsShooting())
-            {
-                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
-            }
-
-            if (PlayerCombat.Instance.IsAttacking())
-            {
-                RangedWeaponsSelector.Instance.ChangeWeaponRequest();
-            }
+            ChangeRangeWeapon();
                 
-            timeSinceLastWeaponSwitchRange = 0f; // Reset the time since last switch
+            timeSinceLastWeaponSwitchRange = 0f;
         }
     }
 
@@ -71,17 +60,49 @@ public class WeaponSelector : MonoBehaviour
     {
         if (timeSinceLastWeaponSwitchMelee >= switchTime && MeleeWeaponsSelector.Instance.GetWeaponCount() > 0)
         {
-            meleeWeaponIndex = (meleeWeaponIndex + 1) % MeleeWeaponsSelector.Instance.GetWeaponCount();
-            MeleeWeaponsSelector.Instance.RequestWeaponChange(meleeWeaponIndex);
+            ChangeMeleeWeapon();
 
-            OnMeleeEquiped?.Invoke(MeleeWeaponsSelector.Instance.GetActiveWeaponSO());
+            timeSinceLastWeaponSwitchMelee = 0f;
+        }
+    }
 
-            if (!PlayerSkills.Instance.IsUsingSkill() && !PlayerCombat.Instance.IsAttacking())
-            {
-                MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
-            }
+    public void ChangeMeleeWeapon()
+    {
+        if (MeleeWeaponsSelector.Instance.GetWeaponCount() <= 0) return;
 
-            timeSinceLastWeaponSwitchMelee = 0f; // Reset the time since last switch
+        meleeWeaponIndex = (meleeWeaponIndex + 1) % MeleeWeaponsSelector.Instance.GetWeaponCount();
+        MeleeWeaponsSelector.Instance.RequestWeaponChange(meleeWeaponIndex);
+
+        OnMeleeEquiped?.Invoke(MeleeWeaponsSelector.Instance.GetActiveWeaponSO());
+
+        if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsAttacking())
+        {
+            MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
+        }
+
+        if (PlayerCombat.Instance.IsShooting())
+        {
+            MeleeWeaponsSelector.Instance.ChangeWeaponRequest();
+        }
+    }
+
+    public void ChangeRangeWeapon()
+    {
+        if (RangedWeaponsSelector.Instance.GetWeaponCount() <= 0) return;
+
+        rangedWeaponIndex = (rangedWeaponIndex + 1) % RangedWeaponsSelector.Instance.GetWeaponCount();
+        RangedWeaponsSelector.Instance.RequestWeaponChange(rangedWeaponIndex);
+
+        OnRangedEquiped?.Invoke(RangedWeaponsSelector.Instance.GetActiveWeaponSO());
+
+        if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsShooting())
+        {
+            RangedWeaponsSelector.Instance.ChangeWeaponRequest();
+        }
+
+        if (PlayerCombat.Instance.IsAttacking())
+        {
+            RangedWeaponsSelector.Instance.ChangeWeaponRequest();
         }
     }
 
@@ -94,6 +115,26 @@ public class WeaponSelector : MonoBehaviour
     public void ChangeSystem(int systemIndex)
     {
         SelectSystem(systemIndex);
+    }
+
+    public string GetCurrentMeleeWeapon()
+    {
+        return MeleeWeaponsSelector.Instance.GetActiveWeaponName();
+    }
+
+    public string GetPendingMeleeWeapon()
+    {
+        return MeleeWeaponsSelector.Instance.GetPendingWeaponName();
+    }
+
+    public string GetCurrentRangeWeapon()
+    {
+        return RangedWeaponsSelector.Instance.GetActiveWeaponName();
+    }
+
+    public string GetPendingRangeWeapon()
+    {
+        return RangedWeaponsSelector.Instance.GetPendingWeaponName();
     }
 
     public string GetCurrentWeaponInHand()

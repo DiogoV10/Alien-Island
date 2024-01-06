@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combo:
   - {fileID: 11400000, guid: 01f13ea355d9992478940c349d963868, type: 2}
+  weapon: 1

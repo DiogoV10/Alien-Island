@@ -12,7 +12,7 @@ public class MeleeWeaponsSelector : MonoBehaviour
     [SerializeField] private MeleeWeaponSO[] meleeWeaponSOs;
 
     private int lastSelectedWeaponIndex;
-    private int pendingWeaponIndex = 0; // Index of the weapon to switch to.
+    private int pendingWeaponIndex = 0;
 
     private bool isSelectorActive = true;
 
@@ -33,16 +33,6 @@ public class MeleeWeaponsSelector : MonoBehaviour
         SetActiveWeapon(lastSelectedWeaponIndex);
     }
 
-    private void Update()
-    {
-        //if (changeWeaponRequested)
-        //{
-        //    SwitchToWeapon(pendingWeaponIndex);
-        //    PlayerCombat.Instance.CheckComboTransitions(PlayerCombat.ComboCondition.None);
-        //    changeWeaponRequested = false; // Reset the flag after changing the weapon.
-        //}
-    }
-
     public void SetActive(bool isActive)
     {
         isSelectorActive = isActive;
@@ -53,13 +43,11 @@ public class MeleeWeaponsSelector : MonoBehaviour
     {
         if (activeWeaponObject != null)
         {
-            // Destroy the previously active weapon if one exists.
             Destroy(activeWeaponObject);
         }
 
         if (weaponIndex >= 0 && weaponIndex < meleeWeaponSOs.Length)
         {
-            // Instantiate the selected weapon GameObject from the Scriptable Object.
             MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[weaponIndex];
             if (activeWeaponSO != null && activeWeaponSO.weaponPrefab != null)
             {
@@ -94,9 +82,9 @@ public class MeleeWeaponsSelector : MonoBehaviour
 
     public MeleeWeaponSO GetActiveWeaponSO()
     {
-        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < meleeWeaponSOs.Length)
+        if (lastSelectedWeaponIndex >= 0 && lastSelectedWeaponIndex < meleeWeaponSOs.Length)
         {
-            MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[pendingWeaponIndex];
+            MeleeWeaponSO activeWeaponSO = meleeWeaponSOs[lastSelectedWeaponIndex];
             if (activeWeaponSO != null)
             {
                 return activeWeaponSO;
@@ -131,6 +119,19 @@ public class MeleeWeaponsSelector : MonoBehaviour
         return 0;
     }
 
+    public MeleeWeaponSO GetPendingWeaponSO()
+    {
+        if (pendingWeaponIndex >= 0 && pendingWeaponIndex < meleeWeaponSOs.Length)
+        {
+            MeleeWeaponSO pendingWeaponSO = meleeWeaponSOs[pendingWeaponIndex];
+            if (pendingWeaponSO != null)
+            {
+                return pendingWeaponSO;
+            }
+        }
+        return null;
+    }
+
     public void SwitchToWeapon(int weaponIndex)
     {
         lastSelectedWeaponIndex = Mathf.Clamp(weaponIndex, 0, meleeWeaponSOs.Length - 1);
@@ -157,7 +158,9 @@ public class MeleeWeaponsSelector : MonoBehaviour
 
             if (activeWeaponObject == null)
             {
-                SwitchToWeapon(meleeWeaponSOs.Length - 1);
+                WeaponSelector.Instance.ChangeMeleeWeapon();
+                ChangeWeaponRequest();
+                WeaponSelector.Instance.ChangeSystem(0);
             }
         }
     }
