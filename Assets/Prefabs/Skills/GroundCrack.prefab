@@ -86,7 +86,7 @@ PrefabInstance:
     - target: {fileID: 4705690472552330582, guid: 73824910a7e0d424b8552b44dc7af609,
         type: 3}
       propertyPath: m_TagString
-      value: LayerMask
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

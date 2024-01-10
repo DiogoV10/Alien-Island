@@ -9,8 +9,6 @@ TagManager:
   - Selectable
   - Target
   - Scenario
-  - SeeThrough
-  - LayerMask
   layers:
   - Default
   - TransparentFX
@@ -25,7 +23,7 @@ TagManager:
   - Selectable
   - Scenario
   - TransparentFX
-  - 
+  - LayerMask
   - 
   - 
   - 

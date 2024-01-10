@@ -47,10 +47,15 @@ public class NPCDialogue : MonoBehaviour
         inputSystem.Enable();
     }
 
+    private void OnDisable()
+    {
+        inputSystem.Disable();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        npcText.GetComponent<ChatBubble>();
+        
     }
 
     // Update is called once per frame
