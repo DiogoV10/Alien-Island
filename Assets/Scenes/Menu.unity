@@ -328,6 +328,7 @@ MonoBehaviour:
   - {fileID: 703831835}
   - {fileID: 232961512}
   _cinematicVideo: {fileID: 1996638094}
+  _secondVideoClip: {fileID: 32900000, guid: 9714cb7cd929d534f87cce2eca3abd76, type: 3}
 --- !u!95 &102767515
 Animator:
   serializedVersion: 5
