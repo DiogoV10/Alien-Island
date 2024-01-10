@@ -9,6 +9,9 @@ public class PlayerGravity : MonoBehaviour
     public static PlayerGravity Instance { get; private set; }
 
 
+    [SerializeField] private float gravityMultiplier = 10f;
+
+    private float initialGravityMultiplier = 0f;
     private float gravity = 9.8f;
     private float canUseGravityTimer = 0f;
     private bool canUseGravity = true;
@@ -19,6 +22,8 @@ public class PlayerGravity : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        initialGravityMultiplier = gravityMultiplier;
     }
 
     private void Start()
@@ -30,7 +35,8 @@ public class PlayerGravity : MonoBehaviour
     {
         if (!PlayerMovement.Instance.IsGrounded() && canUseGravity && gravityOn)
         {
-            rigidbody.AddForce(Vector3.down * gravity, ForceMode.Acceleration);
+            float newGravity = gravity * gravityMultiplier;
+            rigidbody.AddForce(Vector3.down * newGravity, ForceMode.Acceleration);
         }
 
         if (canUseGravityTimer >= 1.5f && !canUseGravity)

@@ -474,7 +474,7 @@ MonoBehaviour:
   lockOnTarget: {fileID: 0}
   dashTime: 0.5
   dashSpeed: 100
-  jumpvalue: 25
+  jumpvalue: 60
   jumpGracePeriod: 0.2
   isGrounded: 0
   groundCheck: {fileID: 5825813674483446961}
@@ -688,6 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 450a7c8f818c2fb439def8762a7c19e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravityMultiplier: 10
 --- !u!114 &-7503995701084580605
 MonoBehaviour:
   m_ObjectHideFlags: 0

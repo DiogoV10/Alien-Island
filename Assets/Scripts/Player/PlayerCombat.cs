@@ -136,6 +136,9 @@ public class PlayerCombat : MonoBehaviour
             case PlayerUpgrades.UpgradeType.Damage_3:
                 IncreaseDamageMultiplierPermanent(2.5f);
                 break;
+            case PlayerUpgrades.UpgradeType.Damage_4:
+                IncreaseDamageMultiplierPermanent(3f);
+                break;
             default:
                 break;
         }

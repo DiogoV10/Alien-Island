@@ -43,6 +43,9 @@ public class PlayerHealthManager : MonoBehaviour, IEntity
             case PlayerUpgrades.UpgradeType.HealthMax_3:
                 SetMaxHealth(300f);
                 break;
+            case PlayerUpgrades.UpgradeType.HealthMax_4:
+                SetMaxHealth(400f);
+                break;
             default:
                 break;
         }

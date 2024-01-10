@@ -13,6 +13,9 @@ public class SkillOrUpgradeOptionUI : MonoBehaviour
     [SerializeField] private Button upgradeTreeButton;
     [SerializeField] private Button skillSelectionButton;
 
+    private Color normalColor = Color.black;
+    private Color selectedColor = Color.grey;
+
 
     private void Awake()
     {
@@ -25,21 +28,40 @@ public class SkillOrUpgradeOptionUI : MonoBehaviour
         {
             SkillSelectionUI.Instance.Hide();
             UpgradeTreeUI.Instance.Show();
+
+            SetButtonSelected(upgradeTreeButton);
+            SetButtonNormal(skillSelectionButton);
         });
 
         skillSelectionButton.onClick.AddListener(() =>
         {
             UpgradeTreeUI.Instance.Hide();
             SkillSelectionUI.Instance.Show();
+
+            SetButtonSelected(skillSelectionButton);
+            SetButtonNormal(upgradeTreeButton);
         });
 
         Hide();
+    }
+
+    private void SetButtonSelected(Button button)
+    {
+        button.GetComponent<Image>().color = selectedColor;
+    }
+
+    private void SetButtonNormal(Button button)
+    {
+        button.GetComponent<Image>().color = normalColor;
     }
 
     public void Show()
     {
         gameObject.SetActive(true);
         UpgradeTreeUI.Instance.Show();
+
+        SetButtonSelected(upgradeTreeButton);
+        SetButtonNormal(skillSelectionButton);
     }
 
     public void Hide()

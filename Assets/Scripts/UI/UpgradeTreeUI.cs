@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,11 +21,15 @@ public class UpgradeTreeUI : MonoBehaviour
     [Header("Materials")]
     [SerializeField] private Material upgradeLockedMaterial;
     [SerializeField] private Material upgradeUnlockableMaterial;
+    [SerializeField] private Sprite lineSprite;
+    [SerializeField] private Sprite lineGlowSprite;
+    [SerializeField] private TextMeshProUGUI upgradePointsText;
 
     [Header("Buttons")]
     [SerializeField] private List<UpgradeButtonData> buttonList;
-    
-    
+    [SerializeField] private UpgradeUnlockPath[] upgradeUnlockPathArray;
+
+
     private List<UpgradeButton> upgradeButtonList;
 
 
@@ -43,8 +48,15 @@ public class UpgradeTreeUI : MonoBehaviour
         }
 
         UpdateVisuals();
+        UpdateUpgradePoints();
 
         PlayerUpgrades.Instance.OnUpgradeUnlocked += PlayerUpgrades_OnUpgradeUnlocked;
+        PlayerUpgrades.Instance.OnUpgradePointsChanged += PlayerUpgrades_OnUpgradePointsChanged;
+    }
+
+    private void PlayerUpgrades_OnUpgradePointsChanged(object sender, System.EventArgs e)
+    {
+        UpdateUpgradePoints();
     }
 
     private void PlayerUpgrades_OnUpgradeUnlocked(object sender, PlayerUpgrades.OnUpgradeUnlockedEventArgs e)
@@ -52,11 +64,37 @@ public class UpgradeTreeUI : MonoBehaviour
         UpdateVisuals();
     }
 
+    private void UpdateUpgradePoints() 
+    {
+        upgradePointsText.SetText(PlayerUpgrades.Instance.GetUpgradePoints().ToString());
+    }
+
     private void UpdateVisuals()
     {
         foreach (UpgradeButton upgradeButton in upgradeButtonList)
         {
             upgradeButton.UpdateVisual();
+        }
+
+        foreach (UpgradeUnlockPath upgradeUnlockPath in upgradeUnlockPathArray)
+        {
+            foreach (Image linkImage in upgradeUnlockPath.linkImageArray)
+            {
+                linkImage.color = new Color(.5f, .5f, .5f);
+                linkImage.sprite = lineSprite;
+            }
+        }
+
+        foreach (UpgradeUnlockPath upgradeUnlockPath in upgradeUnlockPathArray)
+        {
+            if (PlayerUpgrades.Instance.IsUpgradeUnlocked(upgradeUnlockPath.upgradeType) || PlayerUpgrades.Instance.CanUnlock(upgradeUnlockPath.upgradeType))
+            {
+                foreach (Image linkImage in upgradeUnlockPath.linkImageArray)
+                {
+                    linkImage.color = Color.white;
+                    linkImage.sprite = lineGlowSprite;
+                }
+            }
         }
     }
 
@@ -101,6 +139,13 @@ public class UpgradeTreeUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    [System.Serializable]
+    public class UpgradeUnlockPath
+    {
+        public PlayerUpgrades.UpgradeType upgradeType;
+        public Image[] linkImageArray;
     }
 
     public void Show()

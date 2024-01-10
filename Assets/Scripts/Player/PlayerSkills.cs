@@ -162,6 +162,18 @@ public class PlayerSkills : MonoBehaviour
     {
         switch(e.upgradeType)
         {
+            case PlayerUpgrades.UpgradeType.Katana_UltimateSkill:
+                UnlockUltimateSkill(0);
+                break;
+            case PlayerUpgrades.UpgradeType.Knife_UltimateSkill:
+                UnlockUltimateSkill(1);
+                break;
+            case PlayerUpgrades.UpgradeType.Pistol_UltimateSkill:
+                UnlockUltimateSkill(2);
+                break;
+            case PlayerUpgrades.UpgradeType.Rifle_UltimateSkill:
+                UnlockUltimateSkill(3);
+                break;
             case PlayerUpgrades.UpgradeType.IllusionaryDecoy_Skill:
                 UnlockSkill(2);
                 break;
@@ -180,8 +192,12 @@ public class PlayerSkills : MonoBehaviour
                 DecreaseUltimateCooldownMultiplierPermanent(0.1f);
                 break;
             case PlayerUpgrades.UpgradeType.Cooldown_3:
-                DecreaseSkillCooldownMultiplierPermanent(0.3f);
-                DecreaseUltimateCooldownMultiplierPermanent(0.3f);
+                DecreaseSkillCooldownMultiplierPermanent(0.15f);
+                DecreaseUltimateCooldownMultiplierPermanent(0.15f);
+                break;
+            case PlayerUpgrades.UpgradeType.Cooldown_4:
+                DecreaseSkillCooldownMultiplierPermanent(0.25f);
+                DecreaseUltimateCooldownMultiplierPermanent(0.25f);
                 break;
             default:
                 break;
