@@ -17,6 +17,15 @@ public partial class PlayerUI : MonoBehaviour //Base
         SetWeaponSwapElements();
     }
 
+    private void Start()
+    {
+        if (WeaponSelector.Instance)
+        {
+            WeaponSelector.Instance.OnMeleeEquiped += WeaponSelector_OnMeleeEquiped;
+            WeaponSelector.Instance.OnRangedEquiped += WeaponSelector_OnRangedEquiped;
+        }
+    }
+
     private void OnEnable()
     {
         if (_health)
@@ -28,12 +37,6 @@ public partial class PlayerUI : MonoBehaviour //Base
         {
             _playerSkills.OnCastSkill += StartSkillCooldown;
             _playerSkills.OnCastUltimate += StartUltimateCooldown;
-        }
-
-        if (WeaponSelector.Instance)
-        {
-            WeaponSelector.Instance.OnMeleeEquiped += WeaponSelector_OnMeleeEquiped;
-            WeaponSelector.Instance.OnRangedEquiped += WeaponSelector_OnRangedEquiped;
         }
     }
 

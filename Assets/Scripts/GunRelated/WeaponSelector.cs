@@ -8,6 +8,8 @@ using V10;
 
 public class WeaponSelector : MonoBehaviour
 {
+
+
     public static WeaponSelector Instance { get; private set; }
 
 
@@ -34,6 +36,7 @@ public class WeaponSelector : MonoBehaviour
         GameInput.Instance.OnChangeMeleeWeapon += GameInput_OnChangeMeleeWeapon;
         GameInput.Instance.OnChangeRangeWeapon += GameInput_OnChangeRangeWeapon;
 
+        SelectSystem(1);
         SelectSystem(0);
 
         timeSinceLastWeaponSwitchMelee = 0f;
@@ -73,7 +76,7 @@ public class WeaponSelector : MonoBehaviour
         meleeWeaponIndex = (meleeWeaponIndex + 1) % MeleeWeaponsSelector.Instance.GetWeaponCount();
         MeleeWeaponsSelector.Instance.RequestWeaponChange(meleeWeaponIndex);
 
-        OnMeleeEquiped?.Invoke(MeleeWeaponsSelector.Instance.GetActiveWeaponSO());
+        OnMeleeEquiped?.Invoke(MeleeWeaponsSelector.Instance.GetPendingWeaponSO());
 
         if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsAttacking())
         {
@@ -93,7 +96,7 @@ public class WeaponSelector : MonoBehaviour
         rangedWeaponIndex = (rangedWeaponIndex + 1) % RangedWeaponsSelector.Instance.GetWeaponCount();
         RangedWeaponsSelector.Instance.RequestWeaponChange(rangedWeaponIndex);
 
-        OnRangedEquiped?.Invoke(RangedWeaponsSelector.Instance.GetActiveWeaponSO());
+        OnRangedEquiped?.Invoke(RangedWeaponsSelector.Instance.GetPendingWeaponSO());
 
         if (!PlayerSkills.Instance.IsUsingUltimate() && !PlayerCombat.Instance.IsShooting())
         {

@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!inGame)
         {
-            Debug.Log(mov.ReadValue<Vector2>());
+            //Debug.Log(mov.ReadValue<Vector2>());
             velocity = new Vector2(Mathf.SmoothDamp(velocity.x, 0, ref currentHorizontalVelocity, smoothTime), Mathf.SmoothDamp(velocity.y, 0, ref currentVerticalVelocity, smoothTime));
             return;
         }

@@ -8,13 +8,14 @@ public class PlayerData
 
 
     public float health;
-    public float maxHealth;
+    public int upgradePoints;
     public float[] position;
     public bool[] unlockedUpgrades;
 
     public PlayerData(Player player)
     {
         health = PlayerHealthManager.Instance.GetHealth();
+        upgradePoints = PlayerUpgrades.Instance.GetUpgradePoints();
 
         position = new float[3];
         position[0] = player.transform.position.x;

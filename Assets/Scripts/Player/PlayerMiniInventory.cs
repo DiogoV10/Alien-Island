@@ -33,7 +33,7 @@ public class PlayerMiniInventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(playerHealthManager.GetHealth());
+        //Debug.Log(playerHealthManager.GetHealth());
     }
 
     private void ConsumeHealthKit()

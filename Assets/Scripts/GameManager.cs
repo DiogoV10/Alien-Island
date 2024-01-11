@@ -19,6 +19,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UpdateGameState(GameState.InGame);
+
+        if (PlayerPrefs.GetInt("LoadSave") == 1)
+        {
+            Player.Instance.LoadPlayer();
+            PlayerPrefs.DeleteKey("LoadSave");
+        }
     }
 
     public void UpdateGameState(GameState newState)

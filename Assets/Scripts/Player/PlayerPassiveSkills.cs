@@ -26,11 +26,17 @@ public class PlayerPassiveSkills : MonoBehaviour
     private Dictionary<PassiveSkills, PassiveSkill> passiveSkills;
 
 
-    private int meleeEnergyCharges;
-    private int maxMeleeEnergyCharges;
+    private bool adrenalineRushActive;
+    private bool extraterrestrialAgility;
 
-    private int rangedEnergyCharges;
-    private int maxRangedEnergyCharges;
+    private float adrenalineDuration = 10.0f;
+    private float agilityDuration = 10.0f;
+
+    private int meleeEnergyCharges = 0;
+    private int maxMeleeEnergyCharges = 5;
+
+    private int rangedEnergyCharges = 0;
+    private int maxRangedEnergyCharges = 5;
 
 
     private void Awake()
@@ -71,11 +77,21 @@ public class PlayerPassiveSkills : MonoBehaviour
 
         if (passiveSkills[PassiveSkills.AdrenalineRush].unlocked)
         {
-            float healthThreshold = 0.99f;
+            float healthThreshold = 0.25f;
 
-            if (PlayerHealthManager.Instance.GetHealth() < PlayerHealthManager.Instance.GetMaxHealth() * healthThreshold)
+            if (PlayerHealthManager.Instance.GetHealth() < PlayerHealthManager.Instance.GetMaxHealth() * healthThreshold && !adrenalineRushActive)
             {
-                ActivateAdrenalineRush();
+                ActivateAdrenalineRush(adrenalineDuration);
+            }
+        }
+
+        if (passiveSkills[PassiveSkills.ExtraterrestrialAgility].unlocked)
+        {
+            float healthThreshold = 0.25f;
+
+            if (PlayerHealthManager.Instance.GetHealth() < PlayerHealthManager.Instance.GetMaxHealth() * healthThreshold && !extraterrestrialAgility)
+            {
+                ActivateExtraterrestrialAgility(agilityDuration);
             }
         }
 
@@ -83,11 +99,56 @@ public class PlayerPassiveSkills : MonoBehaviour
         {
             if (IsMeleeAttack())
             {
-                
+                if (rangedEnergyCharges > 0 && meleeEnergyCharges == 0)
+                {
+                    PlayerCombat.Instance.IncreaseDamageMultiplierTemporarily(rangedEnergyCharges / 2);
+                }
+
+                if (meleeEnergyCharges == 1 && rangedEnergyCharges > 0)
+                {
+                    if (adrenalineRushActive)
+                    {
+                        PlayerCombat.Instance.ReduceDamageMultiplier(rangedEnergyCharges);
+                    }
+                    else
+                    {
+                        PlayerCombat.Instance.ResetDamageMultiplier();
+                    }
+
+                    meleeEnergyCharges = 0;
+                    rangedEnergyCharges = 0;
+                }
+
+                if (meleeEnergyCharges < maxMeleeEnergyCharges)
+                {
+                    meleeEnergyCharges++;
+                }
             }
             else
             {
+                if (meleeEnergyCharges > 0 && rangedEnergyCharges == 0)
+                {
+                    PlayerCombat.Instance.IncreaseDamageMultiplierTemporarily(meleeEnergyCharges / 2);
+                }
 
+                if (rangedEnergyCharges == 1 && meleeEnergyCharges > 0)
+                {
+                    if (adrenalineRushActive)
+                    {
+                        PlayerCombat.Instance.ReduceDamageMultiplier(meleeEnergyCharges);
+                    }
+                    else
+                    {
+                        PlayerCombat.Instance.ResetDamageMultiplier();
+                    }
+                    meleeEnergyCharges = 0;
+                    rangedEnergyCharges = 0;
+                }
+
+                if (rangedEnergyCharges < maxRangedEnergyCharges)
+                {
+                    rangedEnergyCharges++;
+                }
             }
         }
     }
@@ -100,9 +161,10 @@ public class PlayerPassiveSkills : MonoBehaviour
             return false;
     }
 
-    private void ActivateAdrenalineRush()
+    private void ActivateAdrenalineRush(float adrenalineD)
     {
-        float adrenalineDuration = 10.0f;
+        adrenalineRushActive = true;
+
         float adrenalineMultiplier = 1.5f;
         float adrenalineCooldownMultiplier = 0.1f;
 
@@ -110,16 +172,38 @@ public class PlayerPassiveSkills : MonoBehaviour
         PlayerSkills.Instance.DecreaseSkillCooldownMultiplierTemporarily(adrenalineCooldownMultiplier);
         PlayerSkills.Instance.DecreaseUltimateCooldownMultiplierTemporarily(adrenalineCooldownMultiplier);
 
-        StartCoroutine(DeactivateAdrenalineRush(adrenalineDuration));
+        StartCoroutine(DeactivateAdrenalineRush(adrenalineD));
+    }
+
+    private void ActivateExtraterrestrialAgility(float adrenalineD)
+    {
+        extraterrestrialAgility = true;
+
+        float healthReduction = 1.5f;
+
+        PlayerCombat.Instance.IncreaseHealthReduction(healthReduction);
+
+        StartCoroutine(DeactivateExtraterrestrialAgility(adrenalineD));
     }
 
     private IEnumerator DeactivateAdrenalineRush(float duration)
     {
         yield return new WaitForSeconds(duration);
 
+        adrenalineRushActive = false;
+
         PlayerCombat.Instance.ResetDamageMultiplier();
         PlayerSkills.Instance.ResetSkillCooldownMultiplier();
         PlayerSkills.Instance.ResetUltimateCooldownMultiplier();
+    }
+
+    private IEnumerator DeactivateExtraterrestrialAgility(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        extraterrestrialAgility = false;
+
+        PlayerCombat.Instance.ResetHealthReduction();
     }
 
     private void InitializePassiveSkills()
@@ -131,8 +215,9 @@ public class PlayerPassiveSkills : MonoBehaviour
             passiveSkills.Add(passive, new PassiveSkill());
         }
 
-        passiveSkills[PassiveSkills.LifeSteal].unlocked = true;
-        passiveSkills[PassiveSkills.AdrenalineRush].unlocked = true;
+        //passiveSkills[PassiveSkills.LifeSteal].unlocked = true;
+        //passiveSkills[PassiveSkills.AdrenalineRush].unlocked = true;
+        passiveSkills[PassiveSkills.EnergyChanneling].unlocked = true;
     }
 
 

@@ -6,6 +6,11 @@ using UnityEngine.Video;
 
 public class MainMenu : MonoBehaviour
 {
+
+
+    private const string LOAD_SAVE_KEY = "LoadSave";
+
+
     public GameObject[] _objectsToDisable;
     public GameObject _cinematicVideo;
     [SerializeField] private VideoClip _secondVideoClip;
@@ -23,6 +28,13 @@ public class MainMenu : MonoBehaviour
         }
         _cinematicVideo.SetActive(true);
         StartCoroutine(LoadGameScene());
+    }
+
+    public void LoadGame()
+    {
+        PlayerPrefs.SetInt(LOAD_SAVE_KEY, 1);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void QuitGame()

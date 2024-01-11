@@ -44,6 +44,7 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
 
     protected bool isTargetInSightRange, isTargetInAttackRange, alreadyAttacked;
     protected bool canSeeTarget;
+    protected bool isDead = false;
 
     protected IEnemyState currentState;
     protected EnemyAudio _enemyAudio;
@@ -230,6 +231,16 @@ public abstract class BaseEnemy : MonoBehaviour, IEntity
     public float GetHealth() 
     {
         return health;
+    }
+
+    public void SetIsDead()
+    {
+        isDead = true;
+    }
+
+    public bool IsDead()
+    {
+        return isDead;
     }
 
     public abstract void MoveTo(Vector3 destination);

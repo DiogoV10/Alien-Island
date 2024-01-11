@@ -156,5 +156,10 @@ public class PlayerUpgrades : MonoBehaviour
         return upgradeArray;
     }
 
+    public void LoadData(int points)
+    {
+        upgradePoints = points;
+    }
+
 
 }

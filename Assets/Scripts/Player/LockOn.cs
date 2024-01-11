@@ -31,6 +31,16 @@ public class LockOn : MonoBehaviour
 
     private void Update()
     {
+        if (lockedEnemy != null)
+        {
+            BaseEnemy enemy = lockedEnemy.GetComponent<BaseEnemy>();
+
+            if (enemy.IsDead())
+            {
+                lockedEnemy = null;
+            }
+        }
+
         if (lockedEnemy == null || Vector3.Distance(transform.position, lockedEnemy.transform.position) > detectionRadius)
         {
             // Release the lock-on if no enemy is locked or if the locked enemy is out of range.
@@ -57,7 +67,6 @@ public class LockOn : MonoBehaviour
         GameObject closestEnemy = DetectClosestEnemy();
         if (closestEnemy != null && (lockedEnemy == null || closestEnemy != lockedEnemy))
         {
-            // Lock onto the closest enemy if no enemy is currently locked or if a new enemy is closer.
             lockedEnemy = closestEnemy;
         }
     }
@@ -73,7 +82,9 @@ public class LockOn : MonoBehaviour
         {
             float distance = Vector3.Distance(transform.position, collider.transform.position);
 
-            if (distance < closestDistance)
+            BaseEnemy enemy = collider.GetComponent<BaseEnemy>();
+
+            if (distance < closestDistance && !enemy.IsDead())
             {
                 closestDistance = distance;
                 closestEnemy = collider.gameObject;

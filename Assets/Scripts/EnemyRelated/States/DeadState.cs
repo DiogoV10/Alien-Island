@@ -20,6 +20,10 @@ public class DeadState : MonoBehaviour, IEnemyState
     {
         animator.SetTrigger("Dead");
 
+        enemy.SetIsDead();
+
+        PlayerUpgrades.Instance.AddUpgradePoint();
+
         deadTimer = 0f;
 
         enemy.StopNavigation();

@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
         position.z = data.position[2];
         transform.position = position;
 
+        PlayerUpgrades.Instance.LoadData(data.upgradePoints);
+
         LoadUpgrades(data.unlockedUpgrades);
     }
 

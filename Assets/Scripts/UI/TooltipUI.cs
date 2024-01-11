@@ -41,6 +41,17 @@ public class TooltipUI : MonoBehaviour
 
     private void Update()
     {
+        SetAnchoredPosition();
+
+        showTimer -= Time.deltaTime;
+        if (showTimer <= 0)
+        {
+            Hide();
+        }
+    }
+
+    private void SetAnchoredPosition()
+    {
         Vector2 anchoredPosition = Input.mousePosition / canvasRectTransform.localScale.x;
 
         if (anchoredPosition.x + backgroundRectTransform.rect.width > canvasRectTransform.rect.width)
@@ -53,18 +64,16 @@ public class TooltipUI : MonoBehaviour
             anchoredPosition.y = canvasRectTransform.rect.height - backgroundRectTransform.rect.height;
         }
 
-        rectTransform.anchoredPosition = anchoredPosition;
+        anchoredPosition.x += 5;
+        anchoredPosition.y += 5;
 
-        showTimer -= Time.deltaTime;
-        if (showTimer <= 0)
-        {
-            Hide();
-        }
+        rectTransform.anchoredPosition = anchoredPosition;
     }
 
     public void Show(string tooltipText, float showTimerMax = 2f)
     {
         gameObject.SetActive(true);
+        SetAnchoredPosition();
         SetText(tooltipText);
         showTimer = showTimerMax;
     }

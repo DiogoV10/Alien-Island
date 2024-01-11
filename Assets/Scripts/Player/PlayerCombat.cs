@@ -65,6 +65,7 @@ public class PlayerCombat : MonoBehaviour
 
     private float damageMultiplier = 1f;
     private float baseDamageMultiplier = 1f;
+    private float healthReduction = 0f;
 
 
     private bool canShoot = true;
@@ -548,9 +549,29 @@ public class PlayerCombat : MonoBehaviour
         damageMultiplier = baseDamageMultiplier;
     }
 
+    public void ReduceDamageMultiplier(float amount)
+    {
+        damageMultiplier -= amount;
+    }
+
     public float GetDamageMultiplier()
     {
         return damageMultiplier;
+    }
+
+    public void IncreaseHealthReduction(float amount)
+    {
+        healthReduction += amount;
+    }
+
+    public void ResetHealthReduction()
+    {
+        healthReduction = 0f;
+    }
+
+    public float GetHealthReduction()
+    {
+        return healthReduction;
     }
 
 

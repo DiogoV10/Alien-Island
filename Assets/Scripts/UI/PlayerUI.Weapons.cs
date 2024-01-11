@@ -36,7 +36,7 @@ public partial class PlayerUI : MonoBehaviour // Weapons
         {
             Debug.Log("in ");
             _weapon1_Image.sprite = meleeWeaponSO.icon;
-            SwapWeapons();
+            //SwapWeapons();
         }
     }
 
@@ -45,7 +45,7 @@ public partial class PlayerUI : MonoBehaviour // Weapons
         if (rangedWeaponSO != null)
         {
             _weapon2_Image.sprite = rangedWeaponSO.icon;
-            SwapWeapons();
+            //SwapWeapons();
         }
     }
 

@@ -56,7 +56,7 @@ public class RangedWeapon : MonoBehaviour
                     if (hit.collider != null)
                     {
                         Debug.Log("Hit something with tag: " + hit.transform.tag);
-                        InstantiateHitEffect(hit.point);
+                        InstantiateHitEffect(hit.point, hit.normal);
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class RangedWeapon : MonoBehaviour
                 if (hit.collider != null)
                 {
                     Debug.Log("Hit something with tag: " + hit.transform.tag);
-                    InstantiateHitEffect(hit.point);
+                    InstantiateHitEffect(hit.point, hit.normal);
                 }
             }
         }
@@ -91,9 +91,11 @@ public class RangedWeapon : MonoBehaviour
         return false;
     }
 
-    private void InstantiateHitEffect(Vector3 position)
+    private void InstantiateHitEffect(Vector3 position, Vector3 hitNormal)
     {
-        Instantiate(hitPrefab, position, Quaternion.identity);
+        Quaternion rotation = Quaternion.LookRotation(hitNormal);
+
+        Instantiate(hitPrefab, position, rotation);
     }
 
     public float GunDamage()

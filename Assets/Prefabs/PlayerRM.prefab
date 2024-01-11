@@ -688,7 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 450a7c8f818c2fb439def8762a7c19e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravityMultiplier: 10
+  gravityMultiplier: 5
 --- !u!114 &-7503995701084580605
 MonoBehaviour:
   m_ObjectHideFlags: 0

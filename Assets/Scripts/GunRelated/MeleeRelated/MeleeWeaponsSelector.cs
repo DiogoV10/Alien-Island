@@ -156,12 +156,9 @@ public class MeleeWeaponsSelector : MonoBehaviour
 
             meleeWeaponSOs[meleeWeaponSOs.Length - 1] = newWeapon;
 
-            if (activeWeaponObject == null)
-            {
-                WeaponSelector.Instance.ChangeMeleeWeapon();
-                ChangeWeaponRequest();
-                WeaponSelector.Instance.ChangeSystem(0);
-            }
+            WeaponSelector.Instance.ChangeMeleeWeapon();
+            ChangeWeaponRequest();
+            WeaponSelector.Instance.ChangeSystem(0);
         }
     }
 

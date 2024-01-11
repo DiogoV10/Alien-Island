@@ -28,7 +28,7 @@ public class Enemy : BaseEnemy, IEntity
         {
             animator.SetTrigger("Punch");
             IEntity entity = target.GetComponent<IEntity>();
-            entity.TakeDamage(enemy.damageAmount);
+            entity.TakeDamage(enemy.damageAmount - PlayerCombat.Instance.GetHealthReduction());
             Debug.Log("Attacked!");
             Debug.Log(player.GetComponent<PlayerHealthManager>().GetHealth());
             alreadyAttacked = true;

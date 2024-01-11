@@ -38,7 +38,7 @@ public class Bullseye : BaseEnemy, IEntity
             GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
 
             Projectile projectileScript = projectile.GetComponent<Projectile>();
-            projectileScript.SetDamageAndMove(enemy.damageAmount, targetPosition - projectileSpawnPoint.position);
+            projectileScript.SetDamageAndMove(enemy.damageAmount - PlayerCombat.Instance.GetHealthReduction(), targetPosition - projectileSpawnPoint.position);
 
             animator.SetTrigger("Punch");
             animator.CrossFade("Shoot",0.1f);

@@ -117,6 +117,7 @@ public class UpgradeTreeUI : MonoBehaviour
                 if (!PlayerUpgrades.Instance.TryUnlockUpgrade(upgradeType))
                 {
                     TooltipUI.Instance.Show("Cannot unlock " + upgradeType + "!");
+                    TooltipInfo.Instance.Hide();
                 }
             });
         }

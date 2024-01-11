@@ -156,12 +156,9 @@ public class RangedWeaponsSelector : MonoBehaviour
 
             rangedWeaponSOs[rangedWeaponSOs.Length - 1] = newWeapon;
 
-            if (activeWeaponObject == null)
-            {
-                WeaponSelector.Instance.ChangeRangeWeapon();
-                ChangeWeaponRequest();
-                WeaponSelector.Instance.ChangeSystem(1);
-            }
+            WeaponSelector.Instance.ChangeRangeWeapon();
+            ChangeWeaponRequest();
+            WeaponSelector.Instance.ChangeSystem(1);
         }
     }
 
