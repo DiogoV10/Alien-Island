@@ -8,6 +8,7 @@ Left/Right Mouse Button - Attack
 "3" & "4" - Ultimate ability
 "5" - Skill
 
+---
 ## Artificial Intelligence
 
 ### A*
@@ -19,3 +20,4 @@ When they chase, they use the navigation system from unity. If the player is at 
 If the player runs away, some enemies go to the previous seen location and search around for a bit.
 The hit and dead states are self-explanatory.
 It's not very complex but it works as intended.
+---
